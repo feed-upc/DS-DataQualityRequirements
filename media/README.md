@@ -1,1 +1,1 @@
-Folder for DQR patterns
+This folder contains the DQR pattern templates.
