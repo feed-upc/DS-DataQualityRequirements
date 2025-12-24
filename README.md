@@ -4,9 +4,9 @@ The Reference catalog of Data Quality Requirement (DQR) Patterns is designed to 
 These patterns capture common and recurring DQRs encountered in data space data sharing and governance scenarios. For each pattern in the catalog, the associated data quality dimension, a textual description of the requirement, its general specification, and the elements to be instantiated by stakeholders are explicitly defined.
 
 
-| Quality Dimension | DQR Description | General Specification | Information to Pattern Instantiation |
-| ----------------- | --------------- | --------------------- | ------------------------------------ |
-| Timeless | A specific data age is required for the data in an attribute of an entity | x | y |
+| Quality Dimension | DQR Pattern Identifier | DQR Description | DQR Pattern | DQR Pattern Instantiation Example |
+| ----------------- | ---------------------- | --------------- | ----------- | ----------------------------------|
+| Timeless (ISO/IEC 25012)| DQRP1 | A specific data age is required for the data in an attribute of an entity | x | y |
 
 
 [mls_toolbox_client](https://github.com/MLSToolbox/mls_toolbox_client) | An Angular-based component for displaying the graphical interface and for requesting the services provided by the MLSToolbox tools|
