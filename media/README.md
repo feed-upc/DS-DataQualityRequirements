@@ -1,1 +1,1 @@
-
+Folder for DQR patterns
