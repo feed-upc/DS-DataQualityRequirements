@@ -9,4 +9,4 @@ These patterns capture common and recurring DQRs encountered in data space data 
 | Timeless (ISO/IEC 25012)| DQRP1 | A specific data age is required for the data in an attribute of an entity | x | y |
 
 
-[mls_toolbox_client](https://github.com/MLSToolbox/mls_toolbox_client) | An Angular-based component for displaying the graphical interface and for requesting the services provided by the MLSToolbox tools|
+[DQRP1 Template](https://github.com/feed-upc/DS-DataQualityRequirements/media/DQRP1 - Timeless) | An Angular-based component for displaying the graphical interface and for requesting the services provided by the MLSToolbox tools|
