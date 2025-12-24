@@ -1,4 +1,2 @@
-# DS-DataQualityRequirements
-This repository provides assets to support Data Space Governance Authorities to elicit and specify DQRs during data space setup processes and provide a mechanism for operationalizing and automating DQRs to enable their systematic validation during the publication and update of data products. 
-# Reference Catalog of Data Quality Requirement Patterns
+ # Reference Catalog of Data Quality Requirement Patterns
 The Reference catalog of Data Quality Requirement Patterns is designed to support Data Space Governance Authorities in defining and managing data quality throughout the governance and operational processes underpinning their data spaces. It enables authorities to elicit DQRs by selecting and instantiating relevant patterns, thereby constructing a data space specific DQR catalog tailored to their governance and operational needs.
