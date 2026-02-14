@@ -13,20 +13,25 @@
         "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
         "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
         "prov": "http://www.w3.org/ns/prov#",
-        "qudt": "http://qudt.org/vocab/unit/"
+        "qudt": "http://qudt.org/schema/qudt/"
     },
     "@graph": [
         {
             "@id": "ab:DQRP1",
             "@type": "dqv:QualityPolicy",
             "rdfs:label": "DQRP1 - Timeliness Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 1: A specific data age is required for the data in an attribute of an entity (ISO/IEC 25012 Timeliness)",
+            "rdfs:comment": "Data Quality Requirement Pattern 1: A specific data age is required for the data in an attribute of an entity. The lastUpdated timestamp must not exceed 30 minutes from the current time (ISO/IEC 25012 Timeliness)",
             "tb:derivedFrom": "DQRP1",
             "tb:qualityDimension": "Timeliness",
+            "tb:sourceEntity": {
+                "@id": "ab:DataSpaceGovernanceAuthority"
+            },
             "odrl:permission": [
                 {
                     "@id": "ab:DQRP1_Permission",
                     "@type": "odrl:Permission",
+                    "rdfs:comment": "Data may only be distributed if its age does not exceed 30 minutes",
+                    "odrl:action": "odrl:distribute",
                     "odrl:assigner": {
                         "@id": "ab:DataSpaceGovernanceAuthority"
                     },
@@ -34,29 +39,24 @@
                         "@id": "ab:DataProvider"
                     },
                     "odrl:target": {
-                        "@id": "ab:Survival"
-                    },
-                    "odrl:action": {
-                        "@id": "odrl:distribute"
+                        "@id": "ab:timestamp"
                     },
                     "odrl:constraint": [
                         {
                             "@id": "ab:DQRP1_Constraint",
                             "@type": "odrl:Constraint",
                             "rdfs:comment": "Data age must not exceed 30 minutes",
-                            "odrl:leftOperand": [
-                                {
-                                    "@id": "ab:DataAge",
-                                    "@type": "dqv:QualityMeasurement"
-                                }
-                            ],
+                            "odrl:leftOperand": {
+                                "@id": "ab:DataAge",
+                                "@type": "dqv:QualityMeasurement"
+                            },
                             "odrl:operator": "odrl:lteq",
                             "odrl:rightOperand": {
                                 "@value": "30",
                                 "@type": "xsd:integer"
                             },
                             "odrl:unit": {
-                                "@id": "qudt:MinuteTime"
+                                "@id": "qudt:MIN"
                             }
                         }
                     ]
@@ -66,16 +66,32 @@
         {
             "@id": "ab:DataAge",
             "@type": "dqv:Metric",
+            "rdfs:label": "Data Age Measurement",
+            "rdfs:comment": "Measures the time elapsed since data was recorded/updated via the lastUpdated attribute",
+            "dqv:isMeasurementOf": {
+                "@id": "ab:Freshness"
+            }
+        },
+        {
+            "@id": "ab:Freshness",
+            "@type": "dqv:Metric",
+            "rdfs:label": "Freshness Metric",
             "dqv:inDimension": {
                 "@id": "ab:Timeliness",
                 "@type": "dqv:Dimension"
             }
         },
         {
+            "@id": "ab:Timeliness",
+            "@type": "dqv:Dimension",
+            "rdfs:label": "Timeliness (ISO/IEC 25012)"
+        },
+        {
             "@id": "ab:timestamp",
-            "@type": "tb:Feature",
-            "rdfs:label": "Timestamp Feature",
-            "rdfs:comment": "Maps to physical attribute 'ts' in UPENN-GBM dataset"
+            "@type": "odrl:Asset",
+            "odrl:partOf": {
+                "@id": "ab:EHDS_Patient_Summary"
+            }
         }
     ]
 }
