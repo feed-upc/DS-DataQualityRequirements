@@ -17,20 +17,20 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP2",
+            "@id": "ab:DQRP6",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP2 - Completeness Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 2: Completeness check. In the PatientIdentification entity, the nationalHealthcarePatientID feature must contain exactly 100 percent non-empty values.",
-            "tb:derivedFrom": "DQRP2",
-            "tb:qualityDimension": "Completeness",
+            "rdfs:label": "DQRP6 - Fairness Requirement",
+            "rdfs:comment": "Data Quality Requirement Pattern 6: Entity composition includes groups in appropriate proportions. Gender must be exactly 50% / 50%.",
+            "tb:derivedFrom": "DQRP6",
+            "tb:qualityDimension": "Fairness",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
             },
             "odrl:permission": [
                 {
-                    "@id": "ab:DQRP2_Permission",
+                    "@id": "ab:DQRP6_Permission",
                     "@type": "odrl:Permission",
-                    "rdfs:comment": "Data may only be distributed if nationalHealthcarePatientID completeness is exactly 100%",
+                    "rdfs:comment": "Data may only be distributed if represented groups are balanced (max representation is exactly 50%)",
                     "odrl:action": "odrl:distribute",
                     "odrl:assigner": {
                         "@id": "ab:DataSpaceGovernanceAuthority"
@@ -39,20 +39,20 @@
                         "@id": "ab:DataProvider"
                     },
                     "odrl:target": {
-                        "@id": "ab:nationalHealthcarePatientID"
+                        "@id": "ab:Sex"
                     },
                     "odrl:constraint": [
                         {
-                            "@id": "ab:DQRP2_Constraint",
+                            "@id": "ab:DQRP6_Constraint",
                             "@type": "odrl:Constraint",
-                            "rdfs:comment": "Completeness must be exactly 100",
+                            "rdfs:comment": "The maximum group representation must be exactly 50",
                             "odrl:leftOperand": {
-                                "@id": "ab:CompletenessMeasurement",
+                                "@id": "ab:FairnessMeasurement",
                                 "@type": "dqv:QualityMeasurement"
                             },
                             "odrl:operator": "odrl:eq",
                             "odrl:rightOperand": {
-                                "@value": "100",
+                                "@value": "50",
                                 "@type": "xsd:integer"
                             },
                             "odrl:unit": {
@@ -64,30 +64,30 @@
             ]
         },
         {
-            "@id": "ab:CompletenessMeasurement",
+            "@id": "ab:FairnessMeasurement",
             "@type": "dqv:Metric",
-            "rdfs:label": "Completeness Measurement",
-            "rdfs:comment": "Measures the completeness of an attribute (percentage of non-null values)",
+            "rdfs:label": "Fairness Measurement",
+            "rdfs:comment": "Measures the maximum percentage representation of any discrete group in an attribute",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM"
+                "@id": "ab:qM_Fairness"
             }
         },
         {
-            "@id": "ab:Completeness",
+            "@id": "ab:Fairness",
             "@type": "dqv:Metric",
-            "rdfs:label": "Completeness Metric (Abstract)",
+            "rdfs:label": "Fairness Metric (Abstract)",
             "dqv:inDimension": {
-                "@id": "ab:CompletenessDimension",
+                "@id": "ab:FairnessDimension",
                 "@type": "dqv:Dimension"
             }
         },
         {
-            "@id": "ab:CompletenessDimension",
+            "@id": "ab:FairnessDimension",
             "@type": "dqv:Dimension",
-            "rdfs:label": "Completeness (ISO/IEC 25012)"
+            "rdfs:label": "Fairness (Automated data validation in ML systems)"
         },
         {
-            "@id": "ab:nationalHealthcarePatientID",
+            "@id": "ab:Sex",
             "@type": "odrl:Asset",
             "odrl:partOf": {
                 "@id": "ab:EHDS_Patient_Summary"
