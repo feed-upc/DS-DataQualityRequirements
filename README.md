@@ -17,4 +17,4 @@ These patterns capture common and recurring DQRs encountered in data space data 
 
 ## Automated Validation Workflow
 
-To translate the conceptual Data Quality Requirement Patterns (DQRPs) defined in the catalogs into executable computational governance, this architecture employs an end-to-end, ontology-driven validation pipeline provided by the [Validation Engine](tools/validation-engine) submodule. Please refer to the documentation within that submodule for a complete technical overview of how contracts, semantic planning (`planner.py`), and execution (`executor.py`) operate to enforce these ODRL policies.
+To translate the conceptual Data Quality Requirement Patterns (DQRPs) defined in the catalogs into executable computational governance, this architecture employs an end-to-end, ontology-driven validation pipeline provided by the [Validation Engine](https://github.com/feed-upc/DataValidationWorkflow) submodule. Please refer to the documentation within that repository for a complete technical overview of how contracts, semantic planning (`planner.py`), and execution (`executor.py`) operate to enforce these ODRL policies.
