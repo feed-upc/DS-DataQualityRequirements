@@ -17,20 +17,20 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP2",
+            "@id": "ab:DQRP3",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP2 - Completeness Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 2: Completeness check. In the PatientIdentification entity, the nationalHealthcarePatientID feature must contain exactly 100 percent non-empty values.",
-            "tb:derivedFrom": "DQRP2",
-            "tb:qualityDimension": "Completeness",
+            "rdfs:label": "DQRP3 - Validity Requirement",
+            "rdfs:comment": "Data Quality Requirement Pattern 3: Values of an attribute must follow a specific format. The countryOfAffiliation must follow the ISO 3166 standard.",
+            "tb:derivedFrom": "DQRP3",
+            "tb:qualityDimension": "Validity",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
             },
             "odrl:permission": [
                 {
-                    "@id": "ab:DQRP2_Permission",
+                    "@id": "ab:DQRP3_Permission",
                     "@type": "odrl:Permission",
-                    "rdfs:comment": "Data may only be distributed if nationalHealthcarePatientID completeness is exactly 100%",
+                    "rdfs:comment": "Data may only be distributed if AffiliationCountry values adhere to ISO 3166 strictly",
                     "odrl:action": "odrl:distribute",
                     "odrl:assigner": {
                         "@id": "ab:DataSpaceGovernanceAuthority"
@@ -39,15 +39,15 @@
                         "@id": "ab:DataProvider"
                     },
                     "odrl:target": {
-                        "@id": "ab:nationalHealthcarePatientID"
+                        "@id": "ab:AffiliationCountry"
                     },
                     "odrl:constraint": [
                         {
-                            "@id": "ab:DQRP2_Constraint",
+                            "@id": "ab:DQRP3_Constraint",
                             "@type": "odrl:Constraint",
-                            "rdfs:comment": "Completeness must be exactly 100",
+                            "rdfs:comment": "Validity adherence must be exactly 100",
                             "odrl:leftOperand": {
-                                "@id": "ab:CompletenessMeasurement",
+                                "@id": "ab:ValidityMeasurement",
                                 "@type": "dqv:QualityMeasurement"
                             },
                             "odrl:operator": "odrl:eq",
@@ -64,30 +64,30 @@
             ]
         },
         {
-            "@id": "ab:CompletenessMeasurement",
+            "@id": "ab:ValidityMeasurement",
             "@type": "dqv:Metric",
-            "rdfs:label": "Completeness Measurement",
-            "rdfs:comment": "Measures the completeness of an attribute (percentage of non-null values)",
+            "rdfs:label": "Validity ISO3166 Measurement",
+            "rdfs:comment": "Measures the adherence of a string attribute to ISO 3166-1 alpha-2 standards",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM"
+                "@id": "ab:qM_Validity"
             }
         },
         {
-            "@id": "ab:Completeness",
+            "@id": "ab:Validity",
             "@type": "dqv:Metric",
-            "rdfs:label": "Completeness Metric (Abstract)",
+            "rdfs:label": "Validity Metric (Abstract)",
             "dqv:inDimension": {
-                "@id": "ab:CompletenessDimension",
+                "@id": "ab:ValidityDimension",
                 "@type": "dqv:Dimension"
             }
         },
         {
-            "@id": "ab:CompletenessDimension",
+            "@id": "ab:ValidityDimension",
             "@type": "dqv:Dimension",
-            "rdfs:label": "Completeness (ISO/IEC 25012)"
+            "rdfs:label": "Validity (DAMA-DMBOK)"
         },
         {
-            "@id": "ab:nationalHealthcarePatientID",
+            "@id": "ab:AffiliationCountry",
             "@type": "odrl:Asset",
             "odrl:partOf": {
                 "@id": "ab:EHDS_Patient_Summary"
