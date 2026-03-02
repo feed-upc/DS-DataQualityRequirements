@@ -17,11 +17,11 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP4",
+            "@id": "ab:DQR4Rule",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP4 - Consistency Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 4: Consistency check. If gender is Male, pregnancyHistory must be empty/NULL.",
-            "tb:derivedFrom": "DQRP4",
+            "rdfs:label": "DQR4Rule - QualityPolicy",
+            "rdfs:comment": "The DQR4Rule policy permits distribution of pregnancyHistory data, constrained by the Consistency metric (if gender is M, pregnancyHistory must be NULL) being exactly 100%",
+            "tb:derivedFrom": "DQR4",
             "tb:qualityDimension": "Consistency",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
@@ -69,7 +69,7 @@
             "rdfs:label": "Consistency Measurement",
             "rdfs:comment": "Measures the logical consistency between two conditionally dependent attributes (e.g. gender and pregnancyHistory)",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM_Consistency"
+                "@id": "ab:CheckConsistency"
             }
         },
         {

@@ -17,11 +17,11 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP5",
+            "@id": "ab:DQR5Rule",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP5 - Volume Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 5: In the entity, the number of instances must be at least 2000.",
-            "tb:derivedFrom": "DQRP5",
+            "rdfs:label": "DQR5Rule - QualityPolicy",
+            "rdfs:comment": "The DQR5Rule policy permits distribution of dataset data, constrained by the Volume metric (row count) being at least 2000 instances",
+            "tb:derivedFrom": "DQR5",
             "tb:qualityDimension": "Volume",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
@@ -69,7 +69,7 @@
             "rdfs:label": "Row Count Measurement",
             "rdfs:comment": "Measures the number of rows/instances in a dataset",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM_RowCount"
+                "@id": "ab:CheckVolume"
             }
         },
         {

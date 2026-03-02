@@ -17,11 +17,11 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP2",
+            "@id": "ab:DQR2Rule",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP2 - Completeness Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 2: Completeness check. In the PatientIdentification entity, the nationalHealthcarePatientID feature must contain exactly 100 percent non-empty values.",
-            "tb:derivedFrom": "DQRP2",
+            "rdfs:label": "DQR2Rule - QualityPolicy",
+            "rdfs:comment": "The DQR2Rule policy permits distribution of nationalHealthcarePatientID data, constrained by the Completeness metric being exactly 100%",
+            "tb:derivedFrom": "DQR2",
             "tb:qualityDimension": "Completeness",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
@@ -69,7 +69,7 @@
             "rdfs:label": "Completeness Measurement",
             "rdfs:comment": "Measures the completeness of an attribute (percentage of non-null values)",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM"
+                "@id": "ab:CheckCompleteness"
             }
         },
         {
