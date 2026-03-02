@@ -7,16 +7,20 @@ def run_gx_validation(data_path):
     context = gx.get_context(mode='ephemeral')
     suite = context.suites.add(gx.ExpectationSuite(name='semantic_suite'))
 
-    # Step 2: http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#qM_Consistency
-    suite.add_expectation(gx.expectations.ExpectColumnValuesToBeNull(**{'column': 'pregnancyHistory', 'row_condition': 'gender == "M" or gender == "male"', 'condition_parser': 'pandas'}))
+    # Step 2: http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#CheckFreshness
+    # Pre-compute data age in minutes from datetime column
+    suite.add_expectation(gx.expectations.ExpectColumnValuesToBeBetween(**{'column': 'lastUpdated_age_minutes', 'min_value': 0, 'max_value': 30}))
 
-    csv_asset = context.data_sources.add_pandas('pandas_source').add_csv_asset('csv_asset', filepath_or_buffer=data_path)
-    batch_def = csv_asset.add_batch_definition_whole_dataframe('dataframe_batch_def')
+    _df = pd.read_csv(data_path)
+    _df['lastUpdated_age_minutes'] = (pd.Timestamp.now() - pd.to_datetime(_df['lastUpdated'])).dt.total_seconds() / 60.0
+    ds = context.data_sources.add_pandas('pandas_source')
+    da = ds.add_dataframe_asset(name='df_asset')
+    batch_def = da.add_batch_definition_whole_dataframe('dataframe_batch_def')
     validation_definition = gx.ValidationDefinition(name='semantic_validation', data=batch_def, suite=suite)
     context.validation_definitions.add(validation_definition)
     checkpoint = gx.Checkpoint(name='semantic_checkpoint', validation_definitions=[validation_definition])
     context.checkpoints.add(checkpoint)
-    result = checkpoint.run()
+    result = checkpoint.run(batch_parameters={'dataframe': _df})
     return result.success
 
 

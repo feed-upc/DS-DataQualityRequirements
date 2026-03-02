@@ -17,11 +17,11 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP1",
+            "@id": "ab:DQR1Rule",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP1 - Timeliness Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 1: A specific data age is required for the data in an attribute of an entity. The lastUpdated timestamp must not exceed 30 minutes from the current time (ISO/IEC 25012 Timeliness)",
-            "tb:derivedFrom": "DQRP1",
+            "rdfs:label": "DQR1Rule - QualityPolicy",
+            "rdfs:comment": "The DQR1Rule policy permits distribution of nationalHealthcarePatientID data, constrained by the DataAge metric (computed on insertionTime) being ≤ 30 minutes",
+            "tb:derivedFrom": "DQR1",
             "tb:qualityDimension": "Timeliness",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
@@ -39,7 +39,7 @@
                         "@id": "ab:DataProvider"
                     },
                     "odrl:target": {
-                        "@id": "ab:timestamp"
+                        "@id": "ab:nationalHealthcarePatientID"
                     },
                     "odrl:constraint": [
                         {
@@ -67,9 +67,12 @@
             "@id": "ab:DataAge",
             "@type": "dqv:Metric",
             "rdfs:label": "Data Age Measurement",
-            "rdfs:comment": "Measures the time elapsed since data was recorded/updated via the lastUpdated attribute",
+            "rdfs:comment": "Measures the time elapsed since data was recorded/updated via the insertionTime attribute",
             "dqv:isMeasurementOf": {
                 "@id": "ab:Freshness"
+            },
+            "dqv:computedOn": {
+                "@id": "ab:insertionTime"
             }
         },
         {
@@ -87,7 +90,14 @@
             "rdfs:label": "Timeliness (ISO/IEC 25012)"
         },
         {
-            "@id": "ab:timestamp",
+            "@id": "ab:nationalHealthcarePatientID",
+            "@type": "odrl:Asset",
+            "odrl:partOf": {
+                "@id": "ab:EHDS_Patient_Summary"
+            }
+        },
+        {
+            "@id": "ab:insertionTime",
             "@type": "odrl:Asset",
             "odrl:partOf": {
                 "@id": "ab:EHDS_Patient_Summary"

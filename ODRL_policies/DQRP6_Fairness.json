@@ -17,11 +17,11 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP6",
+            "@id": "ab:DQR6Rule",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP6 - Fairness Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 6: Entity composition includes groups in appropriate proportions. Gender must be exactly 50% / 50%.",
-            "tb:derivedFrom": "DQRP6",
+            "rdfs:label": "DQR6Rule - QualityPolicy",
+            "rdfs:comment": "The DQR6Rule policy permits distribution of Sex data, constrained by the Fairness metric (max group representation) being exactly 50%",
+            "tb:derivedFrom": "DQR6",
             "tb:qualityDimension": "Fairness",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
@@ -69,7 +69,7 @@
             "rdfs:label": "Fairness Measurement",
             "rdfs:comment": "Measures the maximum percentage representation of any discrete group in an attribute",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM_Fairness"
+                "@id": "ab:CheckFairness"
             }
         },
         {

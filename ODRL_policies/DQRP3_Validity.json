@@ -17,11 +17,11 @@
     },
     "@graph": [
         {
-            "@id": "ab:DQRP3",
+            "@id": "ab:DQR3Rule",
             "@type": "dqv:QualityPolicy",
-            "rdfs:label": "DQRP3 - Validity Requirement",
-            "rdfs:comment": "Data Quality Requirement Pattern 3: Values of an attribute must follow a specific format. The countryOfAffiliation must follow the ISO 3166 standard.",
-            "tb:derivedFrom": "DQRP3",
+            "rdfs:label": "DQR3Rule - QualityPolicy",
+            "rdfs:comment": "The DQR3Rule policy permits distribution of AffiliationCountry data, constrained by the Validity metric (ISO 3166 adherence) being exactly 100%",
+            "tb:derivedFrom": "DQR3",
             "tb:qualityDimension": "Validity",
             "tb:sourceEntity": {
                 "@id": "ab:DataSpaceGovernanceAuthority"
@@ -69,7 +69,7 @@
             "rdfs:label": "Validity ISO3166 Measurement",
             "rdfs:comment": "Measures the adherence of a string attribute to ISO 3166-1 alpha-2 standards",
             "dqv:isMeasurementOf": {
-                "@id": "ab:qM_Validity"
+                "@id": "ab:CheckValidity"
             }
         },
         {
