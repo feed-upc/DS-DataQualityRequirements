@@ -1,0 +1,29 @@
+{
+  "id": "DQRP3",
+  "goal": "Ensures data adheres to required formats",
+  "description": "Values of an attribute must follow a specific format",
+  "date": "28/01/2026",
+  "version": "1.0",
+  "qualityDimension": {
+    "dimension": "Validity",
+    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+  },
+  "statementTemplate": "In the %entityName% entity, the %attributeName% attribute must follow the %standardName% standard",
+  "parameters": [
+    {
+      "name": "entityName",
+      "domainType": "String"
+    },
+    {
+      "name": "attributeName",
+      "domainType": "String"
+    },
+    {
+      "name": "standardName",
+      "domainType": "String"
+    }
+  ],
+  "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
+  "supportingMaterials": "Document [rulebooks, standards, legislation, …] with precise details (URL, page, line)",
+  "history": "Change description [Created, Updated, Deleted] and change date"
+}

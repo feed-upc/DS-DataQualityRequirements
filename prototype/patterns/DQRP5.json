@@ -1,0 +1,31 @@
+{
+  "id": "DQRP5",
+  "goal": "Ensures sufficient sample size for statistically valid estimates",
+  "description": "Validates the number of instances of an entity to achieve adequate statistical power.",
+  "date": "28/01/2026",
+  "version": "1.0",
+  "qualityDimension": {
+    "dimension": "Validity",
+    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+  },
+  "statementTemplate": "In the %entityName% entity, the number of instances must be %operator% %value%",
+  "parameters": [
+    {
+      "name": "entityName",
+      "domainType": "String"
+    },
+    {
+      "name": "operator",
+      "domainType": "String",
+      "invariants": "operator = “at least” OR “exactly”"
+    },
+    {
+      "name": "value",
+      "domainType": "Integer",
+      "invariants": "value>0"
+    }
+  ],
+  "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
+  "supportingMaterials": "Document [rulebooks, standards, legislation, …] with precise details (URL, page, line)",
+  "history": "Change description [Created, Updated, Deleted] and change date"
+}

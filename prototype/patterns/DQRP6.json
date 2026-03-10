@@ -1,0 +1,42 @@
+{
+  "id": "DQRP6",
+  "goal": "Ensure that all relevant groups are adequately represented in an entity, preventing systematic under-representation.",
+  "description": "An entity composition includes groups in appropriate proportions for the task and context.",
+  "date": "28/01/2026",
+  "version": "1.0",
+  "qualityDimension": {
+    "dimension": "Fairness",
+    "source": "Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51–65 (2021)"
+  },
+  "relationships": [
+    {
+      "type": "Dependency",
+      "relatedPattern": "DQRPv",
+      "description": "Ensure that all relevant groups must contain at least N samples"
+    }
+  ],
+  "statementTemplate": "In the %entityName% entity, the distribution imbalance of the %attributeName% attribute should %operator% %percValue% %.",
+  "parameters": [
+    {
+      "name": "entityName",
+      "domainType": "String"
+    },
+    {
+      "name": "attributeName",
+      "domainType": "String"
+    },
+    {
+      "name": "operator",
+      "domainType": "String",
+      "invariants": "operator = “not exceed” OR “be exactly”"
+    },
+    {
+      "name": "percValue",
+      "domainType": "Value",
+      "invariants": "1<= p <100"
+    }
+  ],
+  "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
+  "supportingMaterials": "Document [rulebooks, standards, legislation, …] with precise details (URL, page, line)",
+  "history": "Change description [Created, Updated, Deleted] and change date"
+}

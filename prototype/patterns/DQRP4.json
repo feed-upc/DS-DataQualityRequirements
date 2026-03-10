@@ -1,0 +1,53 @@
+{
+  "id": "DQRP4",
+  "goal": "Enforces semantic consistency between attribute values by restricting admissible values based on the value of another attribute",
+  "description": "Values of an attribute must be compatible with values of another attribute.",
+  "date": "28/01/2026",
+  "version": "1.0",
+  "qualityDimension": {
+    "dimension": "Consistency",
+    "source": "ISO/IEC 25012"
+  },
+  "relationships": [
+    {
+      "type": "Conflict",
+      "relatedPattern": "DQRPr",
+      "description": "Requires an attribute to accept all values from its domain"
+    }
+  ],
+  "statementTemplate": "In the %entityName1% entity, when the %attributeName1% attribute has the values %ValueSet1%, the %attributeName2% attribute of %entityName2% entity must %operator% values from the set %ValueSet2%.",
+  "parameters": [
+    {
+      "name": "entityName1",
+      "domainType": "String"
+    },
+    {
+      "name": "attributeName1",
+      "domainType": "String"
+    },
+    {
+      "name": "ValueSet1",
+      "domainType": "Set(Value)"
+    },
+    {
+      "name": "attributeName2",
+      "domainType": "String"
+    },
+    {
+      "name": "entityName2",
+      "domainType": "String"
+    },
+    {
+      "name": "operator",
+      "domainType": "String",
+      "invariants": "operator = \"contain\" OR \"not contain\""
+    },
+    {
+      "name": "ValueSet2",
+      "domainType": "Set(Value)"
+    }
+  ],
+  "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
+  "supportingMaterials": "Document [rulebooks, standards, legislation, …] with precise details (URL, page, line)",
+  "history": "Change description [Created, Updated, Deleted] and change date"
+}

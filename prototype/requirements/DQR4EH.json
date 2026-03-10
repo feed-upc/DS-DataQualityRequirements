@@ -1,0 +1,22 @@
+{
+  "id": "DQR4EH",
+  "goal": "Ensures sufficient sample size for statistically valid estimates",
+  "description": "Validates the number of instances of an entity to achieve adequate statistical power.",
+  "qualityDimension": {
+    "dimension": "Validity",
+    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+  },
+  "pattern": {
+    "id": "DQRP5",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "AMRStudy.isolates",
+    "operator": "at least",
+    "value": "2000"
+  },
+  "statement": "In the AMRStudy.isolates entity, the number of instances must be at least\u00a02000",
+  "sourceEntity": "EHDS Governance Authority",
+  "supportingMaterials": "Dataspace Rulebook (page 44)",
+  "history": "Created 28/01/2026"
+}

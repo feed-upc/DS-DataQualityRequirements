@@ -1,0 +1,24 @@
+{
+  "id": "DQR1",
+  "goal": "Ensuring a required data age for a specific attribute in an entity",
+  "description": "A specific data age is required for the data in an attribute of an entity",
+  "qualityDimension": {
+    "dimension": "Timeliness",
+    "source": "ISO/IEC 25012"
+  },
+  "pattern": {
+    "id": "DQRP1",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "LiveStocks",
+    "attributeName1": "price",
+    "amountOfTime": "30",
+    "timeUnit": "Minutes",
+    "attributeName2": "insertionTime"
+  },
+  "statement": "In the LiveStocks entity, the data in the price attribute is only valid if its data age is less than or equal to 30 Minutes, as calculated from the insertionTime attribute.",
+  "sourceEntity": "Data Space Governance Authority",
+  "supportingMaterials": "DataSpace Rulebook (page 34)",
+  "history": "Created 10/11/2025"
+}
