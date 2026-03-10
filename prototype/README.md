@@ -6,9 +6,9 @@ A prototype web application built with **Streamlit** for managing Data Quality R
 
 ## Features
 
-- **Reference Catalog of DQ Requirement Patterns** — Browse reusable patterns that describe common data quality requirements across dimensions such as completeness, accuracy, timeliness, etc.
-- **Data Space Catalog of DQ Requirements** — Instantiate concrete requirements from patterns, filling in specific parameter values to generate formal requirement statements.
-- **ODRL Policy Generation** — Transform requirements into ODRL (Open Digital Rights Language) rules ready for automated enforcement and validation services.
+- **Reference Catalog of DQR Patterns** — Browse reusable patterns that describe common data quality requirements across dimensions such as completeness, accuracy, timeliness, etc.
+- **Data Space Catalog of DQRs** — Instantiate concrete requirements from patterns, filling in specific parameter values to generate formal requirement statements.
+- **ODRL Rules and Validation Services Generation** — Transform requirements into ODRL (Open Digital Rights Language) rules and automated validation services.
 
 ---
 
