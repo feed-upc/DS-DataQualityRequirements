@@ -1,0 +1,72 @@
+{
+  "patternId": "DQRP4",
+  "patternVersion": "1.0",
+
+  "description": "ODRL template for Consistency pattern for ensuring consistency between values of two attributes",
+
+  "context": {
+    "odrl:operator": {
+      "@type": "@id"
+    },
+    "@base": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
+    "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "qudt": "http://qudt.org/schema/qudt/"
+  },
+
+  "policy": {
+    "type": "dqv:QualityPolicy",
+    "action": "odrl:distribute"
+  },
+
+  "target": {
+    "parameter": "attributeName2"
+  },
+
+  "assigner": {
+    "source": "sourceEntity"
+  },
+
+  "assignee": {
+    "fixed": "DataProvider"
+  },
+
+  "constraint": {
+    "leftOperand": {
+      "id": "ConsistencyMeasurement",
+      "type": "dqv:QualityMeasurement"
+    },
+
+    "operatorMapping": {
+      "=": "odrl:eq",
+      ">=": "odrl:gteq",
+      "<=": "odrl:lteq",
+      ">": "odrl:gt",
+      "<": "odrl:lt"
+    },
+
+    "rightOperand": {
+      "parameter": "percentageValue",
+      "type": "xsd:integer"
+    },
+
+    "unit": {
+      "fixed": "qudt:PERCENT"
+    }
+  },
+
+  "dimension": {
+    "sourceFromDQR": "qualityDimension.dimension"
+  },
+
+  "derivedFrom": {
+    "source": "id"
+  }
+}

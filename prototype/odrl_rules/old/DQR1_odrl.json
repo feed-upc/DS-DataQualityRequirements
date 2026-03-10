@@ -1,0 +1,66 @@
+{
+  "@context": {
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "ab": "http://example.com/abox/",
+    "tb": "http://example.com/tbox/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "qudt": "http://qudt.org/vocab/unit/"
+  },
+  "@graph": [
+    {
+      "@id": "ab:DQR1",
+      "@type": "dqv:QualityPolicy",
+      "odrl:permission": [
+        {
+          "odrl:assigner": {
+            "@id": "ab:Data Space Governance Authority"
+          },
+          "odrl:target": {
+            "@id": "ab:price"
+          },
+          "odrl:action": {
+            "@id": "odrl:distribute"
+          },
+          "odrl:constraint": [
+            {
+              "odrl:leftOperand": {
+                "@id": "ab:DataAge"
+              },
+              "odrl:operator": {
+                "@id": "odrl:lteq"
+              },
+              "odrl:rightOperand": {
+                "@value": "30",
+                "@type": "xsd:integer"
+              },
+              "odrl:unit": {
+                "@id": "qudt:MinuteTime"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "ab:LiveStocks",
+      "@type": "ab:DataModel",
+      "tb:hasAttribute": [
+        {
+          "@id": "ab:price"
+        },
+        {
+          "@id": "ab:insertionTime"
+        }
+      ]
+    },
+    {
+      "@id": "ab:DataAge",
+      "@type": "dqv:Metric",
+      "dqv:inDimension": {
+        "@id": "ab:Timeliness",
+        "@type": "dqv:Dimension"
+      }
+    }
+  ]
+}
