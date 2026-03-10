@@ -202,13 +202,13 @@ DQR Catalog (instantiated requirements)
       │
       │  Select requirement + ODRL template
       ▼
-ODRL Rule (saved to odrl_rules/)
+ODRL Rule (saved to odrl_rules/) and Validation Service (saved to services/)
 ```
 
 1. **Browse patterns** in the Reference Catalog to understand what kinds of requirements are available.
-2. **Create a DQ Requirement** by selecting a pattern and providing values for each parameter. The app generates a formal natural-language statement automatically.
-3. **Manage requirements** — update parameter values (regenerating the statement), delete, or view full details.
-4. **Generate an ODRL rule** for any requirement. The app combines the requirement's parameters with the pattern's ODRL template to produce a JSON-LD policy, which can be saved to disk.
+2. **Create a DQR** by selecting a pattern and providing values for each parameter. The dqr_prototype_gui generates a formal natural-language statement automatically.
+3. **Manage requirements** — update parameter values (regenerating the statement), delete, or view full details, if needed.
+4. **Generate an ODRL rule and a validation service** for any requirement. The dqr_prototype_gui combines the requirement's parameters with the pattern's ODRL template to produce a JSON-LD policy, which can be saved to disk. This policy is used to automatically generate the validation service.
 
 ---
 
@@ -224,5 +224,4 @@ ODRL Rule (saved to odrl_rules/)
 
 - All data is stored as local JSON files; no database is required.
 - ODRL rules are saved to `odrl_rules/` with the naming convention `<requirement_id>_odrl.json`.
-- The validation service generation feature is reserved for future development.
 
