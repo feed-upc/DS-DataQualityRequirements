@@ -76,17 +76,62 @@ Patterns are reusable templates that describe a family of DQRs. Each pattern fil
 
 ```json
 {
-  "id": "DQP-001",
+  "id": "DQRP1",
+  "goal": "Ensuring a required data age for a specific attribute in an entity",
+  "description": "A specific data age is required for the values of an attribute of an entity",
+  "date": "03/11/2025",
   "version": "1.0",
-  "goal": "Ensure data is delivered within an acceptable time window",
-  "description": "Controls the maximum allowed latency for data delivery",
-  "qualityDimension": { "dimension": "Timeliness", "source": "ISO 25012" },
-  "statementTemplate": "The %attribute% must be delivered within %threshold% %unit%.",
+  "qualityDimension": {
+    "dimension": "Timeliness",
+    "source": "ISO/IEC 25012"
+  },
+  "relationships": [
+    {
+      "type": "Conflict",
+      "relatedPattern": "DQRPx",
+      "description": "Preserving historical completeness by retaining all past values"
+    },
+    {
+      "type": "Dependency",
+      "relatedPattern": "DQRPy",
+      "description": "A required column must be free of missing values"
+    }
+  ],
+  "statementTemplate": "In the %entityName% entity, the data in the %attributeName1% attribute is only valid if its data age is less than or equal to %amountOfTime% %timeUnit%, as calculated from the %attributeName2% attribute.",
   "parameters": [
-    { "name": "attribute",  "domainType": "string", "invariants": null },
-    { "name": "threshold",  "domainType": "number", "invariants": null },
-    { "name": "unit",       "domainType": "string", "invariants": ["Minutes", "Hours", "Seconds"] }
-  ]
+    {
+      "name": "entityName",
+      "domainType": "String"
+    },
+    {
+      "name": "attributeName1",
+      "domainType": "String"
+    },
+    {
+      "name": "amountOfTime",
+      "domainType": "Float",
+      "invariants": "amountOfTime > 0"
+    },
+    {
+      "name": "timeUnit",
+      "domainType": "TimeUnitTypes",
+      "invariants": [
+        "TimeUnitTypes = [Seconds",
+        "Minutes",
+        "Miliseconds",
+        "Years",
+        "Hours",
+        "Days]"
+      ]
+    },
+    {
+      "name": "attributeName2",
+      "domainType": "String"
+    }
+  ],
+  "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
+  "supportingMaterials": "Document [rulebooks, standards, legislation, …] with precise details (URL, page, line)",
+  "history": "Change description [Created, Updated, Deleted] and change date"
 }
 ```
 
