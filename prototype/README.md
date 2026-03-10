@@ -53,9 +53,9 @@ The app will open in your browser at `http://localhost:8501`.
 
 ## Data Model
 
-### DQ Requirement Pattern (`patterns/*.json`)
+### DQR Pattern (`patterns/*.json`)
 
-Patterns are reusable templates that describe a family of data quality requirements. Each pattern file contains:
+Patterns are reusable templates that describe a family of DQRs. Each pattern file contains:
 
 | Field | Description |
 |---|---|
