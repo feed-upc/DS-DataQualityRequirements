@@ -1,4 +1,4 @@
-# Managing Data Quality Requirements in Data Spaces
+# Managing Data Quality Requirements in Data Spaces Prototype Tool
 
 A prototype web application built with **Streamlit** for managing Data Quality Requirements (DQRs) in data spaces. The tool allows users to define, instantiate, update and transform DQRs into machine-executable ODRL rules.
 
