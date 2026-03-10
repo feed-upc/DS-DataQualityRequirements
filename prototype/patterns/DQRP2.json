@@ -1,0 +1,47 @@
+{
+  "id": "DQRP2",
+  "goal": "Supporting a required percentage of non-empty values of an attribute in an entity",
+  "description": "Values of an attribute must be mandatory",
+  "date": "03/11/2025",
+  "version": "1.0",
+  "qualityDimension": {
+    "dimension": "Completeness",
+    "source": "ISO/IEC 25012"
+  },
+  "relationships": [
+    {
+      "type": "Conflict",
+      "relatedPattern": "DQRPz",
+      "description": "Allowing optional attributes to contain any percentage of empty values without restriction"
+    },
+    {
+      "type": "Dependency",
+      "relatedPattern": "DQRPt",
+      "description": "Ensuring that non-empty values conform to the expected data type and format"
+    }
+  ],
+  "statementTemplate": "In the %entityName% entity, the %attributeName% attribute must contain %operator% %percentageValue% percent non-empty values",
+  "parameters": [
+    {
+      "name": "entityName",
+      "domainType": "String"
+    },
+    {
+      "name": "attributeName",
+      "domainType": "String"
+    },
+    {
+      "name": "operator",
+      "domainType": "String",
+      "invariants": "operator = “at least” OR “exactly”"
+    },
+    {
+      "name": "percentageValue",
+      "domainType": "Float",
+      "invariants": "1<= percentageValue<=100"
+    }
+  ],
+  "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
+  "supportingMaterials": "Document [rulebooks, standards, legislation, …] with precise details (URL, page, line)",
+  "history": "Change description [Created, Updated, Deleted] and change date"
+}

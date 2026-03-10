@@ -1,0 +1,67 @@
+{
+  "patternId": "DQRP1",
+  "patternVersion": "1.0",
+
+  "description": "ODRL template for Timeliness pattern based on Data Age constraint",
+
+  "context": {
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "ab": "http://example.com/abox/",
+    "tb": "http://example.com/tbox/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "qudt": "http://qudt.org/vocab/unit/"
+  },
+
+  "policy": {
+    "type": "dqv:QualityPolicy",
+    "action": "odrl:distribute"
+  },
+
+  "target": {
+    "type": "attribute",
+    "parameter": "attributeName1"
+  },
+
+  "assigner": {
+    "source": "sourceEntity"
+  },
+
+  "constraint": {
+    "leftOperand": {
+      "id": "DataAge",
+      "type": "dqv:Metric"
+    },
+    "operatorMapping": {
+      "<=": "odrl:lteq",
+      ">=": "odrl:gteq",
+      "<": "odrl:lt",
+      ">": "odrl:gt",
+      "=": "odrl:eq"
+    },
+    "rightOperand": {
+      "type": "xsd:integer",
+      "parameter": "amountOfTime"
+    },
+    "unit": {
+      "parameter": "timeUnit",
+      "mapping": {
+        "Minutes": "qudt:MinuteTime",
+        "Minute": "qudt:MinuteTime",
+        "Hours": "qudt:HourTime",
+        "Hour": "qudt:HourTime",
+        "Days": "qudt:Day",
+        "Day": "qudt:Day"
+      }
+    }
+  },
+
+  "dataModel": {
+    "entityParameter": "entityName",
+    "attributeParameter": "attributeName2"
+  },
+
+  "dimension": {
+    "sourceFromDQR": "qualityDimension.dimension"
+  }
+}
