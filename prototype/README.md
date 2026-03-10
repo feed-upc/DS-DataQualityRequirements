@@ -1,12 +1,12 @@
 # Managing Data Quality Requirements in Data Spaces
 
-A prototype web application built with **Streamlit** for managing Data Quality Requirements (DQRs) in data spaces. The tool allows users to define, instantiate, update and transform DQRs into machine-executable ODRL policies.
+A prototype web application built with **Streamlit** for managing Data Quality Requirements (DQRs) in data spaces. The tool allows users to define, instantiate, update and transform DQRs into machine-executable ODRL rules.
 
 ---
 
 ## Features
 
-- **Reference Catalog of DQR Patterns** — Browse reusable patterns that describe common data quality requirements across dimensions such as completeness, accuracy, timeliness, etc.
+- **Reference Catalog of DQR Patterns** — Browse reusable patterns that describe common DQRs across dimensions such as completeness, accuracy, timeliness, etc.
 - **Data Space Catalog of DQRs** — Instantiate concrete requirements from patterns, filling in specific parameter values to generate formal requirement statements.
 - **ODRL Rules and Validation Services Generation** — Transform requirements into ODRL (Open Digital Rights Language) rules and automated validation services.
 
@@ -44,7 +44,7 @@ pip install streamlit pandas
 ## Running the Application
 
 ```bash
-streamlit run app.py
+streamlit run dqr_prototype_gui.py
 ```
 
 The app will open in your browser at `http://localhost:8501`.
