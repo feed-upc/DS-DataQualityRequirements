@@ -147,20 +147,27 @@ A DQ Requirement is an instantiation of a pattern with concrete values. Each fil
 
 ```json
 {
-  "id": "DQR-2024-001",
-  "goal": "Ensure data is delivered within an acceptable time window",
-  "description": "Controls the maximum allowed latency for data delivery",
-  "qualityDimension": { "dimension": "Timeliness", "source": "ISO 25012" },
-  "pattern": { "id": "DQP-001", "version": "1.0" },
-  "parameters": {
-    "attribute": "sensorReading",
-    "threshold": "5",
-    "unit": "Minutes"
+  "id": "DQR1EH",
+  "goal": "Supporting a required percentage of non-empty values of an attribute in an entity",
+  "description": "Values of an attribute must be mandatory",
+  "qualityDimension": {
+    "dimension": "Completeness",
+    "source": "ISO/IEC 25012"
   },
-  "statement": "The sensorReading must be delivered within 5 Minutes.",
-  "sourceEntity": "OrganisationA",
-  "supportingMaterials": "https://example.org/policy",
-  "history": "Created 2024-01-10"
+  "pattern": {
+    "id": "DQRP2",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "PatientIdentification",
+    "attributeName": "nationalHealthcarePatientID",
+    "operator": "contain",
+    "percentageValue": "100"
+  },
+  "statement": "In the PatientIdentification entity, the nationalHealthcarePatientID attribute must contain contain\u00a0100 percent non-empty values",
+  "sourceEntity": "EHDS Governance Authority",
+  "supportingMaterials": "Dataspace Rulebook (page 40)",
+  "history": "Created 28/01/2026"
 }
 ```
 
