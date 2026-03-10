@@ -16,12 +16,13 @@ A prototype web application built with **Streamlit** for managing Data Quality R
 
 ```
 .
-├── app.py                        # Main Streamlit application
-├── patterns/                     # JSON files defining DQ Requirement Patterns
-├── requirements/                 # JSON files of instantiated DQ Requirements
+├── dqr_prototype_gui.py          # Main Streamlit application
+├── dqr_pattern.schema.json       # JSON file containing DQR Pattern structure
+├── patterns/                     # JSON files defining DQR Patterns
+├── requirements/                 # JSON files of instantiated DQRs
 ├── odrl_rules/                   # Generated ODRL rule files (output)
 ├── odrl_templates/               # ODRL templates, one per pattern
-└── services/                     # (Reserved) Validation service definitions
+└── services/                     # (Reserved) Validation services
 ```
 
 ---
