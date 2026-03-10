@@ -76,57 +76,46 @@ Patterns are reusable templates that describe a family of DQRs. Each pattern fil
 
 ```json
 {
-  "id": "DQRP1",
-  "goal": "Ensuring a required data age for a specific attribute in an entity",
-  "description": "A specific data age is required for the values of an attribute of an entity",
+  "id": "DQRP2",
+  "goal": "Supporting a required percentage of non-empty values of an attribute in an entity",
+  "description": "Values of an attribute must be mandatory",
   "date": "03/11/2025",
   "version": "1.0",
   "qualityDimension": {
-    "dimension": "Timeliness",
+    "dimension": "Completeness",
     "source": "ISO/IEC 25012"
   },
   "relationships": [
     {
       "type": "Conflict",
-      "relatedPattern": "DQRPx",
-      "description": "Preserving historical completeness by retaining all past values"
+      "relatedPattern": "DQRPz",
+      "description": "Allowing optional attributes to contain any percentage of empty values without restriction"
     },
     {
       "type": "Dependency",
-      "relatedPattern": "DQRPy",
-      "description": "A required column must be free of missing values"
+      "relatedPattern": "DQRPt",
+      "description": "Ensuring that non-empty values conform to the expected data type and format"
     }
   ],
-  "statementTemplate": "In the %entityName% entity, the data in the %attributeName1% attribute is only valid if its data age is less than or equal to %amountOfTime% %timeUnit%, as calculated from the %attributeName2% attribute.",
+  "statementTemplate": "In the %entityName% entity, the %attributeName% attribute must contain %operator% %percentageValue% percent non-empty values",
   "parameters": [
     {
       "name": "entityName",
       "domainType": "String"
     },
     {
-      "name": "attributeName1",
+      "name": "attributeName",
       "domainType": "String"
     },
     {
-      "name": "amountOfTime",
+      "name": "operator",
+      "domainType": "String",
+      "invariants": "operator = “at least” OR “exactly”"
+    },
+    {
+      "name": "percentageValue",
       "domainType": "Float",
-      "invariants": "amountOfTime > 0"
-    },
-    {
-      "name": "timeUnit",
-      "domainType": "TimeUnitTypes",
-      "invariants": [
-        "TimeUnitTypes = [Seconds",
-        "Minutes",
-        "Miliseconds",
-        "Years",
-        "Hours",
-        "Days]"
-      ]
-    },
-    {
-      "name": "attributeName2",
-      "domainType": "String"
+      "invariants": "1<= percentageValue<=100"
     }
   ],
   "sourceEntity": "Source Entity [Data Space Governance Authority, Requirement Engineer, Automated Process, …]",
