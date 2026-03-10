@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schema/dqr-pattern.schema.json",
+  "title": "Data Quality Requirement Pattern",
+  "description": "Schema defining the structure of a Data Quality Requirement Pattern (DQR Pattern).",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "id",
+    "goal",
+    "description",
+    "date",
+    "version",
+    "qualityDimension",
+    "statementTemplate",
+    "parameters",
+    "sourceEntity",
+    "supportingMaterials",
+    "history"
+  ],
+
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A value to identify the DQR pattern"
+    },
+
+    "goal": {
+      "type": "string",
+      "description": "The problem-statement of the DQR"
+    },
+
+    "description": {
+      "type": "string",
+      "description": "A one sentence intention of the DQR"
+    },
+
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the DQR pattern was created or later modified"
+    },
+
+    "version": {
+      "type": "string",
+      "description": "The current version of the DQR pattern"
+    },
+
+    "qualityDimension": {
+      "type": "object",
+      "description": "Name of quality dimension of the DQR and its source",
+      "required": [ "dimension", "source" ],
+      "properties": {
+        "dimension": {
+          "type": "string",
+          "description": "Quality dimension name"
+        },
+        "source": {
+          "type": "string",
+          "description": "Standard or reference defining the quality dimension"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "relationships": {
+      "type": "array",
+      "description": "Other DQR patterns that have some relationship with this one",
+      "items": {
+        "type": "object",
+        "required": [ "type", "relatedPattern" ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [ "Conflict", "Dependency" ],
+            "description": "Type of relationship"
+          },
+          "relatedPattern": {
+            "type": "string",
+            "description": "Related DQR pattern"
+          },
+          "description": {
+            "type": "string",
+            "description": "Explanation of the relationship"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "statementTemplate": {
+      "type": "string",
+      "description": "Parameterized statement representing the DQR"
+    },
+
+    "parameters": {
+      "type": "array",
+      "description": "Parameters applied to the DQR statement template",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [ "name", "domainType" ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Parameter name"
+          },
+          "domainType": {
+            "type": "string",
+            "description": "Domain type of the parameter"
+          },
+          "invariants": {
+            "description": "Constraints applied to the parameter",
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "sourceEntity": {
+      "type": "string",
+      "description": "Who raised the DQR?"
+    },
+
+    "supportingMaterials": {
+      "type": "string",
+      "description": "Pointer to documents that illustrate or explain the DQR"
+    },
+
+    "history": {
+      "type": "string",
+      "description": "Description of the different versions of the DQR"
+    }
+  }
+}

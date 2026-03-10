@@ -1,0 +1,22 @@
+{
+  "id": "DQR6EH",
+  "goal": "Ensures data adheres to required formats",
+  "description": "Values of an attribute must follow a specific format",
+  "qualityDimension": {
+    "dimension": "Validity",
+    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+  },
+  "pattern": {
+    "id": "DQRP3",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "Hospital",
+    "attributeName": "country",
+    "standardName": "ISO 3166 International Standard"
+  },
+  "statement": "In the Hospital entity, the country attribute must follow the ISO 3166 International Standard\u00a0standard",
+  "sourceEntity": "EHDS Governance Authority",
+  "supportingMaterials": "DataSpace Rulebook (page 100)",
+  "history": "Created 15/02/2026"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "DQR2EH",
+  "goal": "Ensures data adheres to required formats",
+  "description": "Values of an attribute must follow a specific format",
+  "qualityDimension": {
+    "dimension": "Validity",
+    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+  },
+  "pattern": {
+    "id": "DQRP3",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "PatientIdentification",
+    "attributeName": "countryOfAffiliation",
+    "standardName": "ISO 3166"
+  },
+  "statement": "In the PatientIdentification entity, the countryOfAffiliation attribute must follow the ISO 3166\u00a0standard",
+  "sourceEntity": "EHDS Governance Authority",
+  "supportingMaterials": "Dataspace Rulebook (page 44)",
+  "history": "Created 28/01/2026"
+}
