@@ -169,6 +169,112 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
     req_id = requirement["id"]
     dim = requirement["qualityDimension"]["dimension"]
 
+    # --- Refinement-based template (DQRP4: Consistency) ---
+    if "refinement" in template:
+        ref_tmpl = template["refinement"]
+
+        def clean_valueset(v):
+            return ','.join(s.strip() for s in str(v).strip('{}').split(','))
+
+        ref_attr = params.get(ref_tmpl["leftOperand"]["parameter"])
+        ref_values = clean_valueset(params.get(ref_tmpl["rightOperand"]["parameter"], ""))
+        ref_operator = ref_tmpl["operator"]
+
+        con_operator = constraint_tmpl["operator"]
+        expected_value = clean_valueset(params.get(constraint_tmpl["rightOperand"]["parameter"], ""))
+
+        # Build refinement block (condition / WHERE clause)
+        refinement_block = {
+            "@id": f"ab:{req_id}_Refinement",
+            "@type": "odrl:Constraint",
+            "odrl:leftOperand": {"@id": f"ab:{ref_attr}"},
+            "odrl:operator": ref_operator,
+            "odrl:rightOperand": {
+                "@value": ref_values,
+                "@type": ref_tmpl["rightOperand"]["type"],
+            },
+        }
+
+        # Build constraint block (expectation / THEN clause)
+        constraint_block = {
+            "@id": f"ab:{req_id}_Constraint",
+            "@type": "odrl:Constraint",
+            "odrl:leftOperand": {
+                "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+                "@type": constraint_tmpl["leftOperand"]["type"],
+            },
+            "odrl:operator": con_operator,
+            "odrl:rightOperand": {
+                "@value": expected_value,
+                "@type": constraint_tmpl["rightOperand"]["type"],
+            },
+        }
+
+        graph_nodes = [
+            {
+                "@id": f"ab:{req_id}Rule",
+                "@type": template["policy"]["type"],
+                "rdfs:label": f"ab:{req_id}Rule - QualityPolicy",
+                "tb:derivedFrom": req_id,
+                "tb:qualityDimension": dim,
+                "tb:sourceEntity": {"@id": f"ab:{requirement['sourceEntity']}"},
+                "odrl:permission": [
+                    {
+                        "@id": f"ab:{req_id}_Permission",
+                        "@type": "odrl:Permission",
+                        "odrl:action": template["policy"]["action"],
+                        "odrl:assigner": {"@id": f"ab:{requirement['sourceEntity']}"},
+                        "odrl:assignee": {"@id": f"ab:{template['assignee']['fixed']}"},
+                        "odrl:target": {"@id": f"ab:{attribute}"},
+                        "odrl:duty": [
+                            {
+                                "@id": f"ab:{req_id}_Duty",
+                                "@type": "odrl:Duty",
+                                "odrl:action": {
+                                    "@id": f"ab:{req_id}_Action",
+                                    "@type": "odrl:Action",
+                                    "rdf:value": {"@id": f"ab:Check{dim}"},
+                                    "odrl:refinement": [refinement_block],
+                                },
+                                "odrl:constraint": [constraint_block],
+                            }
+                        ],
+                    }
+                ],
+            },
+            {
+                "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+                "@type": "dqv:Metric",
+                "rdfs:label": f"{dim} Measurement",
+                "dqv:isMeasurementOf": {"@id": f"ab:Check{dim}"},
+            },
+            {
+                "@id": f"ab:{dim}",
+                "@type": "dqv:Metric",
+                "rdfs:label": f"{dim} Metric (Abstract)",
+                "dqv:inDimension": {
+                    "@id": f"ab:{dim}Dimension",
+                    "@type": "dqv:Dimension",
+                },
+            },
+            {
+                "@id": f"ab:{dim}Dimension",
+                "@type": "dqv:Dimension",
+                "rdfs:label": f"{dim} ({requirement['qualityDimension']['source']})",
+            },
+            {
+                "@id": f"ab:{attribute}",
+                "@type": "odrl:Asset",
+                "odrl:partOf": {"@id": ""},
+            },
+        ]
+
+        return {
+            "@context": template["context"],
+            "@graph": graph_nodes,
+        }
+
+    # --- Standard template (DQRP2, DQRP3, etc.) ---
     # Determine operator: fixed value in template, or mapped from requirement params
     if "operator" in constraint_tmpl:
         # Fixed operator (e.g. DQRP3: odrl:isIncludedIn)

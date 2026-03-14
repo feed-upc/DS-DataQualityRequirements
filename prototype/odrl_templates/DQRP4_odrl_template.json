@@ -2,7 +2,7 @@
   "patternId": "DQRP4",
   "patternVersion": "1.0",
 
-  "description": "ODRL template for Consistency pattern for ensuring consistency between values of two attributes",
+  "description": "ODRL template for Consistency pattern using action refinement for conditional constraints",
 
   "context": {
     "odrl:operator": {
@@ -17,8 +17,7 @@
     "dqv": "http://www.w3.org/ns/dqv#",
     "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
     "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
-    "prov": "http://www.w3.org/ns/prov#",
-    "qudt": "http://qudt.org/schema/qudt/"
+    "prov": "http://www.w3.org/ns/prov#"
   },
 
   "policy": {
@@ -38,27 +37,26 @@
     "fixed": "DataProvider"
   },
 
+  "refinement": {
+    "leftOperand": {
+      "parameter": "attributeName1"
+    },
+    "operator": "odrl:isAnyOf",
+    "rightOperand": {
+      "parameter": "ValueSet1",
+      "type": "xsd:string"
+    }
+  },
+
   "constraint": {
     "leftOperand": {
       "id": "ConsistencyMeasurement",
       "type": "dqv:QualityMeasurement"
     },
-
-    "operatorMapping": {
-      "=": "odrl:eq",
-      ">=": "odrl:gteq",
-      "<=": "odrl:lteq",
-      ">": "odrl:gt",
-      "<": "odrl:lt"
-    },
-
+    "operator": "odrl:eq",
     "rightOperand": {
-      "parameter": "percentageValue",
-      "type": "xsd:integer"
-    },
-
-    "unit": {
-      "fixed": "qudt:PERCENT"
+      "parameter": "ValueSet2",
+      "type": "xsd:string"
     }
   },
 
