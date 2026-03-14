@@ -1,7 +1,9 @@
-﻿import streamlit as st
+import streamlit as st
 import json
 import os
+import base64
 import pandas as pd
+import requests
 from pathlib import Path
 
 # =========================
@@ -11,6 +13,8 @@ PATTERNS_DIR = Path("patterns")
 REQUIREMENTS_DIR = Path("requirements")
 ODRL_RULES_DIR = Path("odrl_rules")
 ODRL_TEMPLATES_DIR = Path("odrl_templates")
+ODRL_POLICIES_DIR = Path("..") / "ODRL_policies"
+API_URL = os.environ.get("VALIDATION_API_URL", "http://localhost:5000")
 
 st.set_page_config(
     page_title="Managing Data Quality Requirements in Data Spaces",
@@ -602,7 +606,76 @@ def page_generate_odrl():
             st.success(f"ODRL rule saved to {path}")
 
     if st.button(f"Generate {requirement['id']} validation service"):
-        st.info("This functionality will be implemented later.")
+        with st.spinner("Generating validation service — this may take a minute..."):
+            # Save the ODRL rule to ODRL_policies/ so the framework picks it up
+            ODRL_POLICIES_DIR.mkdir(parents=True, exist_ok=True)
+            policies_path = ODRL_POLICIES_DIR / f"DQRP_{requirement['id']}_odrl.json"
+            if not save_json_file(str(policies_path), rule):
+                st.error("Failed to save ODRL rule to policies directory.")
+                return
+
+            # Also save to local odrl_rules/
+            local_path = ODRL_RULES_DIR / f"{requirement['id']}_odrl.json"
+            save_json_file(str(local_path), rule)
+
+            # Call the validation framework API
+            try:
+                response = requests.post(
+                    f"{API_URL}/generate-validation-service",
+                    json={"rule_id": requirement["id"], "data_product": "Patient_Summary"},
+                    timeout=300,
+                )
+
+                if response.status_code == 200:
+                    result = response.json()
+                    st.success(result.get("message", "Validation service generated successfully."))
+
+                    # Preview the generated validation code
+                    validation_code = result.get("validation_code", "")
+                    if validation_code:
+                        st.markdown("---")
+                        st.subheader("Generated Validation Service Code")
+                        st.code(validation_code, language="python")
+
+                    # Download ZIP button
+                    zip_b64 = result.get("zip_base64", "")
+                    if zip_b64:
+                        zip_bytes = base64.b64decode(zip_b64)
+                        zip_filename = result.get("zip_filename", f"{requirement['id']}_service.zip")
+                        st.download_button(
+                            label="\u2b07 Download Validation Service (ZIP)",
+                            data=zip_bytes,
+                            file_name=zip_filename,
+                            mime="application/zip",
+                        )
+
+                    # Expandable execution logs
+                    logs = result.get("logs", "")
+                    if logs:
+                        with st.expander("Execution Logs"):
+                            st.text(logs)
+                else:
+                    try:
+                        error_data = response.json()
+                    except Exception:
+                        error_data = {}
+                    st.error(
+                        f"API error ({response.status_code}): "
+                        f"{error_data.get('error', error_data.get('detail', response.text))}"
+                    )
+                    if error_data.get("logs"):
+                        with st.expander("Error Logs"):
+                            st.text(error_data["logs"])
+
+            except requests.ConnectionError:
+                st.error(
+                    f"Could not connect to the validation framework API at {API_URL}. "
+                    "Make sure the API server is running (python Connector/ValidationFramework/api/api.py)."
+                )
+            except requests.Timeout:
+                st.error("The validation service generation timed out. The process may still be running on the server.")
+            except Exception as e:
+                st.error(f"Error generating validation service: {e}")
 
 
 # =========================
