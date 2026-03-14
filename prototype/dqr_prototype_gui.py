@@ -164,83 +164,117 @@ def back_button(label: str, target_page: str):
 # =========================
 def build_odrl_rule(requirement: dict, template: dict) -> dict:
     params = requirement.get("parameters", {})
-    operator_map = template["constraint"].get("operatorMapping", {})
-    operator_symbol = (
-        params.get("operator")
-        or params.get("comparisonOperator")
-        or params.get("comparison")
-        or "="
-    )
-    odrl_operator = operator_map.get(operator_symbol, "odrl:eq")
+    constraint_tmpl = template["constraint"]
     attribute = params.get(template["target"]["parameter"])
-    threshold_param = template["constraint"]["rightOperand"]["parameter"]
-    threshold_value = params.get(threshold_param)
     req_id = requirement["id"]
     dim = requirement["qualityDimension"]["dimension"]
 
-    return {
-        "@context": template["context"],
-        "@graph": [
-            {
-                "@id": f"ab:{req_id}Rule",
-                "@type": template["policy"]["type"],
-                "@rdfs:label": f"ab:{req_id}Rule - QualityPolicy",
-                "tb:derivedFrom": req_id,
-                "tb:qualityDimension": dim,
-                "tb:sourceEntity": {"@id": f"ab:{requirement['sourceEntity']}"},
-                "odrl:permission": [
-                    {
-                        "@id": f"ab:{req_id}_Permission",
-                        "@type": "odrl:Permission",
-                        "odrl:action": template["policy"]["action"],
-                        "odrl:assigner": {"@id": f"ab:{requirement['sourceEntity']}"},
-                        "odrl:assignee": {"@id": f"ab:{template['assignee']['fixed']}"},
-                        "odrl:target": {"@id": f"ab:{attribute}"},
-                        "odrl:constraint": [
-                            {
-                                "@id": f"ab:{req_id}_Constraint",
-                                "@type": "odrl:Constraint",
-                                "odrl:leftOperand": {
-                                    "@id": f"ab:{template['constraint']['leftOperand']['id']}",
-                                    "@type": template["constraint"]["leftOperand"]["type"],
-                                },
-                                "odrl:operator": odrl_operator,
-                                "odrl:rightOperand": {
-                                    "@value": str(threshold_value),
-                                    "@type": template["constraint"]["rightOperand"]["type"],
-                                },
-                                "odrl:unit": {"@id": template["constraint"]["unit"]["fixed"]},
-                            }
-                        ],
-                    }
-                ],
-            },
-            {
-                "@id": f"ab:{template['constraint']['leftOperand']['id']}",
-                "@type": "Metric",
-                "rdfs:label": f"{dim} Measurement",
-                "dqv:isMeasurementOf": {"@id": f"ab:Check{dim}"},
-            },
-            {
-                "@id": f"ab:{dim}",
-                "@type": "Metric",
-                "rdfs:label": f"{dim} Metric (Abstract)",
-                "dqv:inDimension": {
-                    "@id": f"ab:{dim}Dimension",
-                    "@type": "dqv:Dimension",
-                },
-            },
-            {
+    # Determine operator: fixed value in template, or mapped from requirement params
+    if "operator" in constraint_tmpl:
+        # Fixed operator (e.g. DQRP3: odrl:isIncludedIn)
+        odrl_operator = constraint_tmpl["operator"]
+    else:
+        # Dynamic operator via mapping (e.g. DQRP2: "=" → odrl:eq)
+        operator_map = constraint_tmpl.get("operatorMapping", {})
+        operator_symbol = (
+            params.get("operator")
+            or params.get("comparisonOperator")
+            or params.get("comparison")
+            or "="
+        )
+        odrl_operator = operator_map.get(operator_symbol, "odrl:eq")
+
+    # Determine rightOperand: numeric literal or reference URI
+    ro_tmpl = constraint_tmpl["rightOperand"]
+    threshold_value = params.get(ro_tmpl["parameter"])
+
+    if ro_tmpl["type"] == "@id":
+        # Reference-based (e.g. standard name → ab:ISO_3166)
+        safe_id = str(threshold_value).replace(" ", "_").replace("\u00a0", "_")
+        right_operand = {"@id": f"ab:{safe_id}"}
+    else:
+        # Literal-based (e.g. percentage → xsd:integer)
+        right_operand = {
+            "@value": str(threshold_value),
+            "@type": ro_tmpl["type"],
+        }
+
+    # Build constraint block
+    constraint_block = {
+        "@id": f"ab:{req_id}_Constraint",
+        "@type": "odrl:Constraint",
+        "odrl:leftOperand": {
+            "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+            "@type": constraint_tmpl["leftOperand"]["type"],
+        },
+        "odrl:operator": odrl_operator,
+        "odrl:rightOperand": right_operand,
+    }
+
+    # Add unit only for percentage-based constraints
+    if "unit" in constraint_tmpl:
+        constraint_block["odrl:unit"] = {"@id": constraint_tmpl["unit"]["fixed"]}
+
+    # Build the graph nodes
+    graph_nodes = [
+        {
+            "@id": f"ab:{req_id}Rule",
+            "@type": template["policy"]["type"],
+            "@rdfs:label": f"ab:{req_id}Rule - QualityPolicy",
+            "tb:derivedFrom": req_id,
+            "tb:qualityDimension": dim,
+            "tb:sourceEntity": {"@id": f"ab:{requirement['sourceEntity']}"},
+            "odrl:permission": [
+                {
+                    "@id": f"ab:{req_id}_Permission",
+                    "@type": "odrl:Permission",
+                    "odrl:action": template["policy"]["action"],
+                    "odrl:assigner": {"@id": f"ab:{requirement['sourceEntity']}"},
+                    "odrl:assignee": {"@id": f"ab:{template['assignee']['fixed']}"},
+                    "odrl:target": {"@id": f"ab:{attribute}"},
+                    "odrl:constraint": [constraint_block],
+                }
+            ],
+        },
+        {
+            "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+            "@type": "Metric",
+            "rdfs:label": f"{dim} Measurement",
+            "dqv:isMeasurementOf": {"@id": f"ab:Check{dim}"},
+        },
+        {
+            "@id": f"ab:{dim}",
+            "@type": "Metric",
+            "rdfs:label": f"{dim} Metric (Abstract)",
+            "dqv:inDimension": {
                 "@id": f"ab:{dim}Dimension",
                 "@type": "dqv:Dimension",
-                "rdfs:label": f"{dim} ({requirement['qualityDimension']['source']})",
             },
-            {
-                "@id": f"ab:{attribute}",
-                "@type": "odrl:Asset",
-                "odrl:partOf": {"@id": ""},
-            },
-        ],
+        },
+        {
+            "@id": f"ab:{dim}Dimension",
+            "@type": "dqv:Dimension",
+            "rdfs:label": f"{dim} ({requirement['qualityDimension']['source']})",
+        },
+        {
+            "@id": f"ab:{attribute}",
+            "@type": "odrl:Asset",
+            "odrl:partOf": {"@id": ""},
+        },
+    ]
+
+    # For reference-based constraints, declare the standard as a named resource
+    if ro_tmpl["type"] == "@id" and threshold_value:
+        safe_id = str(threshold_value).replace(" ", "_").replace("\u00a0", "_")
+        graph_nodes.append({
+            "@id": f"ab:{safe_id}",
+            "@type": "tb:ReferenceStandard",
+            "rdfs:label": str(threshold_value),
+        })
+
+    return {
+        "@context": template["context"],
+        "@graph": graph_nodes,
     }
 
 # =========================

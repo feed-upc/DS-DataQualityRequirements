@@ -3,9 +3,6 @@
     "odrl:operator": {
       "@type": "@id"
     },
-    "odrl:rightOperand": {
-      "@type": "@id"
-    },
     "@base": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -15,21 +12,22 @@
     "dqv": "http://www.w3.org/ns/dqv#",
     "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
     "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
-    "prov": "http://www.w3.org/ns/prov#"
+    "prov": "http://www.w3.org/ns/prov#",
+    "qudt": "http://qudt.org/schema/qudt/"
   },
   "@graph": [
     {
-      "@id": "ab:DQR2EHRule",
+      "@id": "ab:DQR3EHRule",
       "@type": "dqv:QualityPolicy",
-      "@rdfs:label": "ab:DQR2EHRule - QualityPolicy",
-      "tb:derivedFrom": "DQR2EH",
-      "tb:qualityDimension": "Validity",
+      "@rdfs:label": "ab:DQR3EHRule - QualityPolicy",
+      "tb:derivedFrom": "DQR3EH",
+      "tb:qualityDimension": "Consistency",
       "tb:sourceEntity": {
         "@id": "ab:EHDS Governance Authority"
       },
       "odrl:permission": [
         {
-          "@id": "ab:DQR2EH_Permission",
+          "@id": "ab:DQR3EH_Permission",
           "@type": "odrl:Permission",
           "odrl:action": "odrl:distribute",
           "odrl:assigner": {
@@ -39,19 +37,23 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:countryOfAffiliation"
+            "@id": "ab:pregnancyHistory"
           },
           "odrl:constraint": [
             {
-              "@id": "ab:DQR2EH_Constraint",
+              "@id": "ab:DQR3EH_Constraint",
               "@type": "odrl:Constraint",
               "odrl:leftOperand": {
-                "@id": "ab:ValidityMeasurement",
+                "@id": "ab:ConsistencyMeasurement",
                 "@type": "dqv:QualityMeasurement"
               },
-              "odrl:operator": "odrl:isIncludedIn",
+              "odrl:operator": "odrl:eq",
               "odrl:rightOperand": {
-                "@id": "ab:ISO_3166"
+                "@value": "None",
+                "@type": "xsd:integer"
+              },
+              "odrl:unit": {
+                "@id": "qudt:PERCENT"
               }
             }
           ]
@@ -59,38 +61,33 @@
       ]
     },
     {
-      "@id": "ab:ValidityMeasurement",
+      "@id": "ab:ConsistencyMeasurement",
       "@type": "Metric",
-      "rdfs:label": "Validity Measurement",
+      "rdfs:label": "Consistency Measurement",
       "dqv:isMeasurementOf": {
-        "@id": "ab:CheckValidity"
+        "@id": "ab:CheckConsistency"
       }
     },
     {
-      "@id": "ab:Validity",
+      "@id": "ab:Consistency",
       "@type": "Metric",
-      "rdfs:label": "Validity Metric (Abstract)",
+      "rdfs:label": "Consistency Metric (Abstract)",
       "dqv:inDimension": {
-        "@id": "ab:ValidityDimension",
+        "@id": "ab:ConsistencyDimension",
         "@type": "dqv:Dimension"
       }
     },
     {
-      "@id": "ab:ValidityDimension",
+      "@id": "ab:ConsistencyDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Validity (Data Management Body of Knowledge DAMA-DMBOK)"
+      "rdfs:label": "Consistency (ISO/IEC 25012)"
     },
     {
-      "@id": "ab:countryOfAffiliation",
+      "@id": "ab:pregnancyHistory",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""
       }
-    },
-    {
-      "@id": "ab:ISO_3166",
-      "@type": "tb:ReferenceStandard",
-      "rdfs:label": "ISO 3166"
     }
   ]
 }
