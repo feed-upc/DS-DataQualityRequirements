@@ -12,11 +12,11 @@
   },
   "parameters": {
     "entityName": "AMRStudy.isolates",
-    "attributeName": "Isolate.isolateHistory.PatientSummaryBody.PatientSummary.PatientSummaryHeader.PatientIdentification.gender",
-    "operator": "be exactly",
-    "percValue": "50"
+    "attributeName": "gender",
+    "operator": "not exceed",
+    "percValue": "5"
   },
-  "statement": "In the AMRStudy.isolates entity, the distribution imbalance of the Isolate.isolateHistory.PatientSummaryBody.PatientSummary.PatientSummaryHeader.PatientIdentification.gender attribute should be exactly 50%",
+  "statement": "In the AMRStudy.isolates entity, the class imbalance of the gender attribute should not exceed 5%",
   "sourceEntity": "EHDS Governance Authority",
   "supportingMaterials": "Dataspace Rulebook (page 50)",
   "history": "Created 28/01/2026"

@@ -60,7 +60,7 @@
     },
     {
       "@id": "ab:ValidityMeasurement",
-      "@type": "Metric",
+      "@type": "dqv:Metric",
       "rdfs:label": "Validity Measurement",
       "dqv:isMeasurementOf": {
         "@id": "ab:CheckValidity"
@@ -68,7 +68,7 @@
     },
     {
       "@id": "ab:Validity",
-      "@type": "Metric",
+      "@type": "dqv:Metric",
       "rdfs:label": "Validity Metric (Abstract)",
       "dqv:inDimension": {
         "@id": "ab:ValidityDimension",
