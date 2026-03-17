@@ -168,6 +168,9 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
     attribute = params.get(template["target"]["parameter"])
     req_id = requirement["id"]
     dim = requirement["qualityDimension"]["dimension"]
+    # Optional override: when the measurement concept differs from the dimension
+    # (e.g. dimension="Validity" but measurement concept is "Volume")
+    concept = requirement.get("measurementConcept", dim)
 
     # --- Refinement-based template (DQRP4: Consistency) ---
     if "refinement" in template:
@@ -196,11 +199,12 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
         }
 
         # Build constraint block (expectation / THEN clause)
+        refinement_measurement_id = f"{concept}Measurement"
         constraint_block = {
             "@id": f"ab:{req_id}_Constraint",
             "@type": "odrl:Constraint",
             "odrl:leftOperand": {
-                "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+                "@id": f"ab:{refinement_measurement_id}",
                 "@type": constraint_tmpl["leftOperand"]["type"],
             },
             "odrl:operator": con_operator,
@@ -243,15 +247,15 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
                 ],
             },
             {
-                "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+                "@id": f"ab:{concept}Measurement",
                 "@type": "dqv:Metric",
-                "rdfs:label": f"{dim} Measurement",
-                "dqv:isMeasurementOf": {"@id": f"ab:Check{dim}"},
+                "rdfs:label": f"{concept} Measurement",
+                "dqv:isMeasurementOf": {"@id": f"ab:Check{concept}"},
             },
             {
-                "@id": f"ab:{dim}",
+                "@id": f"ab:{concept}",
                 "@type": "dqv:Metric",
-                "rdfs:label": f"{dim} Metric (Abstract)",
+                "rdfs:label": f"{concept} Metric (Abstract)",
                 "dqv:inDimension": {
                     "@id": f"ab:{dim}Dimension",
                     "@type": "dqv:Dimension",
@@ -306,11 +310,12 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
         }
 
     # Build constraint block
+    measurement_id = f"{concept}Measurement"
     constraint_block = {
         "@id": f"ab:{req_id}_Constraint",
         "@type": "odrl:Constraint",
         "odrl:leftOperand": {
-            "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
+            "@id": f"ab:{measurement_id}",
             "@type": constraint_tmpl["leftOperand"]["type"],
         },
         "odrl:operator": odrl_operator,
@@ -343,15 +348,15 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
             ],
         },
         {
-            "@id": f"ab:{constraint_tmpl['leftOperand']['id']}",
-            "@type": "Metric",
-            "rdfs:label": f"{dim} Measurement",
-            "dqv:isMeasurementOf": {"@id": f"ab:Check{dim}"},
+            "@id": f"ab:{measurement_id}",
+            "@type": "dqv:Metric",
+            "rdfs:label": f"{concept} Measurement",
+            "dqv:isMeasurementOf": {"@id": f"ab:Check{concept}"},
         },
         {
-            "@id": f"ab:{dim}",
-            "@type": "Metric",
-            "rdfs:label": f"{dim} Metric (Abstract)",
+            "@id": f"ab:{concept}",
+            "@type": "dqv:Metric",
+            "rdfs:label": f"{concept} Metric (Abstract)",
             "dqv:inDimension": {
                 "@id": f"ab:{dim}Dimension",
                 "@type": "dqv:Dimension",

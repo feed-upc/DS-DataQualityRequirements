@@ -6,6 +6,7 @@
     "dimension": "Validity",
     "source": "Data Management Body of Knowledge DAMA-DMBOK"
   },
+  "measurementConcept": "Volume",
   "pattern": {
     "id": "DQRP5",
     "version": "1.0"

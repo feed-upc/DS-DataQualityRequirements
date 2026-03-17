@@ -62,7 +62,7 @@
     },
     {
       "@id": "ab:CompletenessMeasurement",
-      "@type": "Metric",
+      "@type": "dqv:Metric",
       "rdfs:label": "Completeness Measurement",
       "dqv:isMeasurementOf": {
         "@id": "ab:CheckCompleteness"
@@ -70,7 +70,7 @@
     },
     {
       "@id": "ab:Completeness",
-      "@type": "Metric",
+      "@type": "dqv:Metric",
       "rdfs:label": "Completeness Metric (Abstract)",
       "dqv:inDimension": {
         "@id": "ab:CompletenessDimension",

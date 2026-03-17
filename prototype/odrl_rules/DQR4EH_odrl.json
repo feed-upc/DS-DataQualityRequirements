@@ -44,7 +44,7 @@
               "@id": "ab:DQR4EH_Constraint",
               "@type": "odrl:Constraint",
               "odrl:leftOperand": {
-                "@id": "ab:ValidityMeasurement",
+                "@id": "ab:VolumeMeasurement",
                 "@type": "dqv:QualityMeasurement"
               },
               "odrl:operator": "odrl:gteq",
@@ -61,17 +61,17 @@
       ]
     },
     {
-      "@id": "ab:ValidityMeasurement",
-      "@type": "Metric",
-      "rdfs:label": "Validity Measurement",
+      "@id": "ab:VolumeMeasurement",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Volume Measurement",
       "dqv:isMeasurementOf": {
-        "@id": "ab:CheckValidity"
+        "@id": "ab:CheckVolume"
       }
     },
     {
-      "@id": "ab:Validity",
-      "@type": "Metric",
-      "rdfs:label": "Validity Metric (Abstract)",
+      "@id": "ab:Volume",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Volume Metric (Abstract)",
       "dqv:inDimension": {
         "@id": "ab:ValidityDimension",
         "@type": "dqv:Dimension"

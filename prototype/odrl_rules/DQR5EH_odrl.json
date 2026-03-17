@@ -37,7 +37,7 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:Isolate.isolateHistory.PatientSummaryBody.PatientSummary.PatientSummaryHeader.PatientIdentification.gender"
+            "@id": "ab:gender"
           },
           "odrl:constraint": [
             {
@@ -47,9 +47,9 @@
                 "@id": "ab:FairnessMeasurement",
                 "@type": "dqv:QualityMeasurement"
               },
-              "odrl:operator": "odrl:eq",
+              "odrl:operator": "odrl:lt",
               "odrl:rightOperand": {
-                "@value": "50",
+                "@value": "5",
                 "@type": "xsd:integer"
               },
               "odrl:unit": {
@@ -62,7 +62,7 @@
     },
     {
       "@id": "ab:FairnessMeasurement",
-      "@type": "Metric",
+      "@type": "dqv:Metric",
       "rdfs:label": "Fairness Measurement",
       "dqv:isMeasurementOf": {
         "@id": "ab:CheckFairness"
@@ -70,7 +70,7 @@
     },
     {
       "@id": "ab:Fairness",
-      "@type": "Metric",
+      "@type": "dqv:Metric",
       "rdfs:label": "Fairness Metric (Abstract)",
       "dqv:inDimension": {
         "@id": "ab:FairnessDimension",
@@ -83,7 +83,7 @@
       "rdfs:label": "Fairness (Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51\u201365 (2021))"
     },
     {
-      "@id": "ab:Isolate.isolateHistory.PatientSummaryBody.PatientSummary.PatientSummaryHeader.PatientIdentification.gender",
+      "@id": "ab:gender",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""
