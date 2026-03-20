@@ -3,6 +3,9 @@
     "odrl:operator": {
       "@type": "@id"
     },
+    "odrl:rightOperand": {
+      "@type": "@id"
+    },
     "@base": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -12,22 +15,21 @@
     "dqv": "http://www.w3.org/ns/dqv#",
     "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
     "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
-    "prov": "http://www.w3.org/ns/prov#",
-    "qudt": "http://qudt.org/schema/qudt/"
+    "prov": "http://www.w3.org/ns/prov#"
   },
   "@graph": [
     {
-      "@id": "ab:DQR5EHRule",
+      "@id": "ab:DQR6EHRule",
       "@type": "dqv:QualityPolicy",
-      "rdfs:label": "ab:DQR5EHRule - QualityPolicy",
-      "tb:derivedFrom": "DQR5EH",
-      "tb:qualityDimension": "Fairness",
+      "rdfs:label": "ab:DQR6EHRule - QualityPolicy",
+      "tb:derivedFrom": "DQR6EH",
+      "tb:qualityDimension": "Validity",
       "tb:sourceEntity": {
         "@id": "ab:EHDS Governance Authority"
       },
       "odrl:permission": [
         {
-          "@id": "ab:DQR5EH_Permission",
+          "@id": "ab:DQR6EH_Permission",
           "@type": "odrl:Permission",
           "odrl:action": "odrl:distribute",
           "odrl:assigner": {
@@ -37,23 +39,19 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:gender"
+            "@id": "ab:country"
           },
           "odrl:constraint": [
             {
-              "@id": "ab:DQR5EH_Constraint",
+              "@id": "ab:DQR6EH_Constraint",
               "@type": "odrl:Constraint",
               "odrl:leftOperand": {
-                "@id": "ab:FairnessMeasurement",
+                "@id": "ab:ValidityMeasurement",
                 "@type": "dqv:QualityMeasurement"
               },
-              "odrl:operator": "odrl:lt",
+              "odrl:operator": "odrl:isIncludedIn",
               "odrl:rightOperand": {
-                "@value": "5",
-                "@type": "xsd:integer"
-              },
-              "odrl:unit": {
-                "@id": "qudt:PERCENT"
+                "@id": "ab:ISO_3166_International_Standard"
               }
             }
           ]
@@ -61,33 +59,38 @@
       ]
     },
     {
-      "@id": "ab:FairnessMeasurement",
+      "@id": "ab:ValidityMeasurement",
       "@type": "dqv:Metric",
-      "rdfs:label": "Fairness Measurement",
+      "rdfs:label": "Validity Measurement",
       "dqv:isMeasurementOf": {
-        "@id": "ab:CheckFairness"
+        "@id": "ab:CheckValidity"
       }
     },
     {
-      "@id": "ab:Fairness",
+      "@id": "ab:Validity",
       "@type": "dqv:Metric",
-      "rdfs:label": "Fairness Metric (Abstract)",
+      "rdfs:label": "Validity Metric (Abstract)",
       "dqv:inDimension": {
-        "@id": "ab:FairnessDimension",
+        "@id": "ab:ValidityDimension",
         "@type": "dqv:Dimension"
       }
     },
     {
-      "@id": "ab:FairnessDimension",
+      "@id": "ab:ValidityDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Fairness (Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51\u201365 (2021))"
+      "rdfs:label": "Validity (Data Management Body of Knowledge DAMA-DMBOK)"
     },
     {
-      "@id": "ab:gender",
+      "@id": "ab:country",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""
       }
+    },
+    {
+      "@id": "ab:ISO_3166_International_Standard",
+      "@type": "tb:ReferenceStandard",
+      "rdfs:label": "ISO 3166 International Standard"
     }
   ]
 }

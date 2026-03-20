@@ -13,10 +13,10 @@
   "parameters": {
     "entityName": "PatientIdentification",
     "attributeName": "nationalHealthcarePatientID",
-    "operator": "contain",
+    "operator": "at least",
     "percentageValue": "100"
   },
-  "statement": "In the PatientIdentification entity, the nationalHealthcarePatientID attribute must contain contain\u00a0100 percent non-empty values",
+  "statement": "In the PatientIdentification entity, the nationalHealthcarePatientID attribute must contain at least 100 percent non-empty values",
   "sourceEntity": "EHDS Governance Authority",
   "supportingMaterials": "Dataspace Rulebook (page 40)",
   "history": "Created 28/01/2026"

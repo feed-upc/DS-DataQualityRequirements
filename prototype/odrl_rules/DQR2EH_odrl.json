@@ -21,7 +21,7 @@
     {
       "@id": "ab:DQR2EHRule",
       "@type": "dqv:QualityPolicy",
-      "@rdfs:label": "ab:DQR2EHRule - QualityPolicy",
+      "rdfs:label": "ab:DQR2EHRule - QualityPolicy",
       "tb:derivedFrom": "DQR2EH",
       "tb:qualityDimension": "Validity",
       "tb:sourceEntity": {

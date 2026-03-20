@@ -49,7 +49,11 @@
       ">=": "odrl:gteq",
       "<=": "odrl:lteq",
       ">": "odrl:gt",
-      "<": "odrl:lt"
+      "<": "odrl:lt",
+      "exactly": "odrl:eq",
+      "at least": "odrl:gteq",
+      "at most": "odrl:lteq",
+      "contain": "odrl:gteq"
     },
 
     "rightOperand": {

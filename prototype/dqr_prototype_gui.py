@@ -331,7 +331,7 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
         {
             "@id": f"ab:{req_id}Rule",
             "@type": template["policy"]["type"],
-            "@rdfs:label": f"ab:{req_id}Rule - QualityPolicy",
+            "rdfs:label": f"ab:{req_id}Rule - QualityPolicy",
             "tb:derivedFrom": req_id,
             "tb:qualityDimension": dim,
             "tb:sourceEntity": {"@id": f"ab:{requirement['sourceEntity']}"},
