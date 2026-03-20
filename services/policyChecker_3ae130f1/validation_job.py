@@ -1,19 +1,14 @@
 import great_expectations
-import pycountry
 
 import great_expectations as gx
 import pandas as pd
 
 def run_gx_validation(data_path):
     context = gx.get_context(mode='ephemeral')
-    _df = pd.read_csv(data_path)
     suite = context.suites.add(gx.ExpectationSuite(name='semantic_suite'))
 
-    # Step 2: http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#CheckValidity
-    _kw = {'column': 'countryOfAffiliation'}
-    import pycountry
-    _kw['value_set'] = [c.alpha_2 for c in pycountry.countries]
-    suite.add_expectation(gx.expectations.ExpectColumnValuesToBeInSet(**_kw))
+    # Step 2: http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#qM
+    suite.add_expectation(gx.expectations.ExpectColumnValuesToNotBeNull(**{'column': 'local_patient_id', 'mostly': 1.0}))
 
     csv_asset = context.data_sources.add_pandas('pandas_source').add_csv_asset('csv_asset', filepath_or_buffer=data_path)
     batch_def = csv_asset.add_batch_definition_whole_dataframe('dataframe_batch_def')
@@ -28,10 +23,7 @@ def run_gx_validation(data_path):
 if __name__ == "__main__":
     import sys
     # Extract data path from args or use default
-    if len(sys.argv) < 2:
-        print("Usage: python validation_job.py <data_path>")
-        sys.exit(1)
-    data_file = sys.argv[1]
+    data_file = sys.argv[1] if len(sys.argv) > 1 else "/home/acraf/psr/Fdatavalidation-1/DataProductLayer/DataProduct_EHDS_AMR/Data/Patient_Summary.csv"
     print(f"Loading data from {data_file}...")
     try:
         result = run_gx_validation(data_file)
