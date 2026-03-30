@@ -12,9 +12,9 @@
   },
   "parameters": {
     "entityName1": "PatientIdentification",
-    "attributeName1": "gender",
+    "attributeName1": "PatientSummary.PatientSummaryHeader.PatientIdentification.gender",
     "ValueSet1": "{male}",
-    "attributeName2": "pregnancyHistory",
+    "attributeName2": "PatientSummary.PatientSummaryHeader.PatientIdentification.pregnancyHistory",
     "entityName2": "PatientSummaryBody",
     "operator": "contain",
     "ValueSet2": "{NULL}"

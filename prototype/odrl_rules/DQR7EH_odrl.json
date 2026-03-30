@@ -37,7 +37,7 @@
             "@id": "ab:DataConsumer"
           },
           "odrl:target": {
-            "@id": "ab:Patient_Summary"
+            "@id": "ab:PatientSummary"
           },
           "odrl:constraint": [
             {
@@ -47,7 +47,7 @@
                 "@id": "ab:DataAgeMeasurementEH",
                 "@type": "dqv:QualityMeasurement",
                 "dqv:computedOn": {
-                  "@id": "ab:lastUpdated"
+                  "@id": "ab:PatientSummary.lastUpdated"
                 }
               },
               "odrl:operator": "odrl:lteq",
@@ -71,7 +71,7 @@
         "@id": "ab:CheckFreshness"
       },
       "dqv:computedOn": {
-        "@id": "ab:lastUpdated"
+        "@id": "ab:PatientSummary.lastUpdated"
       }
     },
     {

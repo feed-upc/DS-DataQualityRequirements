@@ -12,7 +12,7 @@
   },
   "parameters": {
     "entityName": "PatientIdentification",
-    "attributeName": "countryOfAffiliation",
+    "attributeName": "PatientSummary.PatientSummaryHeader.PatientIdentification.countryOfAffiliation",
     "standardName": "ISO 3166"
   },
   "statement": "In the PatientIdentification entity, the countryOfAffiliation attribute must follow the ISO 3166\u00a0standard",

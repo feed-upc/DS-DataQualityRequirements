@@ -36,7 +36,7 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:pregnancyHistory"
+            "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.pregnancyHistory"
           },
           "odrl:duty": [
             {
@@ -53,7 +53,7 @@
                     "@id": "ab:DQR3EH_Refinement",
                     "@type": "odrl:Constraint",
                     "odrl:leftOperand": {
-                      "@id": "ab:gender"
+                      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.gender"
                     },
                     "odrl:operator": "odrl:isAnyOf",
                     "odrl:rightOperand": {
@@ -106,7 +106,7 @@
       "rdfs:label": "Consistency (ISO/IEC 25012)"
     },
     {
-      "@id": "ab:pregnancyHistory",
+      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.pregnancyHistory",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""
