@@ -37,7 +37,7 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:nationalHealthcarePatientID"
+            "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.nationalHealthcarePatientID"
           },
           "odrl:constraint": [
             {
@@ -83,7 +83,7 @@
       "rdfs:label": "Completeness (ISO/IEC 25012)"
     },
     {
-      "@id": "ab:nationalHealthcarePatientID",
+      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.nationalHealthcarePatientID",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""

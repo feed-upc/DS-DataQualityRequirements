@@ -12,7 +12,7 @@
   },
   "parameters": {
     "entityName": "AMRStudy.isolates",
-    "attributeName": "gender",
+    "attributeName": "PatientSummary.PatientSummaryHeader.PatientIdentification.gender",
     "operator": "not exceed",
     "percValue": "5"
   },

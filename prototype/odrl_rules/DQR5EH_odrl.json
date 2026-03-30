@@ -37,7 +37,7 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:gender"
+            "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.gender"
           },
           "odrl:constraint": [
             {
@@ -83,7 +83,7 @@
       "rdfs:label": "Fairness (Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51\u201365 (2021))"
     },
     {
-      "@id": "ab:gender",
+      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.gender",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""

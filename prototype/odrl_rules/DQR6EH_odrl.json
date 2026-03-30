@@ -39,7 +39,7 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:country"
+            "@id": "ab:Hospital.country"
           },
           "odrl:constraint": [
             {
@@ -81,7 +81,7 @@
       "rdfs:label": "Validity (Data Management Body of Knowledge DAMA-DMBOK)"
     },
     {
-      "@id": "ab:country",
+      "@id": "ab:Hospital.country",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""

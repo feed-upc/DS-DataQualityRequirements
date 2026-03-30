@@ -39,7 +39,7 @@
             "@id": "ab:DataProvider"
           },
           "odrl:target": {
-            "@id": "ab:countryOfAffiliation"
+            "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.countryOfAffiliation"
           },
           "odrl:constraint": [
             {
@@ -81,7 +81,7 @@
       "rdfs:label": "Validity (Data Management Body of Knowledge DAMA-DMBOK)"
     },
     {
-      "@id": "ab:countryOfAffiliation",
+      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.countryOfAffiliation",
       "@type": "odrl:Asset",
       "odrl:partOf": {
         "@id": ""

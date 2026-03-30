@@ -12,7 +12,7 @@
   },
   "parameters": {
     "entityName": "PatientIdentification",
-    "attributeName": "nationalHealthcarePatientID",
+    "attributeName": "PatientSummary.PatientSummaryHeader.PatientIdentification.nationalHealthcarePatientID",
     "operator": "at least",
     "percentageValue": "100"
   },
