@@ -1,0 +1,116 @@
+{
+  "@context": {
+    "odrl:operator": {
+      "@type": "@id"
+    },
+    "@base": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
+    "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@graph": [
+    {
+      "@id": "ab:DQR3EHRule",
+      "@type": "dqv:QualityPolicy",
+      "rdfs:label": "ab:DQR3EHRule - QualityPolicy",
+      "tb:derivedFrom": "DQR3EH",
+      "tb:qualityDimension": "Consistency",
+      "tb:sourceEntity": {
+        "@id": "ab:EHDS Governance Authority"
+      },
+      "odrl:permission": [
+        {
+          "@id": "ab:DQR3EH_Permission",
+          "@type": "odrl:Permission",
+          "odrl:action": "odrl:distribute",
+          "odrl:assigner": {
+            "@id": "ab:EHDS Governance Authority"
+          },
+          "odrl:assignee": {
+            "@id": "ab:DataProvider"
+          },
+          "odrl:target": {
+            "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.pregnancyHistory"
+          },
+          "odrl:duty": [
+            {
+              "@id": "ab:DQR3EH_Duty",
+              "@type": "odrl:Duty",
+              "odrl:action": {
+                "@id": "ab:DQR3EH_Action",
+                "@type": "odrl:Action",
+                "rdf:value": {
+                  "@id": "ab:CheckConsistency"
+                },
+                "odrl:refinement": [
+                  {
+                    "@id": "ab:DQR3EH_Refinement",
+                    "@type": "odrl:Constraint",
+                    "odrl:leftOperand": {
+                      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.gender"
+                    },
+                    "odrl:operator": "odrl:isAnyOf",
+                    "odrl:rightOperand": {
+                      "@value": "male",
+                      "@type": "xsd:string"
+                    }
+                  }
+                ]
+              },
+              "odrl:constraint": [
+                {
+                  "@id": "ab:DQR3EH_Constraint",
+                  "@type": "odrl:Constraint",
+                  "odrl:leftOperand": {
+                    "@id": "ab:ConsistencyMeasurement",
+                    "@type": "dqv:QualityMeasurement"
+                  },
+                  "odrl:operator": "odrl:eq",
+                  "odrl:rightOperand": {
+                    "@value": "NULL",
+                    "@type": "xsd:string"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "ab:ConsistencyMeasurement",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Consistency Measurement",
+      "dqv:isMeasurementOf": {
+        "@id": "ab:CheckConsistency"
+      }
+    },
+    {
+      "@id": "ab:Consistency",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Consistency Metric (Abstract)",
+      "dqv:inDimension": {
+        "@id": "ab:ConsistencyDimension",
+        "@type": "dqv:Dimension"
+      }
+    },
+    {
+      "@id": "ab:ConsistencyDimension",
+      "@type": "dqv:Dimension",
+      "rdfs:label": "Consistency (ISO/IEC 25012)"
+    },
+    {
+      "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.pregnancyHistory",
+      "@type": "odrl:Asset",
+      "odrl:partOf": {
+        "@id": ""
+      }
+    }
+  ]
+}
