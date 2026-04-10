@@ -1,0 +1,24 @@
+{
+  "id": "10",
+  "goal": "Ensuring a required data age for a specific attribute in an entity",
+  "description": "A specific data age is required for the values of an attribute of an entity",
+  "qualityDimension": {
+    "dimension": "Timeliness",
+    "source": "ISO/IEC 25012"
+  },
+  "pattern": {
+    "id": "DQRP1",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "SensorData",
+    "attributeName1": "SensorData.temperature",
+    "amountOfTime": "60",
+    "timeUnit": "Minutes",
+    "attributeName2": "SensorData.timestamp"
+  },
+  "statement": "In the SensorData entity, the data in the SensorData.temperature attribute is only valid if its data age is less than or equal to 60 Minutes, as calculated from the SensorData.timestamp attribute.",
+  "sourceEntity": "TestAuthority",
+  "supportingMaterials": "",
+  "history": ""
+}
