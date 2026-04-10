@@ -1,0 +1,24 @@
+{
+  "id": "DQR7EH",
+  "goal": "Ensuring a required data age for a specific attribute in an entity",
+  "description": "A specific data age is required for the values of an attribute of an entity",
+  "qualityDimension": {
+    "dimension": "Timeliness",
+    "source": "ISO/IEC 25012"
+  },
+  "pattern": {
+    "id": "DQRP1",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "PatientSummary",
+    "attributeName1": "PatientSummary",
+    "amountOfTime": "1440",
+    "timeUnit": "Minutes",
+    "attributeName2": "PatientSummary.lastUpdated"
+  },
+  "statement": "In the PatientSummary entity, the data in the PatientSummary attribute is only valid if its data age is less than or equal to 1440 Minutes, as calculated from the PatientSummary.lastUpdated attribute.",
+  "sourceEntity": "EHDS Governance Authority",
+  "supportingMaterials": "Dataspace Rulebook (page 52)",
+  "history": "Created 10/04/2026"
+}

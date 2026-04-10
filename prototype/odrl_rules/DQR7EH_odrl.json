@@ -19,22 +19,22 @@
     {
       "@id": "ab:DQR7EHRule",
       "@type": "dqv:QualityPolicy",
-      "rdfs:label": "DQR7EH - Timeliness of Patient Summary records",
+      "rdfs:label": "ab:DQR7EHRule - QualityPolicy",
       "tb:derivedFrom": "DQR7EH",
       "tb:qualityDimension": "Timeliness",
       "tb:sourceEntity": {
-        "@id": "ab:DataSpaceGovernanceAuthority"
+        "@id": "ab:EHDS Governance Authority"
       },
       "odrl:permission": [
         {
           "@id": "ab:DQR7EH_Permission",
           "@type": "odrl:Permission",
-          "odrl:action": "odrl:use",
+          "odrl:action": "odrl:distribute",
           "odrl:assigner": {
-            "@id": "ab:DataSpaceGovernanceAuthority"
+            "@id": "ab:EHDS Governance Authority"
           },
           "odrl:assignee": {
-            "@id": "ab:DataConsumer"
+            "@id": "ab:DataProvider"
           },
           "odrl:target": {
             "@id": "ab:PatientSummary"
@@ -44,7 +44,7 @@
               "@id": "ab:DQR7EH_Constraint",
               "@type": "odrl:Constraint",
               "odrl:leftOperand": {
-                "@id": "ab:DataAgeMeasurementEH",
+                "@id": "ab:TimelinessMeasurement",
                 "@type": "dqv:QualityMeasurement",
                 "dqv:computedOn": {
                   "@id": "ab:PatientSummary.lastUpdated"
@@ -64,20 +64,36 @@
       ]
     },
     {
-      "@id": "ab:DataAgeMeasurementEH",
+      "@id": "ab:TimelinessMeasurement",
       "@type": "dqv:Metric",
-      "rdfs:label": "Data Age Measurement for Patient Summary (minutes)",
+      "rdfs:label": "Timeliness Measurement",
       "dqv:isMeasurementOf": {
-        "@id": "ab:CheckFreshness"
+        "@id": "ab:CheckTimeliness"
       },
       "dqv:computedOn": {
         "@id": "ab:PatientSummary.lastUpdated"
       }
     },
     {
+      "@id": "ab:Timeliness",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Timeliness Metric (Abstract)",
+      "dqv:inDimension": {
+        "@id": "ab:TimelinessDimension",
+        "@type": "dqv:Dimension"
+      }
+    },
+    {
       "@id": "ab:TimelinessDimension",
       "@type": "dqv:Dimension",
       "rdfs:label": "Timeliness (ISO/IEC 25012)"
+    },
+    {
+      "@id": "ab:PatientSummary",
+      "@type": "odrl:Asset",
+      "odrl:partOf": {
+        "@id": ""
+      }
     }
   ]
 }
