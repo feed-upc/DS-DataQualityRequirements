@@ -13,7 +13,6 @@ PATTERNS_DIR = Path("patterns")
 REQUIREMENTS_DIR = Path("requirements")
 ODRL_RULES_DIR = Path("odrl_rules")
 ODRL_TEMPLATES_DIR = Path("odrl_templates")
-ODRL_POLICIES_DIR = Path("..") / "ODRL_policies"
 API_URL = os.environ.get("VALIDATION_API_URL", "http://localhost:5000")
 
 st.set_page_config(
@@ -769,16 +768,12 @@ def page_generate_odrl():
 
     if st.button(f"Generate {requirement['id']} validation service"):
         with st.spinner("Generating validation service — this may take a minute..."):
-            # Save the ODRL rule to ODRL_policies/ so the framework picks it up
-            ODRL_POLICIES_DIR.mkdir(parents=True, exist_ok=True)
-            policies_path = ODRL_POLICIES_DIR / f"DQRP_{requirement['id']}_odrl.json"
-            if not save_json_file(str(policies_path), rule):
-                st.error("Failed to save ODRL rule to policies directory.")
-                return
-
-            # Also save to local odrl_rules/
+            # Save the ODRL rule to odrl_rules/
+            ODRL_RULES_DIR.mkdir(parents=True, exist_ok=True)
             local_path = ODRL_RULES_DIR / f"{requirement['id']}_odrl.json"
-            save_json_file(str(local_path), rule)
+            if not save_json_file(str(local_path), rule):
+                st.error("Failed to save ODRL rule to odrl_rules directory.")
+                return
 
             # Call the validation framework API
             try:
