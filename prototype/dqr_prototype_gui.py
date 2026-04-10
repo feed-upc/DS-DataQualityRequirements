@@ -322,9 +322,24 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
         "odrl:rightOperand": right_operand,
     }
 
-    # Add unit only for percentage-based constraints
+    # Add unit: fixed value or dynamic mapping (e.g. timeliness time-unit)
     if "unit" in constraint_tmpl:
-        constraint_block["odrl:unit"] = {"@id": constraint_tmpl["unit"]["fixed"]}
+        unit_tmpl = constraint_tmpl["unit"]
+        if "fixed" in unit_tmpl:
+            constraint_block["odrl:unit"] = {"@id": unit_tmpl["fixed"]}
+        elif "mapping" in unit_tmpl:
+            time_unit = params.get(unit_tmpl["parameter"], "")
+            unit_uri = unit_tmpl["mapping"].get(time_unit, f"qudt:{time_unit}")
+            constraint_block["odrl:unit"] = {"@id": unit_uri}
+
+    # Add computedOn to leftOperand when specified (e.g. timeliness patterns)
+    computed_on_tmpl = template.get("computedOn")
+    if computed_on_tmpl:
+        computed_attr = params.get(computed_on_tmpl["parameter"], "")
+        if computed_attr:
+            constraint_block["odrl:leftOperand"]["dqv:computedOn"] = {
+                "@id": f"ab:{computed_attr}"
+            }
 
     # Build the graph nodes
     graph_nodes = [
@@ -352,6 +367,8 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
             "@type": "dqv:Metric",
             "rdfs:label": f"{concept} Measurement",
             "dqv:isMeasurementOf": {"@id": f"ab:Check{concept}"},
+            **({"dqv:computedOn": {"@id": f"ab:{params.get(computed_on_tmpl['parameter'], '')}"}}
+               if computed_on_tmpl and params.get(computed_on_tmpl.get("parameter", "")) else {}),
         },
         {
             "@id": f"ab:{concept}",
