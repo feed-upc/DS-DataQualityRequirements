@@ -19,9 +19,9 @@
     {
       "@id": "ab:DQR1LSRule",
       "@type": "dqv:QualityPolicy",
-      "rdfs:label": "DQR1LS - Timeliness of Live Stocks price data",
+      "rdfs:label": "DQR1LS - Currentness of Live Stocks price data",
       "tb:derivedFrom": "DQR1LS",
-      "tb:qualityDimension": "Timeliness",
+      "tb:qualityDimension": "Currentness",
       "tb:sourceEntity": {
         "@id": "ab:DataSpaceGovernanceAuthority"
       },
@@ -77,7 +77,7 @@
     {
       "@id": "ab:TimelinessDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Timeliness (ISO/IEC 25012)"
+      "rdfs:label": "Currentness (ISO/IEC 25012)"
     },
     {
       "@id": "ab:price",

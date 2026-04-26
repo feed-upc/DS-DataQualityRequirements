@@ -3,7 +3,7 @@
   "goal": "Ensures sufficient sample size for statistically valid estimates",
   "description": "Validates the number of instances of an entity to achieve adequate statistical power.",
   "qualityDimension": {
-    "dimension": "Validity",
+    "dimension": "Completeness",
     "source": "Data Management Body of Knowledge DAMA-DMBOK"
   },
   "measurementConcept": "Volume",

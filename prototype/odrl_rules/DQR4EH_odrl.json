@@ -21,7 +21,7 @@
       "@type": "dqv:QualityPolicy",
       "rdfs:label": "ab:DQR4EHRule - QualityPolicy",
       "tb:derivedFrom": "DQR4EH",
-      "tb:qualityDimension": "Validity",
+      "tb:qualityDimension": "Completeness",
       "tb:sourceEntity": {
         "@id": "ab:EHDS Governance Authority"
       },
@@ -73,14 +73,14 @@
       "@type": "dqv:Metric",
       "rdfs:label": "Volume Metric (Abstract)",
       "dqv:inDimension": {
-        "@id": "ab:ValidityDimension",
+        "@id": "ab:CompletenessDimension",
         "@type": "dqv:Dimension"
       }
     },
     {
-      "@id": "ab:ValidityDimension",
+      "@id": "ab:CompletenessDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Validity (Data Management Body of Knowledge DAMA-DMBOK)"
+      "rdfs:label": "Completeness (Data Management Body of Knowledge DAMA-DMBOK)"
     },
     {
       "@id": "ab:AMRStudy.isolates",

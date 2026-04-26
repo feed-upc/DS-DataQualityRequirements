@@ -21,7 +21,7 @@
       "@type": "dqv:QualityPolicy",
       "rdfs:label": "ab:DQR7EHRule - QualityPolicy",
       "tb:derivedFrom": "DQR7EH",
-      "tb:qualityDimension": "Timeliness",
+      "tb:qualityDimension": "Currentness",
       "tb:sourceEntity": {
         "@id": "ab:EHDS Governance Authority"
       },
@@ -44,7 +44,7 @@
               "@id": "ab:DQR7EH_Constraint",
               "@type": "odrl:Constraint",
               "odrl:leftOperand": {
-                "@id": "ab:TimelinessMeasurement",
+                "@id": "ab:CurrentnessMeasurement",
                 "@type": "dqv:QualityMeasurement",
                 "dqv:computedOn": {
                   "@id": "ab:PatientSummary.lastUpdated"
@@ -64,29 +64,29 @@
       ]
     },
     {
-      "@id": "ab:TimelinessMeasurement",
+      "@id": "ab:CurrentnessMeasurement",
       "@type": "dqv:Metric",
-      "rdfs:label": "Timeliness Measurement",
+      "rdfs:label": "Currentness Measurement",
       "dqv:isMeasurementOf": {
-        "@id": "ab:CheckTimeliness"
+        "@id": "ab:CheckCurrentness"
       },
       "dqv:computedOn": {
         "@id": "ab:PatientSummary.lastUpdated"
       }
     },
     {
-      "@id": "ab:Timeliness",
+      "@id": "ab:Currentness",
       "@type": "dqv:Metric",
-      "rdfs:label": "Timeliness Metric (Abstract)",
+      "rdfs:label": "Currentness Metric (Abstract)",
       "dqv:inDimension": {
-        "@id": "ab:TimelinessDimension",
+        "@id": "ab:CurrentnessDimension",
         "@type": "dqv:Dimension"
       }
     },
     {
-      "@id": "ab:TimelinessDimension",
+      "@id": "ab:CurrentnessDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Timeliness (ISO/IEC 25012)"
+      "rdfs:label": "Currentness (ISO/IEC 25012)"
     },
     {
       "@id": "ab:PatientSummary",

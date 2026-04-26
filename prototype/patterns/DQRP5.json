@@ -5,7 +5,7 @@
   "date": "28/01/2026",
   "version": "1.0",
   "qualityDimension": {
-    "dimension": "Validity",
+    "dimension": "Completeness",
     "source": "Data Management Body of Knowledge DAMA-DMBOK"
   },
   "statementTemplate": "In the %entityName% entity, the number of instances must be %operator% %value%",

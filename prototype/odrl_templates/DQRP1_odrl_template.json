@@ -1,7 +1,7 @@
 {
   "patternId": "DQRP1",
   "patternVersion": "1.0",
-  "description": "ODRL template for Timeliness pattern based on Data Age constraint",
+  "description": "ODRL template for Currentness pattern based on Data Age constraint",
   "context": {
     "odrl:operator": {
       "@type": "@id"
