@@ -6,7 +6,7 @@
   "version": "1.0",
   "qualityDimension": {
     "dimension": "Validity",
-    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+    "source": "ISO/IEC 25012"
   },
   "statementTemplate": "In the %entityName% entity, the %attributeName% attribute must follow the %standardName% standard",
   "parameters": [

@@ -78,7 +78,7 @@
     {
       "@id": "ab:ValidityDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Validity (Data Management Body of Knowledge DAMA-DMBOK)"
+      "rdfs:label": "Validity (ISO/IEC 25012)"
     },
     {
       "@id": "ab:Hospital.country",

@@ -6,7 +6,7 @@
   "version": "1.0",
   "qualityDimension": {
     "dimension": "Completeness",
-    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+    "source": "ISO/IEC 25012"
   },
   "statementTemplate": "In the %entityName% entity, the number of instances must be %operator% %value%",
   "parameters": [

@@ -4,7 +4,7 @@
   "description": "Validates the number of instances of an entity to achieve adequate statistical power.",
   "qualityDimension": {
     "dimension": "Completeness",
-    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+    "source": "ISO/IEC 25012"
   },
   "measurementConcept": "Volume",
   "pattern": {

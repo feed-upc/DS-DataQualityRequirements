@@ -80,7 +80,7 @@
     {
       "@id": "ab:CompletenessDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Completeness (Data Management Body of Knowledge DAMA-DMBOK)"
+      "rdfs:label": "Completeness (ISO/IEC 25012)"
     },
     {
       "@id": "ab:AMRStudy.isolates",

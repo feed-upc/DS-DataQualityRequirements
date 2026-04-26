@@ -4,7 +4,7 @@
   "description": "Values of an attribute must follow a specific format",
   "qualityDimension": {
     "dimension": "Validity",
-    "source": "Data Management Body of Knowledge DAMA-DMBOK"
+    "source": "ISO/IEC 25012"
   },
   "pattern": {
     "id": "DQRP3",
