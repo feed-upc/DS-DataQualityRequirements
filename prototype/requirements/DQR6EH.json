@@ -3,9 +3,10 @@
   "goal": "Ensures data adheres to required formats",
   "description": "Values of an attribute must follow a specific format",
   "qualityDimension": {
-    "dimension": "Validity",
+    "dimension": "Compliance",
     "source": "ISO/IEC 25012"
   },
+  "measurementConcept": "Validity",
   "pattern": {
     "id": "DQRP3",
     "version": "1.0"

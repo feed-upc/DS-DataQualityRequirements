@@ -431,7 +431,7 @@ def test_consistency_refinement(res: Results):
 
 def test_measurement_concept_override(res: Results):
     """
-    DQR4EH has measurementConcept='Volume' overriding dimension='Validity'.
+    DQR4EH has measurementConcept='Volume' overriding dimension='Completeness'.
     The generated rule should use 'Volume' for measurement IDs.
     """
     print("\n--- Test: measurementConcept override (DQR4EH) ---")
@@ -454,7 +454,7 @@ def test_measurement_concept_override(res: Results):
 
 def test_reference_standard_node(res: Results):
     """
-    DQRP3 (Validity/Standards) should generate a ReferenceStandard node.
+    DQRP3 (Compliance/Standards) should generate a ReferenceStandard node.
     """
     print("\n--- Test: reference standard node (DQRP3 rules) ---")
     for rid in ["DQR2EH", "DQR6EH"]:

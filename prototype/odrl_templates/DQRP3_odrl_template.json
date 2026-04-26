@@ -2,7 +2,7 @@
   "patternId": "DQRP3",
   "patternVersion": "1.0",
 
-  "description": "ODRL template for Validity pattern — values of an attribute must conform to a reference standard",
+  "description": "ODRL template for Compliance pattern — values of an attribute must conform to a reference standard",
 
   "context": {
     "odrl:operator": {

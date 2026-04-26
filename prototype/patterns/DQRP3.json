@@ -5,7 +5,7 @@
   "date": "28/01/2026",
   "version": "1.0",
   "qualityDimension": {
-    "dimension": "Validity",
+    "dimension": "Compliance",
     "source": "ISO/IEC 25012"
   },
   "statementTemplate": "In the %entityName% entity, the %attributeName% attribute must follow the %standardName% standard",

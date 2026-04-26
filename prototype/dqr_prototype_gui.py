@@ -168,7 +168,7 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
     req_id = requirement["id"]
     dim = requirement["qualityDimension"]["dimension"]
     # Optional override: when the measurement concept differs from the dimension
-    # (e.g. dimension="Validity" but measurement concept is "Volume")
+    # (e.g. dimension="Completeness" but measurement concept is "Volume", or dimension="Compliance" but concept is "Validity")
     concept = requirement.get("measurementConcept", dim)
 
     # --- Refinement-based template (DQRP4: Consistency) ---

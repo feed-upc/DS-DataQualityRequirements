@@ -23,7 +23,7 @@
       "@type": "dqv:QualityPolicy",
       "rdfs:label": "ab:DQR2EHRule - QualityPolicy",
       "tb:derivedFrom": "DQR2EH",
-      "tb:qualityDimension": "Validity",
+      "tb:qualityDimension": "Compliance",
       "tb:sourceEntity": {
         "@id": "ab:EHDS Governance Authority"
       },
@@ -71,14 +71,14 @@
       "@type": "dqv:Metric",
       "rdfs:label": "Validity Metric (Abstract)",
       "dqv:inDimension": {
-        "@id": "ab:ValidityDimension",
+        "@id": "ab:ComplianceDimension",
         "@type": "dqv:Dimension"
       }
     },
     {
-      "@id": "ab:ValidityDimension",
+      "@id": "ab:ComplianceDimension",
       "@type": "dqv:Dimension",
-      "rdfs:label": "Validity (ISO/IEC 25012)"
+      "rdfs:label": "Compliance (ISO/IEC 25012)"
     },
     {
       "@id": "ab:PatientSummary.PatientSummaryHeader.PatientIdentification.countryOfAffiliation",
