@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DQR Studio — Policy Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #EEF2FA;
+  color: #0F172A;
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── App shell ─────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 256px;
+  min-width: 256px;
+  background: #1a2e55;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 18px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.main-area {
+  flex: 1;
+  padding: 36px 48px;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+.logo-mark {
+  width: 34px; height: 34px;
+  background: #3B82F6;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.logo-text { font-size: 17px; font-weight: 800; color: white; }
+.logo-sub  { font-size: 10px; color: #64A2FF; font-weight: 500; }
+
+.sb-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #5B7DB8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 6px;
+  border-radius: 8px;
+  transition: background 0.15s;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+.step-row.active { background: rgba(59,130,246,0.18); }
+.step-row.done   { opacity: 0.75; }
+.step-bubble {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.2s;
+}
+.step-row.active .step-bubble {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  color: white;
+}
+.step-row.done .step-bubble {
+  background: #10B981;
+  border-color: #10B981;
+  color: white;
+}
+.step-text {}
+.step-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+.step-hint { font-size: 11px; color: #5B7DB8; margin-top: 2px; transition: color 0.2s; }
+.step-row.active .step-hint { color: #93C5FD; }
+
+/* connector line */
+.step-connector {
+  width: 2px; height: 14px;
+  background: rgba(255,255,255,0.08);
+  margin: 0 0 0 17px;
+}
+
+/* coverage panel */
+.cov-panel {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.cov-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.cov-row:hover { background: rgba(255,255,255,0.05); }
+.cov-pip {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cov-name { font-size: 12px; color: rgba(255,255,255,0.65); flex: 1; }
+.cov-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+}
+.cov-badge.has { background: rgba(16,185,129,0.2); color: #6EE7B7; }
+.cov-none { opacity: 0.35; font-style: italic; }
+
+/* ── Page header ───────────────────────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.breadcrumb {
+  font-size: 13px;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.breadcrumb b { color: #0F172A; font-weight: 600; }
+.data-product-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.data-product-chip span { font-weight: 700; color: #1E3A6E; }
+
+/* ── Step panels ───────────────────────────────────────────────────────────── */
+.panel { display: none; }
+.panel.active {
+  display: block;
+  animation: fadeUp 0.22s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.panel-heading { margin-bottom: 28px; }
+.panel-heading h2 { font-size: 22px; font-weight: 800; color: #0F172A; margin-bottom: 6px; }
+.panel-heading p  { font-size: 14px; color: #64748B; line-height: 1.55; }
+
+/* ── Step 1: Dimension tiles ───────────────────────────────────────────────── */
+.dim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.dim-tile {
+  background: white;
+  border-radius: 14px;
+  padding: 22px 18px 20px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
+  text-align: center;
+  user-select: none;
+}
+.dim-tile-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 12px 12px 0 0;
+}
+.dim-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+}
+.dim-tile.selected {
+  border-color: var(--c);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 15%, transparent);
+}
+.dim-tile-icon { font-size: 30px; margin-bottom: 10px; }
+.dim-tile-name { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+.dim-tile-desc { font-size: 12px; color: #64748B; line-height: 1.4; }
+.dim-count-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 20px;
+  line-height: 1.4;
+}
+
+/* ── Step 2: Pattern cards ─────────────────────────────────────────────────── */
+.pattern-stack { display: flex; flex-direction: column; gap: 12px; }
+.pcard {
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #E2E8F0;
+  padding: 22px 26px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.pcard:hover {
+  border-color: #93C5FD;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+}
+.pcard-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.pcard-pid  { font-size: 11px; font-weight: 700; color: #94A3B8; letter-spacing: 0.06em; text-transform: uppercase; }
+.pcard-name { font-size: 17px; font-weight: 700; color: #0F172A; margin-top: 2px; }
+.pcard-desc { font-size: 13px; color: #64748B; margin-bottom: 12px; line-height: 1.5; }
+.pcard-example {
+  background: #F0F7FF;
+  border-left: 3px solid #3B82F6;
+  padding: 9px 13px;
+  border-radius: 0 7px 7px 0;
+  font-size: 13px;
+  color: #1E40AF;
+  font-style: italic;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.pcard-example-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #93C5FD;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.pcard-conflict {
+  background: #FFF7ED;
+  border: 1px solid #FED7AA;
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 12px;
+  color: #92400E;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.use-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #2563EB;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.use-btn:hover { background: #1D4ED8; }
+.use-btn svg { flex-shrink: 0; }
+
+/* ── Step 3: Mad Libs builder ──────────────────────────────────────────────── */
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 22px;
+  align-items: start;
+}
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.card-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+
+/* Dim tag */
+.dim-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 4px;
+}
+.pattern-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748B;
+  margin-bottom: 22px;
+}
+
+/* The sentence */
+.sentence-wrap {
+  font-size: 16px;
+  line-height: 3.2;
+  color: #0F172A;
+  user-select: none;
+}
+
+/* Mad Libs slots */
+.ml-text { /* plain text segments — no class needed, just inline */ }
+
+.ml-text-input {
+  display: inline-block;
+  border: none;
+  border-bottom: 2.5px solid #3B82F6;
+  background: #EFF6FF;
+  border-radius: 6px 6px 0 0;
+  padding: 3px 9px;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #1D4ED8;
+  outline: none;
+  transition: background 0.15s, border-color 0.15s;
+  min-width: 90px;
+  vertical-align: middle;
+  text-align: center;
+}
+.ml-text-input::placeholder { color: #93C5FD; font-weight: 400; font-style: italic; font-size: 13px; }
+.ml-text-input:focus { background: #DBEAFE; border-bottom-color: #1E40AF; }
+.ml-text-input.filled { background: #DBEAFE; }
+
+.ml-select {
+  display: inline-block;
+  border: none;
+  border-bottom: 2.5px solid #3B82F6;
+  background: #EFF6FF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 6px center;
+  border-radius: 6px 6px 0 0;
+  padding: 3px 26px 3px 9px;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #1D4ED8;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: background 0.15s;
+}
+.ml-select:focus { background-color: #DBEAFE; }
+
+.ml-number {
+  display: inline-block;
+  border: none;
+  border-bottom: 2.5px solid #3B82F6;
+  background: #EFF6FF;
+  border-radius: 6px 6px 0 0;
+  padding: 3px 9px;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #1D4ED8;
+  outline: none;
+  min-width: 70px;
+  text-align: center;
+  vertical-align: middle;
+  transition: background 0.15s;
+}
+.ml-number::placeholder { color: #93C5FD; font-style: italic; font-weight: 400; font-size: 13px; }
+.ml-number:focus { background: #DBEAFE; }
+.ml-number.filled { background: #DBEAFE; }
+
+/* Range slider inline */
+.ml-range-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #EFF6FF;
+  border-bottom: 2.5px solid #3B82F6;
+  border-radius: 6px 6px 0 0;
+  padding: 3px 10px;
+  vertical-align: middle;
+}
+.ml-range {
+  width: 90px;
+  accent-color: #2563EB;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.ml-range-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1D4ED8;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* ── Preview panel ─────────────────────────────────────────────────────────── */
+.preview-stack { display: flex; flex-direction: column; gap: 16px; }
+
+.policy-box {
+  border: 2px solid #10B981;
+  border-radius: 11px;
+  padding: 18px;
+  background: #F0FDF4;
+}
+.policy-box-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #065F46;
+  margin-bottom: 10px;
+}
+.policy-status { font-size: 18px; }
+.policy-stmt {
+  font-size: 13px;
+  color: #374151;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  min-height: 50px;
+  transition: color 0.2s;
+}
+.policy-stmt.dim { color: #9CA3AF; }
+.policy-meta-row {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.pm-label { font-weight: 600; color: #6B7280; min-width: 74px; }
+.pm-val   { color: #1F2937; }
+
+.rel-box {
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.rel-conflict { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
+.rel-dep      { background: #EFF6FF; border: 1.5px solid #BFDBFE; color: #1E40AF; }
+.rel-title    { font-weight: 700; margin-bottom: 4px; }
+
+/* ── Step 4: Governance ────────────────────────────────────────────────────── */
+.stmt-confirm {
+  border: 2px solid #10B981;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background: #F0FDF4;
+  font-style: italic;
+  font-size: 15px;
+  color: #065F46;
+  margin-bottom: 26px;
+  line-height: 1.6;
+}
+
+.gov-card { background: white; border-radius: 14px; padding: 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.gov-card-title { font-size: 18px; font-weight: 700; margin-bottom: 22px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 13px; font-weight: 600; color: #374151; }
+.form-hint  { font-size: 11px; color: #9CA3AF; margin-top: -2px; }
+
+.form-input, .form-select, .form-textarea {
+  border: 1.5px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0F172A;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: white;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+.form-textarea { min-height: 80px; resize: vertical; }
+
+/* ── Action bar ────────────────────────────────────────────────────────────── */
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1.5px solid #E2E8F0;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.btn-back  { background: white; color: #64748B; border: 1.5px solid #E2E8F0; }
+.btn-back:hover  { background: #F8FAFC; color: #0F172A; }
+.btn-next  { background: #2563EB; color: white; }
+.btn-next:hover  { background: #1D4ED8; }
+.btn-next:disabled { background: #BFDBFE; cursor: not-allowed; }
+.btn-save  { background: #10B981; color: white; }
+.btn-save:hover  { background: #059669; }
+.btn-ghost { background: transparent; color: #64748B; border: 1.5px solid #E2E8F0; }
+.btn-ghost:hover { background: #F8FAFC; }
+.btn-primary { background: #2563EB; color: white; }
+.btn-primary:hover { background: #1D4ED8; }
+
+/* ── Success state ─────────────────────────────────────────────────────────── */
+#panel-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-ring {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: #D1FAE5;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  margin: 0 auto 22px;
+}
+.success-h { font-size: 24px; font-weight: 800; color: #065F46; margin-bottom: 10px; }
+.success-p {
+  font-size: 15px;
+  color: #374151;
+  font-style: italic;
+  max-width: 540px;
+  margin: 0 auto 28px;
+  line-height: 1.65;
+}
+.success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ── Utilities ─────────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+.mt-12  { margin-top: 12px; }
+.mt-20  { margin-top: 20px; }
+
+/* ── Scrollbar (subtle) ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">🛡</div>
+    <div>
+      <div class="logo-text">DQR Studio</div>
+      <div class="logo-sub">Policy Builder</div>
+    </div>
+  </div>
+
+  <div class="sb-section-label">New policy — steps</div>
+
+  <div class="step-row active" id="sb-1">
+    <div class="step-bubble">1</div>
+    <div class="step-text">
+      <div class="step-name">Quality Dimension</div>
+      <div class="step-hint" id="sb-1-hint">What concern do you want to address?</div>
+    </div>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-row" id="sb-2">
+    <div class="step-bubble">2</div>
+    <div class="step-text">
+      <div class="step-name">Rule Pattern</div>
+      <div class="step-hint" id="sb-2-hint">Choose the structure of your rule</div>
+    </div>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-row" id="sb-3">
+    <div class="step-bubble">3</div>
+    <div class="step-text">
+      <div class="step-name">Define the Rule</div>
+      <div class="step-hint">Fill in the specifics</div>
+    </div>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-row" id="sb-4">
+    <div class="step-bubble">4</div>
+    <div class="step-text">
+      <div class="step-name">Governance</div>
+      <div class="step-hint">Source &amp; documentation</div>
+    </div>
+  </div>
+
+  <div class="cov-panel">
+    <div class="sb-section-label" style="margin-bottom:10px">Coverage · Patient Summary</div>
+    <div id="cov-sidebar"></div>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main-area">
+
+  <div class="page-header">
+    <div class="breadcrumb">Requirements &rsaquo; <b>New Policy</b></div>
+    <div class="data-product-chip">
+      📁 Data Product: <span>Patient Summary</span>
+    </div>
+  </div>
+
+  <!-- ── PANEL 1: Dimension ── -->
+  <div class="panel active" id="panel-1">
+    <div class="panel-heading">
+      <h2>What aspect of data quality do you want to enforce?</h2>
+      <p>Pick a quality dimension. Each one addresses a different kind of concern about your data.</p>
+    </div>
+    <div class="dim-grid" id="dim-grid"></div>
+  </div>
+
+  <!-- ── PANEL 2: Pattern ── -->
+  <div class="panel" id="panel-2">
+    <div class="panel-heading">
+      <h2>Choose the type of rule</h2>
+      <p>Each pattern defines a reusable rule structure for the <strong id="p2-dim-label">—</strong> dimension. Pick the one that best describes your intent.</p>
+    </div>
+    <div class="pattern-stack" id="pattern-stack"></div>
+    <div class="action-bar">
+      <button class="btn btn-back" onclick="go(1)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL 3: Builder ── -->
+  <div class="panel" id="panel-3">
+    <div class="panel-heading">
+      <h2>Define your policy</h2>
+      <p>Complete the sentence below. The policy preview on the right updates as you type.</p>
+    </div>
+
+    <div class="builder-grid">
+      <!-- Left: Sentence builder -->
+      <div>
+        <div class="card">
+          <div class="card-label">Policy sentence builder</div>
+          <div id="builder-tag"></div>
+          <div class="pattern-subtitle" id="builder-pattern-name"></div>
+          <div class="sentence-wrap" id="sentence-wrap"></div>
+        </div>
+        <div class="action-bar">
+          <button class="btn btn-back" onclick="go(2)">← Back</button>
+          <button class="btn btn-next" id="btn-next-3" onclick="go(4)" disabled>
+            Next: Governance →
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Preview -->
+      <div class="preview-stack">
+        <div class="card">
+          <div class="card-label">Live policy preview</div>
+          <div class="policy-box">
+            <div class="policy-box-hdr">
+              <span class="policy-status" id="preview-status">🔲</span>
+              <span id="preview-id">Policy —</span>
+            </div>
+            <div class="policy-stmt dim" id="preview-stmt">Complete the sentence builder to see your policy here.</div>
+            <div class="policy-meta-row"><span class="pm-label">Dimension</span><span class="pm-val" id="preview-dim">—</span></div>
+            <div class="policy-meta-row"><span class="pm-label">Pattern</span><span class="pm-val" id="preview-pattern">—</span></div>
+          </div>
+        </div>
+
+        <div class="card hidden" id="conflict-card"></div>
+
+        <div class="card">
+          <div class="card-label">Pattern reference card</div>
+          <div id="ref-card-img-wrap">
+            <div id="ref-placeholder" style="background:#F1F5F9;border-radius:8px;padding:30px 20px;text-align:center;color:#94A3B8;font-size:12px;line-height:1.5">
+              The pattern reference card (from media2) would appear here, showing the full schema of this pattern for reference.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 4: Governance ── -->
+  <div class="panel" id="panel-4">
+    <div class="panel-heading">
+      <h2>Governance &amp; documentation</h2>
+      <p>Document where this requirement comes from and who is responsible for it.</p>
+    </div>
+
+    <div class="stmt-confirm" id="p4-stmt-confirm">—</div>
+
+    <div class="gov-card">
+      <div class="gov-card-title">Requirement details</div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="f-id">Requirement ID</label>
+          <div class="form-hint">Auto-suggested — edit if needed</div>
+          <input class="form-input mt-12" id="f-id" type="text" placeholder="e.g. DQR8EH">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-source">Raised by</label>
+          <div class="form-hint">Who defined or requested this requirement?</div>
+          <select class="form-select mt-12" id="f-source">
+            <option value="">Select source…</option>
+            <option>EHDS Governance Authority</option>
+            <option>Data Space Governance Authority</option>
+            <option>Requirement Engineer</option>
+            <option>Clinical Expert</option>
+            <option>Legal / Compliance Team</option>
+            <option>Automated Process</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:18px">
+        <label class="form-label" for="f-materials">Supporting materials</label>
+        <div class="form-hint">Link to the regulation, rulebook, or standard that mandates this rule</div>
+        <textarea class="form-textarea mt-12" id="f-materials" placeholder="e.g. EHDS Regulation Art. 12 (https://…), Dataspace Rulebook p.40"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="f-history">History</label>
+        <input class="form-input" id="f-history" type="text">
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn-back" onclick="go(3)">← Back</button>
+      <button class="btn btn-save" onclick="save()">✓ Create Policy</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL SUCCESS ── -->
+  <div class="panel" id="panel-success">
+    <div class="success-ring">✅</div>
+    <div class="success-h" id="success-title">Policy created!</div>
+    <div class="success-p" id="success-stmt">—</div>
+    <div class="success-actions">
+      <button class="btn btn-primary" onclick="alert('In the full app this generates the ODRL rule and deploys a validation microservice.')">
+        ⚙ Generate ODRL &amp; Validation Service
+      </button>
+      <button class="btn btn-ghost" onclick="restart()">+ Create another policy</button>
+      <button class="btn btn-ghost" onclick="alert('Navigate to requirements catalog')">View all requirements</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════════ */
+const DIM = {
+  Completeness: { color:'#2563EB', icon:'📊', desc:'Required fields, record counts, non-null values' },
+  Currentness:  { color:'#0891B2', icon:'⏱️', desc:'Data freshness and age limits' },
+  Compliance:   { color:'#7C3AED', icon:'📋', desc:'Format adherence, standard conformance' },
+  Consistency:  { color:'#EA580C', icon:'🔗', desc:'Cross-attribute value compatibility' },
+  Fairness:     { color:'#059669', icon:'⚖️', desc:'Group representation, bias prevention' },
+};
+
+const PATTERNS = [
+  {
+    id:'DQRP1', dim:'Currentness',
+    name:'Data Freshness Limit',
+    desc:'Set a maximum allowed age for the data in a specific attribute. Useful for fields that become unreliable after a certain period.',
+    example:'"Medication records must be updated within 90 days of the prescription date."',
+    conflicts:[], deps:[],
+    parts:[
+      {t:'text', v:'In the '},
+      {t:'slot', name:'entityName',   label:'entity',        kind:'text'},
+      {t:'text', v:' entity, the '},
+      {t:'slot', name:'attributeName1', label:'attribute',   kind:'text'},
+      {t:'text', v:' attribute is only valid if its data age is at most '},
+      {t:'slot', name:'amountOfTime', label:'amount',        kind:'number', min:0.1, step:'any'},
+      {t:'text', v:' '},
+      {t:'slot', name:'timeUnit',     label:'unit',          kind:'select', opts:['Days','Months','Years','Hours','Minutes','Seconds']},
+      {t:'text', v:', measured from the '},
+      {t:'slot', name:'attributeName2', label:'date attribute', kind:'text'},
+      {t:'text', v:' attribute.'},
+    ]
+  },
+  {
+    id:'DQRP2', dim:'Completeness',
+    name:'Mandatory Field Completeness',
+    desc:'Require a minimum percentage of non-empty values in a specific field. Set 100% for mandatory fields.',
+    example:'"The nationalHealthcarePatientID field must be 100% filled — no missing values allowed."',
+    conflicts:['Patterns that allow optional attributes to have any percentage of empty values'],
+    deps:[],
+    parts:[
+      {t:'text', v:'In the '},
+      {t:'slot', name:'entityName',       label:'entity',    kind:'text'},
+      {t:'text', v:' entity, the '},
+      {t:'slot', name:'attributeName',    label:'attribute', kind:'text'},
+      {t:'text', v:' attribute must contain '},
+      {t:'slot', name:'operator',         label:'',          kind:'select', opts:['at least','exactly']},
+      {t:'text', v:' '},
+      {t:'slot', name:'percentageValue',  label:'100',       kind:'range',  min:1, max:100, def:100},
+      {t:'text', v:'% non-empty values.'},
+    ]
+  },
+  {
+    id:'DQRP3', dim:'Compliance',
+    name:'Format Standard Conformance',
+    desc:'Require values in a field to follow a recognised standard or format (e.g. ISO codes, SNOMED, HL7).',
+    example:'"The country code field must follow the ISO 3166-1 alpha-2 standard."',
+    conflicts:[], deps:['DQRP2 — the field should also be non-empty to be validatable'],
+    parts:[
+      {t:'text', v:'In the '},
+      {t:'slot', name:'entityName',   label:'entity',    kind:'text'},
+      {t:'text', v:' entity, the '},
+      {t:'slot', name:'attributeName',label:'attribute', kind:'text'},
+      {t:'text', v:' attribute must conform to the '},
+      {t:'slot', name:'standardName', label:'standard name', kind:'text'},
+      {t:'text', v:' standard.'},
+    ]
+  },
+  {
+    id:'DQRP4', dim:'Consistency',
+    name:'Cross-attribute Value Consistency',
+    desc:'When one attribute takes certain values, another attribute must (or must not) take values from a specified set.',
+    example:'"When allergy severity is Critical, the reaction attribute must contain values from {Anaphylaxis, Shock}."',
+    conflicts:['Patterns that require an attribute to accept all possible values from its domain'],
+    deps:[],
+    parts:[
+      {t:'text', v:'In the '},
+      {t:'slot', name:'entityName1',   label:'entity',    kind:'text'},
+      {t:'text', v:' entity, when the '},
+      {t:'slot', name:'attributeName1',label:'attribute', kind:'text'},
+      {t:'text', v:' has the values '},
+      {t:'slot', name:'ValueSet1',     label:'{val1, val2}', kind:'text'},
+      {t:'text', v:', the '},
+      {t:'slot', name:'attributeName2',label:'attribute', kind:'text'},
+      {t:'text', v:' attribute must '},
+      {t:'slot', name:'operator',      label:'',          kind:'select', opts:['contain','not contain']},
+      {t:'text', v:' values from '},
+      {t:'slot', name:'ValueSet2',     label:'{val1, val2}', kind:'text'},
+      {t:'text', v:'.'},
+    ]
+  },
+  {
+    id:'DQRP5', dim:'Completeness',
+    name:'Minimum Record Count',
+    desc:'Ensure the dataset has enough rows for statistically valid analysis or machine learning.',
+    example:'"The PatientSummary entity must contain at least 500 patient records."',
+    conflicts:[], deps:[],
+    parts:[
+      {t:'text', v:'In the '},
+      {t:'slot', name:'entityName', label:'entity',    kind:'text'},
+      {t:'text', v:' entity, the number of records must be '},
+      {t:'slot', name:'operator',   label:'',          kind:'select', opts:['at least','exactly']},
+      {t:'text', v:' '},
+      {t:'slot', name:'value',      label:'N',         kind:'number', min:1, step:1},
+      {t:'text', v:'.'},
+    ]
+  },
+  {
+    id:'DQRP6', dim:'Fairness',
+    name:'Group Representation Balance',
+    desc:'Prevent systematic under-representation of demographic groups (e.g. sex, age, nationality).',
+    example:'"The distribution imbalance of the sex attribute must not exceed 15%."',
+    conflicts:[], deps:['DQRP5 — each group should also meet a minimum record count'],
+    parts:[
+      {t:'text', v:'In the '},
+      {t:'slot', name:'entityName',  label:'entity',    kind:'text'},
+      {t:'text', v:' entity, the distribution imbalance of the '},
+      {t:'slot', name:'attributeName',label:'attribute',kind:'text'},
+      {t:'text', v:' attribute must '},
+      {t:'slot', name:'operator',    label:'',          kind:'select', opts:['not exceed','be exactly']},
+      {t:'text', v:' '},
+      {t:'slot', name:'percValue',   label:'15',        kind:'range', min:1, max:99, def:15},
+      {t:'text', v:'%.'},
+    ]
+  },
+];
+
+// Existing DQRs (seeded)
+let existingDQRs = [
+  {id:'DQR1EH', dim:'Completeness'}, {id:'DQR2EH', dim:'Compliance'},
+  {id:'DQR3EH', dim:'Consistency'},  {id:'DQR4EH', dim:'Completeness'},
+  {id:'DQR5EH', dim:'Fairness'},     {id:'DQR6EH', dim:'Compliance'},
+  {id:'DQR7EH', dim:'Currentness'},
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════ */
+let S = {
+  step:    1,
+  dim:     null,
+  pattern: null,
+  vals:    {},
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+function go(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const id = n === 'success' ? 'panel-success' : `panel-${n}`;
+  document.getElementById(id).classList.add('active');
+  S.step = n;
+  updateSidebar();
+  if (n === 4) populateGov();
+}
+
+function updateSidebar() {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`sb-${i}`);
+    el.classList.remove('active','done');
+    if (i < S.step) el.classList.add('done');
+    else if (i === S.step) el.classList.add('active');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 1 — Dimension picker
+═══════════════════════════════════════════════════════════════ */
+function coverage() {
+  const c = {};
+  for (const d of Object.keys(DIM)) c[d] = existingDQRs.filter(r => r.dim === d).length;
+  return c;
+}
+
+function renderDimGrid() {
+  const cov = coverage();
+  const grid = document.getElementById('dim-grid');
+  grid.innerHTML = '';
+  for (const [dim, cfg] of Object.entries(DIM)) {
+    const n = cov[dim] || 0;
+    const tile = document.createElement('div');
+    tile.className = 'dim-tile';
+    tile.style.setProperty('--c', cfg.color);
+    tile.innerHTML = `
+      <div class="dim-tile-bar" style="background:${cfg.color}"></div>
+      ${n > 0 ? `<div class="dim-count-badge" style="background:${cfg.color}">${n} DQR${n>1?'s':''}</div>` : ''}
+      <div class="dim-tile-icon">${cfg.icon}</div>
+      <div class="dim-tile-name">${dim}</div>
+      <div class="dim-tile-desc">${cfg.desc}</div>
+    `;
+    tile.addEventListener('click', () => pickDim(dim, tile));
+    grid.appendChild(tile);
+  }
+  renderCovSidebar(cov);
+}
+
+function pickDim(dim, tile) {
+  document.querySelectorAll('.dim-tile').forEach(t => t.classList.remove('selected'));
+  tile.classList.add('selected');
+  S.dim = dim;
+  document.getElementById('sb-1-hint').textContent = dim;
+  setTimeout(() => {
+    renderPatterns(dim);
+    go(2);
+  }, 180);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 2 — Pattern cards
+═══════════════════════════════════════════════════════════════ */
+function renderPatterns(dim) {
+  const cfg = DIM[dim];
+  document.getElementById('p2-dim-label').textContent = dim;
+  document.getElementById('p2-dim-label').style.color = cfg.color;
+
+  const stack = document.getElementById('pattern-stack');
+  stack.innerHTML = '';
+
+  const filtered = PATTERNS.filter(p => p.dim === dim);
+  for (const p of filtered) {
+    const confHtml = p.conflicts.map(c =>
+      `<div class="pcard-conflict">⚠️ <strong>Conflict:</strong> may conflict with patterns that "${c}"</div>`
+    ).join('');
+    const depHtml = p.deps.map(d =>
+      `<div class="pcard-conflict" style="background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF">🔗 <strong>Dependency:</strong> ${d}</div>`
+    ).join('');
+
+    const card = document.createElement('div');
+    card.className = 'pcard';
+    card.innerHTML = `
+      <div class="pcard-top">
+        <div>
+          <div class="pcard-pid">${p.id}</div>
+          <div class="pcard-name">${p.name}</div>
+        </div>
+        <div class="dim-tag" style="background:${cfg.color};flex-shrink:0">${cfg.icon} ${dim}</div>
+      </div>
+      <div class="pcard-desc">${p.desc}</div>
+      <div class="pcard-example-label">Example</div>
+      <div class="pcard-example">${p.example}</div>
+      ${confHtml}${depHtml}
+      <button class="use-btn" onclick="pickPattern('${p.id}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Use this pattern
+      </button>
+    `;
+    stack.appendChild(card);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 3 — Mad Libs builder
+═══════════════════════════════════════════════════════════════ */
+function pickPattern(id) {
+  S.pattern = PATTERNS.find(p => p.id === id);
+  S.vals = {};
+  document.getElementById('sb-2-hint').textContent = S.pattern.name;
+  renderBuilder();
+  go(3);
+}
+
+function renderBuilder() {
+  const p = S.pattern;
+  const cfg = DIM[S.dim];
+
+  // Dimension tag + pattern name
+  document.getElementById('builder-tag').innerHTML =
+    `<span class="dim-tag" style="background:${cfg.color}">${cfg.icon} ${S.dim}</span>`;
+  document.getElementById('builder-pattern-name').textContent = p.name;
+
+  // Preview metadata
+  document.getElementById('preview-dim').innerHTML =
+    `<span style="color:${cfg.color};font-weight:600">${cfg.icon} ${S.dim}</span>`;
+  document.getElementById('preview-pattern').textContent = p.id;
+
+  // Conflict / dep card
+  const confCard = document.getElementById('conflict-card');
+  const rels = [...p.conflicts.map(c=>({type:'conflict',text:c})), ...p.deps.map(d=>({type:'dep',text:d}))];
+  if (rels.length) {
+    confCard.classList.remove('hidden');
+    confCard.innerHTML = `<div class="card-label">Relationships</div>` + rels.map(r =>
+      `<div class="rel-box ${r.type==='conflict'?'rel-conflict':'rel-dep'} mt-12">
+        <div class="rel-title">${r.type==='conflict'?'⚠️ Conflict note':'🔗 Dependency'}</div>
+        ${r.text}
+      </div>`
+    ).join('');
+  } else {
+    confCard.classList.add('hidden');
+  }
+
+  // Build sentence
+  const wrap = document.getElementById('sentence-wrap');
+  wrap.innerHTML = '';
+
+  for (const part of p.parts) {
+    if (part.t === 'text') {
+      wrap.appendChild(document.createTextNode(part.v));
+      continue;
+    }
+
+    // Slot
+    let el;
+    if (part.kind === 'select') {
+      el = document.createElement('select');
+      el.className = 'ml-select';
+      for (const o of part.opts) {
+        const opt = document.createElement('option');
+        opt.value = o; opt.textContent = o;
+        el.appendChild(opt);
+      }
+      S.vals[part.name] = part.opts[0];
+      el.addEventListener('change', () => { S.vals[part.name] = el.value; refreshPreview(); });
+
+    } else if (part.kind === 'range') {
+      const grp = document.createElement('span');
+      grp.className = 'ml-range-group';
+      const r = document.createElement('input');
+      r.type = 'range'; r.className = 'ml-range';
+      r.min = part.min; r.max = part.max; r.value = part.def || Math.round((part.min+part.max)/2);
+      const vd = document.createElement('span');
+      vd.className = 'ml-range-val'; vd.textContent = r.value;
+      S.vals[part.name] = r.value;
+      r.addEventListener('input', () => { vd.textContent = r.value; S.vals[part.name] = r.value; refreshPreview(); });
+      grp.appendChild(r); grp.appendChild(vd);
+      el = grp;
+
+    } else if (part.kind === 'number') {
+      el = document.createElement('input');
+      el.type = 'number'; el.className = 'ml-number';
+      el.placeholder = part.label; el.min = part.min; el.step = part.step || 'any';
+      el.addEventListener('input', () => { S.vals[part.name] = el.value; refreshPreview(); checkComplete(); });
+
+    } else {
+      el = document.createElement('input');
+      el.type = 'text'; el.className = 'ml-text-input';
+      el.placeholder = part.label;
+      el.addEventListener('input', () => {
+        S.vals[part.name] = el.value;
+        el.classList.toggle('filled', !!el.value.trim());
+        refreshPreview(); checkComplete();
+      });
+    }
+    wrap.appendChild(el);
+  }
+
+  refreshPreview();
+  checkComplete();
+}
+
+function buildStmt() {
+  let s = '';
+  for (const part of S.pattern.parts)
+    s += part.t === 'text' ? part.v : (S.vals[part.name] || `[${part.label||part.name}]`);
+  return s;
+}
+
+function isComplete() {
+  for (const part of S.pattern.parts) {
+    if (part.t !== 'slot') continue;
+    if (part.kind === 'select' || part.kind === 'range') continue;
+    const v = S.vals[part.name];
+    if (!v || !String(v).trim()) return false;
+  }
+  return true;
+}
+
+function checkComplete() {
+  document.getElementById('btn-next-3').disabled = !isComplete();
+}
+
+function refreshPreview() {
+  const stmt = buildStmt();
+  const done = isComplete();
+  const stmtEl = document.getElementById('preview-stmt');
+  stmtEl.textContent = stmt;
+  stmtEl.classList.toggle('dim', !done);
+  document.getElementById('preview-status').textContent = done ? '✅' : '🔲';
+  document.getElementById('preview-id').textContent =
+    'Policy — ' + (document.getElementById('f-id')?.value || '…');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STEP 4 — Governance
+═══════════════════════════════════════════════════════════════ */
+function populateGov() {
+  const stmt = buildStmt();
+  document.getElementById('p4-stmt-confirm').textContent = stmt;
+
+  // Suggest ID
+  const n = existingDQRs.length + 1;
+  document.getElementById('f-id').value = `DQR${n}EH`;
+  document.getElementById('f-history').value =
+    'Created ' + new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'2-digit', year:'numeric'});
+
+  // Keep preview-id in sync as user edits the ID
+  document.getElementById('f-id').addEventListener('input', refreshPreview);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SAVE
+═══════════════════════════════════════════════════════════════ */
+function save() {
+  const id   = document.getElementById('f-id').value || `DQR${existingDQRs.length+1}EH`;
+  const stmt = buildStmt();
+  existingDQRs.push({ id, dim: S.dim });
+  document.getElementById('success-title').textContent = `${id} created!`;
+  document.getElementById('success-stmt').textContent = stmt;
+  renderDimGrid();        // refresh coverage
+  renderCovSidebar(coverage());
+  go('success');
+}
+
+function restart() {
+  S = { step:1, dim:null, pattern:null, vals:{} };
+  renderDimGrid();
+  go(1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COVERAGE SIDEBAR
+═══════════════════════════════════════════════════════════════ */
+function renderCovSidebar(cov) {
+  const el = document.getElementById('cov-sidebar');
+  el.innerHTML = '';
+  for (const [dim, cfg] of Object.entries(DIM)) {
+    const n = cov[dim] || 0;
+    const row = document.createElement('div');
+    row.className = 'cov-row';
+    row.innerHTML = `
+      <div class="cov-pip" style="background:${n ? cfg.color : 'rgba(255,255,255,0.15)'}"></div>
+      <div class="cov-name ${n ? '' : 'cov-none'}">${cfg.icon} ${dim}</div>
+      <div class="cov-badge ${n ? 'has' : ''}">${n}</div>
+    `;
+    row.addEventListener('click', () => { pickDim(dim, null); });
+    el.appendChild(row);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+renderDimGrid();
+renderCovSidebar(coverage());
+</script>
+</body>
+</html>
