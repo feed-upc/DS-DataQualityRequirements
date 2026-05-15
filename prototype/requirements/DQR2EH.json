@@ -6,6 +6,10 @@
     "dimension": "Compliance",
     "source": "ISO/IEC 25012"
   },
+  "qualityDimensions": [
+    {"dimension": "Compliance", "source": "ISO/IEC 25012", "primary": true},
+    {"dimension": "Accuracy",   "source": "ISO/IEC 25012"}
+  ],
   "measurementConcept": "Validity",
   "pattern": {
     "id": "DQRP3",

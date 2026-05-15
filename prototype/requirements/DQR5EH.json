@@ -6,6 +6,10 @@
     "dimension": "Fairness",
     "source": "Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51\u201365 (2021)"
   },
+  "qualityDimensions": [
+    {"dimension": "Fairness",     "source": "Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51\u201365 (2021)", "primary": true},
+    {"dimension": "Completeness", "source": "ISO/IEC 25012"}
+  ],
   "pattern": {
     "id": "DQRP6",
     "version": "1.0"
@@ -16,7 +20,7 @@
     "operator": "not exceed",
     "percValue": "5"
   },
-  "statement": "In the AMRStudy.isolates entity, the class imbalance of the gender attribute should not exceed 5%",
+  "statement": "In the AMRStudy.isolates entity, the distribution imbalance of the gender attribute should not exceed 5%",
   "sourceEntity": "EHDS Governance Authority",
   "supportingMaterials": "Dataspace Rulebook (page 50)",
   "history": "Created 28/01/2026"

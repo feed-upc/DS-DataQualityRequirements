@@ -6,6 +6,10 @@
     "dimension": "Consistency",
     "source": "ISO/IEC 25012"
   },
+  "qualityDimensions": [
+    {"dimension": "Consistency", "source": "ISO/IEC 25012", "primary": true},
+    {"dimension": "Compliance",  "source": "ISO/IEC 25012"}
+  ],
   "pattern": {
     "id": "DQRP4",
     "version": "1.0"

@@ -8,6 +8,10 @@
     "dimension": "Fairness",
     "source": "Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51–65 (2021)"
   },
+  "qualityDimensions": [
+    {"dimension": "Fairness",     "source": "Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51–65 (2021)", "primary": true},
+    {"dimension": "Completeness", "source": "ISO/IEC 25012"}
+  ],
   "relationships": [
     {
       "type": "Dependency",
@@ -15,7 +19,7 @@
       "description": "Ensure that all relevant groups must contain at least N samples"
     }
   ],
-  "statementTemplate": "In the %entityName% entity, the distribution imbalance of the %attributeName% attribute should %operator% %percValue% %.",
+  "statementTemplate": "In the %entityName% entity, the distribution imbalance of the %attributeName% attribute should %operator% %percValue%%.",
   "parameters": [
     {
       "name": "entityName",

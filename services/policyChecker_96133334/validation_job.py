@@ -8,7 +8,9 @@ def run_gx_validation(data_path):
     suite = context.suites.add(gx.ExpectationSuite(name='semantic_suite'))
 
     # Step 2: http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#qM_Fairness
-    suite.add_expectation(gx.expectations.ExpectColumnKLDivergenceToBeLessThan(**{'column': 'gender', 'threshold': 0.5, 'partition_object': {'values': ['M', 'F'], 'weights': [0.5, 0.5]}}))
+    # DQR5EH: Fairness check — distribution imbalance of gender must not exceed percValue=5%.
+    # threshold=0.05 derived from percValue/100 (KL divergence proxy for ~5% imbalance threshold).
+    suite.add_expectation(gx.expectations.ExpectColumnKLDivergenceToBeLessThan(**{'column': 'gender', 'threshold': 0.05, 'partition_object': {'values': ['M', 'F'], 'weights': [0.5, 0.5]}}))
 
     csv_asset = context.data_sources.add_pandas('pandas_source').add_csv_asset('csv_asset', filepath_or_buffer=data_path)
     batch_def = csv_asset.add_batch_definition_whole_dataframe('dataframe_batch_def')

@@ -8,6 +8,10 @@
     "dimension": "Compliance",
     "source": "ISO/IEC 25012"
   },
+  "qualityDimensions": [
+    {"dimension": "Compliance", "source": "ISO/IEC 25012", "primary": true},
+    {"dimension": "Accuracy",   "source": "ISO/IEC 25012"}
+  ],
   "statementTemplate": "In the %entityName% entity, the %attributeName% attribute must follow the %standardName% standard",
   "parameters": [
     {

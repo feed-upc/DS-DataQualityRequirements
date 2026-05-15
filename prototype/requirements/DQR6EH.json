@@ -6,6 +6,10 @@
     "dimension": "Compliance",
     "source": "ISO/IEC 25012"
   },
+  "qualityDimensions": [
+    {"dimension": "Compliance", "source": "ISO/IEC 25012", "primary": true},
+    {"dimension": "Accuracy",   "source": "ISO/IEC 25012"}
+  ],
   "measurementConcept": "Validity",
   "pattern": {
     "id": "DQRP3",
@@ -14,9 +18,9 @@
   "parameters": {
     "entityName": "Hospital",
     "attributeName": "Hospital.country",
-    "standardName": "ISO 3166 International Standard"
+    "standardName": "ISO 3166"
   },
-  "statement": "In the Hospital entity, the country attribute must follow the ISO 3166 International Standard\u00a0standard",
+  "statement": "In the Hospital entity, the country attribute must follow the ISO 3166 standard",
   "sourceEntity": "EHDS Governance Authority",
   "supportingMaterials": "DataSpace Rulebook (page 100)",
   "history": "Created 15/02/2026"

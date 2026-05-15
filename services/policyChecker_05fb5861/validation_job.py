@@ -12,7 +12,7 @@ def run_gx_validation(data_path):
     suite.add_expectation(gx.expectations.ExpectColumnValuesToBeBetween(**{'column': 'lastUpdated_age_minutes', 'min_value': 0, 'max_value': 1440}))
 
     # Pre-computation for step 2
-    _df['lastUpdated_age_minutes'] = (pd.Timestamp.now() - pd.to_datetime(_df['lastUpdated'])).dt.total_seconds() / 60.0
+    _df['lastUpdated_age_minutes'] = (pd.Timestamp.now(tz='UTC') - pd.to_datetime(_df['lastUpdated'], utc=True)).dt.total_seconds() / 60.0
     ds = context.data_sources.add_pandas('pandas_source')
     da = ds.add_dataframe_asset(name='df_asset')
     batch_def = da.add_batch_definition_whole_dataframe('dataframe_batch_def')

@@ -42,7 +42,7 @@
 
   "constraint": {
     "leftOperand": {
-      "id": "ValidityMeasurement",
+      "id": "ComplianceMeasurement",
       "type": "dqv:QualityMeasurement"
     },
 

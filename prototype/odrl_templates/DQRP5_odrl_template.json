@@ -2,7 +2,7 @@
   "patternId": "DQRP5",
   "patternVersion": "1.0",
 
-  "description": "ODRL template for Validity pattern for ensuring statistically validity",
+  "description": "ODRL template for Completeness pattern ensuring sufficient sample size for statistical validity",
 
   "context": {
     "odrl:operator": {
@@ -40,7 +40,7 @@
 
   "constraint": {
     "leftOperand": {
-      "id": "ValidityMeasurement",
+      "id": "VolumeMeasurement",
       "type": "dqv:QualityMeasurement"
     },
 

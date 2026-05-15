@@ -1,0 +1,24 @@
+{
+  "id": "DQR1_1",
+  "goal": "Ensuring a required data age for a specific attribute in an entity",
+  "description": "A specific data age is required for the values of an attribute of an entity",
+  "qualityDimension": {
+    "dimension": "Currentness",
+    "source": "ISO/IEC 25012"
+  },
+  "pattern": {
+    "id": "DQRP1",
+    "version": "1.0"
+  },
+  "parameters": {
+    "entityName": "PatientSummary",
+    "attributeName1": "PatientID",
+    "amountOfTime": "0.1",
+    "timeUnit": "Seconds",
+    "attributeName2": "timestamp"
+  },
+  "statement": "In the PatientSummary entity, the data in the PatientID attribute is only valid if its data age is less than or equal to 0.1 Seconds, as calculated from the timestamp attribute.",
+  "sourceEntity": "EHDS Governance Authority",
+  "supportingMaterials": "",
+  "history": "Created 29/04/2026"
+}

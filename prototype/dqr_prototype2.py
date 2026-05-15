@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-prototype2/dqr_prototype2.py — v3 (HTML design port)
+prototype/dqr_prototype2.py — v3 (HTML design port)
 
 Design changes from v2:
   • Dark sidebar with step indicator and coverage mini-panel
@@ -31,11 +31,11 @@ import streamlit as st
 # ── Paths ──────────────────────────────────────────────────────────────────────
 HERE         = Path(__file__).resolve().parent
 CATS         = HERE.parent
-PATTERNS_DIR = CATS / "prototype" / "patterns"
-REQS_DIR     = CATS / "prototype" / "requirements"
-ODRL_TMPL    = CATS / "prototype" / "odrl_templates"
-ODRL_RULES   = CATS / "prototype" / "odrl_rules"
-MEDIA2_DIR   = CATS / "media2"
+PATTERNS_DIR = HERE / "patterns"
+REQS_DIR     = HERE / "requirements"
+ODRL_TMPL    = HERE / "odrl_templates"
+ODRL_RULES   = HERE / "odrl_rules"
+MEDIA2_DIR   = CATS / "media"
 API_URL      = os.environ.get("VALIDATION_API_URL", "http://localhost:5000")
 
 # ── Dimension palette ──────────────────────────────────────────────────────────
@@ -813,6 +813,132 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
             "rdfs:label": str(thr_val),
         })
     return {"@context": template["context"], "@graph": graph_nodes}
+
+
+# ── ODRL visual renderer ───────────────────────────────────────────────────────
+
+def render_odrl_visual(rule: dict):
+    graph = rule.get("@graph", [])
+
+    policy_node = next((n for n in graph if "odrl:permission" in n), {})
+    dim_node    = next((n for n in graph if n.get("@type") == "dqv:Dimension"), {})
+    metric_node = next((n for n in graph if "dqv:isMeasurementOf" in n), {})
+
+    perm = (policy_node.get("odrl:permission") or [{}])[0]
+
+    constraint = None
+    refinement = None
+    if "odrl:constraint" in perm:
+        constraint = (perm["odrl:constraint"] or [{}])[0]
+    elif "odrl:duty" in perm:
+        duty       = (perm["odrl:duty"] or [{}])[0]
+        constraint = (duty.get("odrl:constraint") or [{}])[0]
+        refs       = duty.get("odrl:action", {}).get("odrl:refinement") or []
+        refinement = refs[0] if refs else None
+
+    dim_name  = policy_node.get("tb:qualityDimension", "—")
+    dim_color = DIM_COLORS.get(dim_name, "#6B7280")
+    dim_icon  = DIM_ICONS.get(dim_name, "•")
+
+    # ── Metadata ──
+    st.markdown("##### Policy Metadata")
+    m1, m2, m3 = st.columns(3)
+    with m1:
+        st.markdown(f"**Policy ID**")
+        st.code(policy_node.get("@id", "—"), language=None)
+        st.markdown(f"**Type**")
+        st.code(policy_node.get("@type", "—"), language=None)
+    with m2:
+        st.markdown(f"**Derived from DQR**")
+        st.code(policy_node.get("tb:derivedFrom", "—"), language=None)
+        st.markdown(f"**Source entity**")
+        st.code(policy_node.get("tb:sourceEntity", {}).get("@id", "—"), language=None)
+    with m3:
+        st.markdown("**Quality Dimension**")
+        st.markdown(
+            f'<div style="background:{dim_color}18;border-left:4px solid {dim_color};'
+            f'padding:0.5rem 0.8rem;border-radius:4px;font-weight:600;color:{dim_color}">'
+            f'{dim_icon} {dim_name}</div>',
+            unsafe_allow_html=True,
+        )
+        st.caption(dim_node.get("rdfs:label", ""))
+
+    st.divider()
+
+    # ── Permission ──
+    st.markdown("##### Permission")
+    p1, p2, p3 = st.columns(3)
+    with p1:
+        st.markdown("**Action**")
+        st.code(perm.get("odrl:action", "—"), language=None)
+    with p2:
+        st.markdown("**Assigner**")
+        st.code(perm.get("odrl:assigner", {}).get("@id", "—"), language=None)
+        st.markdown("**Assignee**")
+        st.code(perm.get("odrl:assignee", {}).get("@id", "—"), language=None)
+    with p3:
+        st.markdown("**Target (asset)**")
+        st.code(perm.get("odrl:target", {}).get("@id", "—"), language=None)
+
+    # ── Refinement (conditional patterns only) ──
+    if refinement:
+        st.divider()
+        st.markdown("##### Condition (Refinement)")
+        r1, r2, r3 = st.columns(3)
+        with r1:
+            st.markdown("**When attribute**")
+            st.code(refinement.get("odrl:leftOperand", {}).get("@id", "—"), language=None)
+        with r2:
+            st.markdown("**Operator**")
+            st.code(refinement.get("odrl:operator", "—"), language=None)
+        with r3:
+            rv = refinement.get("odrl:rightOperand", {})
+            st.markdown("**Has value**")
+            st.code(rv.get("@value", rv.get("@id", "—")), language=None)
+
+    st.divider()
+
+    # ── Constraint ──
+    st.markdown("##### Constraint")
+    lo   = (constraint or {}).get("odrl:leftOperand", {})
+    ro   = (constraint or {}).get("odrl:rightOperand", {})
+    unit = (constraint or {}).get("odrl:unit", {}).get("@id", "")
+    op   = (constraint or {}).get("odrl:operator", "—")
+
+    c1, arr1, c2, arr2, c3, c4 = st.columns([3, 0.4, 2, 0.4, 2, 1.8])
+    with c1:
+        st.markdown("**Measurement (left operand)**")
+        st.info(lo.get("@id", "—"))
+    with arr1:
+        st.markdown("<div style='text-align:center;font-size:1.4rem;margin-top:2rem'>→</div>",
+                    unsafe_allow_html=True)
+    with c2:
+        st.markdown("**Operator**")
+        st.warning(op)
+    with arr2:
+        st.markdown("<div style='text-align:center;font-size:1.4rem;margin-top:2rem'>→</div>",
+                    unsafe_allow_html=True)
+    with c3:
+        st.markdown("**Threshold (right operand)**")
+        st.success(ro.get("@value", ro.get("@id", "—")))
+    with c4:
+        if unit:
+            st.markdown("**Unit**")
+            st.code(unit, language=None)
+
+    st.divider()
+
+    # ── Quality model ──
+    st.markdown("##### Quality Model")
+    q1, q2 = st.columns(2)
+    with q1:
+        st.markdown("**Metric**")
+        st.code(metric_node.get("@id", "—"), language=None)
+        st.caption(metric_node.get("rdfs:label", ""))
+    with q2:
+        st.markdown("**Dimension**")
+        st.code(dim_node.get("@id", "—"), language=None)
+        st.caption(dim_node.get("rdfs:label", ""))
 
 
 # ── Coverage widget ────────────────────────────────────────────────────────────
@@ -1889,72 +2015,11 @@ def page_generate_odrl():
     if not tmpl:
         return
 
+    # ── Top: policy summary card + DQR image ────────────────────────────────────
     c1, c2 = st.columns([3, 2])
     with c1:
         st.subheader("Policy card")
         st.markdown(policy_card_html(req), unsafe_allow_html=True)
-
-        with st.expander("View raw ODRL policy (machine-readable / expert)"):
-            try:
-                st.json(build_odrl_rule(req, tmpl))
-            except Exception as e:
-                st.error(f"Could not build ODRL: {e}")
-
-        st.divider()
-        col_save, col_gen = st.columns(2)
-        with col_save:
-            if st.button("\U0001f4be Save ODRL rule", use_container_width=True):
-                try:
-                    rule = build_odrl_rule(req, tmpl)
-                    ODRL_RULES.mkdir(parents=True, exist_ok=True)
-                    path = ODRL_RULES / f"{req['id']}_odrl.json"
-                    if save_json(path, rule):
-                        st.success(f"Saved → {path.name}")
-                except Exception as e:
-                    st.error(str(e))
-
-        with col_gen:
-            if st.button("⚙️ Generate validation service",
-                         type="primary", use_container_width=True):
-                with st.spinner("Generating validation service…"):
-                    try:
-                        rule = build_odrl_rule(req, tmpl)
-                        ODRL_RULES.mkdir(parents=True, exist_ok=True)
-                        local = ODRL_RULES / f"{req['id']}_odrl.json"
-                        save_json(local, rule)
-
-                        resp = requests.post(
-                            f"{API_URL}/generate-validation-service",
-                            json={"rule_id": req["id"], "data_product": "Patient_Summary"},
-                            timeout=300,
-                        )
-                        if resp.status_code == 200:
-                            st.session_state["gen_result"] = resp.json()
-                            st.session_state["gen_req_id"] = req["id"]
-                        else:
-                            try:
-                                err = resp.json()
-                            except Exception:
-                                err = {}
-                            st.session_state["gen_result"] = {
-                                "error": f"API error {resp.status_code}: "
-                                         f"{err.get('error', err.get('detail', resp.text))}",
-                                "logs": err.get("logs", ""),
-                            }
-                            st.session_state["gen_req_id"] = req["id"]
-
-                    except requests.ConnectionError:
-                        st.session_state["gen_result"] = {
-                            "error": f"Cannot reach API at {API_URL}. Is the server running?"}
-                        st.session_state["gen_req_id"] = req["id"]
-                    except requests.Timeout:
-                        st.session_state["gen_result"] = {
-                            "error": "Request timed out. The process may still be running."}
-                        st.session_state["gen_req_id"] = req["id"]
-                    except Exception as e:
-                        st.session_state["gen_result"] = {"error": str(e)}
-                        st.session_state["gen_req_id"] = req["id"]
-
     with c2:
         inst_img = get_instantiation_image(req)
         if inst_img:
@@ -1964,6 +2029,79 @@ def page_generate_odrl():
             p = find_by_id(patterns, req.get("pattern", {}).get("id", ""))
             if p:
                 show_pattern_image(p)
+
+    # ── Full-width ODRL section ──────────────────────────────────────────────────
+    st.divider()
+    st.subheader("ODRL Policy")
+    tab_vis, tab_raw = st.tabs(["📊 Visual breakdown", "📄 Raw JSON-LD"])
+    try:
+        rule = build_odrl_rule(req, tmpl)
+        with tab_vis:
+            render_odrl_visual(rule)
+        with tab_raw:
+            st.markdown(
+                "<style>[data-testid='stCode'] code "
+                "{ font-size: 0.71rem !important; line-height: 1.5 !important; }</style>",
+                unsafe_allow_html=True,
+            )
+            st.code(json.dumps(rule, indent=2), language="json")
+    except Exception as e:
+        st.error(f"Could not build ODRL: {e}")
+
+    st.divider()
+    col_save, col_gen = st.columns(2)
+    with col_save:
+        if st.button("\U0001f4be Save ODRL rule", use_container_width=True):
+            try:
+                rule = build_odrl_rule(req, tmpl)
+                ODRL_RULES.mkdir(parents=True, exist_ok=True)
+                path = ODRL_RULES / f"{req['id']}_odrl.json"
+                if save_json(path, rule):
+                    st.success(f"Saved → {path.name}")
+            except Exception as e:
+                st.error(str(e))
+
+    with col_gen:
+        if st.button("⚙️ Generate validation service",
+                     type="primary", use_container_width=True):
+            with st.spinner("Generating validation service…"):
+                try:
+                    rule = build_odrl_rule(req, tmpl)
+                    ODRL_RULES.mkdir(parents=True, exist_ok=True)
+                    local = ODRL_RULES / f"{req['id']}_odrl.json"
+                    save_json(local, rule)
+
+                    resp = requests.post(
+                        f"{API_URL}/generate-validation-service",
+                        json={"rule_id": req["id"], "data_product": "Patient_Summary"},
+                        timeout=300,
+                    )
+                    if resp.status_code == 200:
+                        st.session_state["gen_result"] = resp.json()
+                        st.session_state["gen_req_id"] = req["id"]
+                    else:
+                        try:
+                            err = resp.json()
+                        except Exception:
+                            err = {}
+                        st.session_state["gen_result"] = {
+                            "error": f"API error {resp.status_code}: "
+                                     f"{err.get('error', err.get('detail', resp.text))}",
+                            "logs": err.get("logs", ""),
+                        }
+                        st.session_state["gen_req_id"] = req["id"]
+
+                except requests.ConnectionError:
+                    st.session_state["gen_result"] = {
+                        "error": f"Cannot reach API at {API_URL}. Is the server running?"}
+                    st.session_state["gen_req_id"] = req["id"]
+                except requests.Timeout:
+                    st.session_state["gen_result"] = {
+                        "error": "Request timed out. The process may still be running."}
+                    st.session_state["gen_req_id"] = req["id"]
+                except Exception as e:
+                    st.session_state["gen_result"] = {"error": str(e)}
+                    st.session_state["gen_req_id"] = req["id"]
 
     # ── Full-width result panel (rendered outside the 2-column layout) ──────────
     gen_result = st.session_state.get("gen_result")
@@ -2264,16 +2402,17 @@ PAGES = {
     "pattern_maintainer": page_pattern_maintainer,
 }
 
-if "page" not in st.session_state:
-    st.session_state.page = "home"
+if __name__ == "__main__":
+    if "page" not in st.session_state:
+        st.session_state.page = "home"
 
-_page = st.session_state.page
-_wiz  = st.session_state.get("wiz")
-_wiz_step = (
-    _wiz.get("step", 0)
-    if (_page == "create_dqr_wizard" and _wiz and not _wiz.get("saved"))
-    else 0
-)
+    _page = st.session_state.page
+    _wiz  = st.session_state.get("wiz")
+    _wiz_step = (
+        _wiz.get("step", 0)
+        if (_page == "create_dqr_wizard" and _wiz and not _wiz.get("saved"))
+        else 0
+    )
 
-render_sidebar(_wiz_step)
-PAGES.get(_page, page_home)()
+    render_sidebar(_wiz_step)
+    PAGES.get(_page, page_home)()

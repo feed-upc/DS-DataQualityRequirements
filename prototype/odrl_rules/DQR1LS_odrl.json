@@ -75,7 +75,7 @@
       }
     },
     {
-      "@id": "ab:TimelinessDimension",
+      "@id": "ab:CurrentnessDimension",
       "@type": "dqv:Dimension",
       "rdfs:label": "Currentness (ISO/IEC 25012)"
     },

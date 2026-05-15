@@ -46,7 +46,7 @@
               "@id": "ab:DQR2EH_Constraint",
               "@type": "odrl:Constraint",
               "odrl:leftOperand": {
-                "@id": "ab:ValidityMeasurement",
+                "@id": "ab:ComplianceMeasurement",
                 "@type": "dqv:QualityMeasurement"
               },
               "odrl:operator": "odrl:isIncludedIn",
@@ -59,17 +59,17 @@
       ]
     },
     {
-      "@id": "ab:ValidityMeasurement",
+      "@id": "ab:ComplianceMeasurement",
       "@type": "dqv:Metric",
-      "rdfs:label": "Validity Measurement",
+      "rdfs:label": "Compliance Measurement",
       "dqv:isMeasurementOf": {
-        "@id": "ab:CheckValidity"
+        "@id": "ab:CheckCompliance"
       }
     },
     {
-      "@id": "ab:Validity",
+      "@id": "ab:Compliance",
       "@type": "dqv:Metric",
-      "rdfs:label": "Validity Metric (Abstract)",
+      "rdfs:label": "Compliance Metric (Abstract)",
       "dqv:inDimension": {
         "@id": "ab:ComplianceDimension",
         "@type": "dqv:Dimension"

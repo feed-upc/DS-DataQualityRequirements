@@ -8,6 +8,7 @@ def run_gx_validation(data_path):
     suite = context.suites.add(gx.ExpectationSuite(name='semantic_suite'))
 
     # Step 2: http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#qM
+    # DQR1EH: Completeness check on nationalHealthcarePatientID (mapped to physical column local_patient_id)
     suite.add_expectation(gx.expectations.ExpectColumnValuesToNotBeNull(**{'column': 'local_patient_id', 'mostly': 1.0}))
 
     csv_asset = context.data_sources.add_pandas('pandas_source').add_csv_asset('csv_asset', filepath_or_buffer=data_path)

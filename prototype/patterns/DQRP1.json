@@ -8,6 +8,10 @@
     "dimension": "Currentness",
     "source": "ISO/IEC 25012"
   },
+  "qualityDimensions": [
+    {"dimension": "Currentness", "source": "ISO/IEC 25012", "primary": true},
+    {"dimension": "Accuracy",    "source": "ISO/IEC 25012"}
+  ],
   "relationships": [
     {
       "type": "Conflict",
