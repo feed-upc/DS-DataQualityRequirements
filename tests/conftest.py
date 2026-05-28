@@ -13,6 +13,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "requires_eye: mark test as requiring the EYE N3 reasoner"
+    )
+
 HERE      = Path(__file__).resolve().parent
 CATS      = HERE.parent
 REPO_ROOT = CATS.parent.parent

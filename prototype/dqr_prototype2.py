@@ -6,11 +6,11 @@ Design changes from v2:
   • Dark sidebar with step indicator and coverage mini-panel
   • Intent-first wizard restructured into 4 clean steps:
       1. Quality Dimension (tiles with color bar, icon, description, count badge)
-      2. Rule Pattern (cards with human-readable names and example sentences)
-      3. Define the Rule (Mad Libs sentence preview above smart input grid)
+      2. DQR Pattern (cards with human-readable names and example sentences)
+      3. Define the Requirement (Mad Libs sentence preview above smart input grid)
       4. Governance & save (side-by-side with pattern reference image)
   • Live sentence preview updates as parameters are filled (blue=filled, orange=empty)
-  • Right-column live policy preview card in step 3
+  • Right-column live requirement preview card in step 3
   • ODRL stays hidden in expert expanders
 
 Run:  streamlit run dqr_prototype2.py
@@ -49,13 +49,13 @@ DIM_COLORS = {
     "Credibility":  "#0D9488",
 }
 DIM_ICONS = {
-    "Completeness": "📊",
-    "Currentness":  "⏱️",
-    "Compliance":   "📋",
-    "Consistency":  "🔗",
-    "Fairness":     "⚖️",
-    "Accuracy":     "🎯",
-    "Credibility":  "🏅",
+    "Completeness": "",
+    "Currentness":  "",
+    "Compliance":   "",
+    "Consistency":  "",
+    "Fairness":     "",
+    "Accuracy":     "",
+    "Credibility":  "",
 }
 DIM_DESCS = {
     "Completeness": "All required fields are present and populated",
@@ -666,7 +666,7 @@ def policy_card_html(req: dict) -> str:
     )
     return (
         f'<div class="policy-card">'
-        f'<div class="pc-header">✅ Policy: {req["id"]}</div>'
+        f'<div class="pc-header">Requirement: {req["id"]}</div>'
         f'<p style="font-size:0.93rem;font-style:italic;color:#374151;margin:0 0 0.8rem">{stmt}</p>'
         f'{rows}'
         f'</div>'
@@ -813,6 +813,148 @@ def build_odrl_rule(requirement: dict, template: dict) -> dict:
             "rdfs:label": str(thr_val),
         })
     return {"@context": template["context"], "@graph": graph_nodes}
+
+
+# ── DQVP Turtle builder ────────────────────────────────────────────────────────
+
+# Maps pattern ID → DQVP leftOperand term and parameter roles.
+_DQVP_PATTERN_MAP = {
+    "DQRP1": {
+        "leftOperand":    "dqvp:Freshness",
+        "targetAttribute": "attributeName2",   # timestamp column
+        "operator":       "odrl:lteq",
+        "rightOperand":   "amountOfTime",
+        "rightType":      "xsd:decimal",
+    },
+    "DQRP2": {
+        "leftOperand":    "dqvp:NonNullRate",
+        "targetAttribute": "attributeName",
+        "rightOperand":   "percentageValue",
+        "rightType":      "xsd:decimal",
+    },
+    "DQRP3": {
+        "leftOperand":        "dqvp:ReferenceConformance",
+        "targetAttribute":    "attributeName",
+        "referenceStandard":  "standardName",  # mapped to IRI below
+        "operator":           "odrl:gteq",
+        "rightOperand_fixed": "100",
+        "rightType":          "xsd:decimal",
+    },
+    "DQRP4": {
+        "leftOperand":        "dqvp:RowComparisonRate",
+        "targetAttribute":    "attributeName2",
+        "conditionAttribute": "attributeName1",
+        "conditionValues":    "ValueSet1",      # strip {} braces
+        "operator":           "odrl:eq",
+        "rightOperand_fixed": "NULL",
+    },
+    "DQRP5": {
+        "leftOperand":  "dqvp:RowCount",
+        "rightOperand": "value",
+        "rightType":    "xsd:integer",
+    },
+    "DQRP6": {
+        "leftOperand":    "dqvp:DistributionDeviation",
+        "targetAttribute": "attributeName",
+        "rightOperand":   "percValue",
+        "rightType":      "xsd:decimal",
+    },
+}
+
+# Known reference standard IRIs
+_STANDARD_IRIS = {
+    "ISO 3166":   "<https://www.iso.org/standard/3166-1>",
+    "ISO 3166-1": "<https://www.iso.org/standard/3166-1>",
+    "ICD-10":     "<https://www.who.int/classifications/icd/en/>",
+    "SNOMED CT":  "<http://snomed.info/sct>",
+}
+
+
+def build_dqvp_turtle(requirement: dict, template: dict) -> str:
+    """
+    Generate a DQVP-conformant Turtle policy from a DQR JSON + ODRL template.
+    Returns a Turtle string ready for plan_dqvp().
+    """
+    pid    = requirement.get("pattern", {}).get("id", "")
+    spec   = _DQVP_PATTERN_MAP.get(pid)
+    if not spec:
+        return f"# No DQVP mapping for pattern {pid}\n"
+
+    params  = requirement.get("parameters", {})
+    req_id  = requirement["id"]
+    dataset = params.get("entityName", "UnknownEntity").replace(".", "_")
+
+    # Resolve operator
+    if "operator" in spec:
+        odrl_op = spec["operator"]
+    else:
+        raw_op  = params.get("operator", "at least")
+        odrl_op = _ODRL_OP_MAP.get(raw_op, "odrl:gteq")
+
+    # Resolve right operand
+    if "rightOperand_fixed" in spec:
+        right_val  = spec["rightOperand_fixed"]
+        right_type = spec.get("rightType", "")
+    else:
+        right_val  = params.get(spec["rightOperand"], "")
+        right_type = spec.get("rightType", "")
+
+    right_turtle = (
+        f'"{right_val}"^^{right_type}' if right_type else f'"{right_val}"'
+    )
+
+    # Build constraint block lines
+    constraint_lines = [
+        f"            [ odrl:leftOperand     {spec['leftOperand']} ;",
+    ]
+
+    if "targetAttribute" in spec and spec["targetAttribute"] in params:
+        attr = params[spec["targetAttribute"]].replace(".", "_")
+        constraint_lines.append(f'              dqvp:targetAttribute ab:{attr} ;')
+
+    if "referenceStandard" in spec:
+        std_name = params.get(spec["referenceStandard"], "")
+        std_iri  = _STANDARD_IRIS.get(std_name, f"<https://www.iso.org/standard/{std_name.replace(' ','_')}>")
+        constraint_lines.append(f"              dqvp:referenceStandard {std_iri} ;")
+
+    if "conditionAttribute" in spec and spec["conditionAttribute"] in params:
+        cond_attr = params[spec["conditionAttribute"]].replace(".", "_")
+        constraint_lines.append(f'              dqvp:conditionAttribute ab:{cond_attr} ;')
+
+    if "conditionValues" in spec and spec["conditionValues"] in params:
+        raw_vals = params[spec["conditionValues"]].strip("{}")
+        constraint_lines.append(f'              dqvp:conditionValues    "{raw_vals}" ;')
+
+    constraint_lines += [
+        f"              odrl:operator        {odrl_op} ;",
+        f"              odrl:rightOperand    {right_turtle} ]",
+    ]
+    constraint_block = "\n".join(constraint_lines)
+
+    turtle = f"""\
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+@prefix dqvp:  <https://w3id.org/odrl/profile/dataquality#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix ab:    <https://w3id.org/ehds/patsum/attr/> .
+@prefix dp:    <https://w3id.org/ehds/patsum/asset/> .
+@prefix ex:    <https://example.org/ehds/dqvp/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+ex:{req_id}-offer
+    a dqvp:QualityPolicy, odrl:Offer ;
+    odrl:uid         ex:{req_id}-offer ;
+    odrl:profile     <https://w3id.org/odrl/profile/dataquality> ;
+    dcterms:source   "{req_id}" ;
+    odrl:permission [
+        a             odrl:Permission ;
+        odrl:target   dp:{dataset} ;
+        odrl:action   odrl:use ;
+        dqvp:allChecks (
+{constraint_block}
+        )
+    ] .
+"""
+    return turtle
 
 
 # ── ODRL visual renderer ───────────────────────────────────────────────────────
@@ -986,25 +1128,25 @@ def render_sidebar(wiz_step: int = 0):
     }
 
     STEPS = [
-        ("Quality Dimension", "What concern to address?"),
-        ("Rule Pattern",      "Choose the rule structure"),
-        ("Define the Rule",   "Fill in the specifics"),
-        ("Governance",        "Source & documentation"),
+        ("Quality Dimension",     "What concern to address?"),
+        ("DQR Pattern",           "Choose the requirement structure"),
+        ("Define the Requirement","Fill in the specifics"),
+        ("Governance",            "Source & documentation"),
     ]
 
     with st.sidebar:
         st.markdown(
             '<div class="sb-logo">'
-            '<div class="sb-logo-mark">\U0001f6e1</div>'
+            '<div class="sb-logo-mark">DQ</div>'
             '<div>'
             '<div class="sb-logo-text">DQR Catalog</div>'
-            '<div class="sb-logo-sub">Policy Builder</div>'
+            '<div class="sb-logo-sub">DQR Builder</div>'
             '</div></div>',
             unsafe_allow_html=True,
         )
 
         if wiz_step > 0:
-            st.markdown('<span class="sb-section-label">New policy — steps</span>',
+            st.markdown('<span class="sb-section-label">New requirement — steps</span>',
                         unsafe_allow_html=True)
             items_html = ""
             for i, (sname, shint) in enumerate(STEPS, 1):
@@ -1026,17 +1168,17 @@ def render_sidebar(wiz_step: int = 0):
         else:
             st.markdown('<span class="sb-section-label">Navigation</span>',
                         unsafe_allow_html=True)
-            if st.button("\U0001f3e0  Home",              key="sb_home",    use_container_width=True):
+            if st.button("Home",              key="sb_home",    use_container_width=True):
                 nav("home")
-            if st.button("\U0001f4da  Pattern Catalog",   key="sb_catalog",  use_container_width=True):
+            if st.button("Pattern Catalog",   key="sb_catalog",  use_container_width=True):
                 nav("catalog")
-            if st.button("\U0001f4dd  Requirements",      key="sb_reqs",     use_container_width=True):
+            if st.button("Requirements",      key="sb_reqs",     use_container_width=True):
                 nav("manage_dqr")
-            if st.button("⚙️  Generate Policies", key="sb_odrl",  use_container_width=True):
+            if st.button("Generate Policies", key="sb_odrl",  use_container_width=True):
                 nav("manage_odrl")
             st.markdown('<span class="sb-section-label" style="margin-top:12px;display:block">Maintainer</span>',
                         unsafe_allow_html=True)
-            if st.button("🔧  Define Pattern",    key="sb_maint", use_container_width=True):
+            if st.button("Define Pattern",    key="sb_maint", use_container_width=True):
                 nav("pattern_maintainer")
 
         # Coverage panel — always
@@ -1153,15 +1295,15 @@ def page_home():
     )
 
     cards = [
-        ("\U0001f4da", "Pattern Catalog",
+        ("", "Pattern Catalog",
          "Browse the library of reusable Data Quality Requirement Patterns (DQRPs) "
          "covering Completeness, Currentness, Compliance, Consistency, and Fairness.",
          "catalog"),
-        ("\U0001f4dd", "Requirements",
+        ("", "Requirements",
          "Create and manage concrete Data Quality Requirements (DQRs) for your data space. "
          "Each DQR is an instance of a reusable pattern with specific parameter values.",
          "manage_dqr"),
-        ("⚙️", "Generate Policies",
+        ("", "Generate Policies",
          "Convert DQRs into machine-executable ODRL policies and auto-generate "
          "the corresponding validation microservices.",
          "manage_odrl"),
@@ -1300,7 +1442,7 @@ def page_pattern_detail():
             st.markdown("**Relationships**")
             for r in rels:
                 box_cls = "conflict-box" if r.get("type") == "Conflict" else "dep-box"
-                prefix  = "⚠️ Conflict" if r.get("type") == "Conflict" else f"\U0001f517 {r.get('type','')}"
+                prefix  = "⚠️ Conflict" if r.get("type") == "Conflict" else f"{r.get('type','')}"
                 st.markdown(
                     f'<div class="{box_cls}"><strong>{prefix}</strong> '
                     f'({r.get("relatedPattern", "?")}): {r.get("description", "")}</div>',
@@ -1365,17 +1507,17 @@ def page_manage_dqr():
     st.subheader("Actions")
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        if st.button("➕ Create DQR", use_container_width=True, type="primary"):
+        if st.button("Create DQR", use_container_width=True, type="primary"):
             _wizard_reset()
             nav("create_dqr_wizard")
     with c2:
-        if st.button("✏️ Update DQR", use_container_width=True):
+        if st.button("Update DQR", use_container_width=True):
             nav("update_dqr")
     with c3:
-        if st.button("\U0001f441 View DQR", use_container_width=True):
+        if st.button("View DQR", use_container_width=True):
             nav("view_dqr")
     with c4:
-        if st.button("\U0001f5d1 Delete DQR", use_container_width=True):
+        if st.button("Delete DQR", use_container_width=True):
             nav("delete_dqr")
 
 
@@ -1402,7 +1544,7 @@ def _wizard_reset(preset_pattern: dict | None = None, preset_dim: str | None = N
 
 
 def page_create_dqr_wizard():
-    st.markdown('<div class="breadcrumb">Requirements › <b>New Policy</b></div>',
+    st.markdown('<div class="breadcrumb">Requirements › <b>New Requirement</b></div>',
                 unsafe_allow_html=True)
 
     if "wiz" not in st.session_state or st.session_state.wiz is None:
@@ -1410,7 +1552,7 @@ def page_create_dqr_wizard():
     wiz = st.session_state.wiz
 
     if not wiz.get("saved"):
-        step_bar(["Quality Dimension", "Rule Pattern", "Define the Rule", "Governance"],
+        step_bar(["Quality Dimension", "DQR Pattern", "Define the Requirement", "Governance"],
                  wiz["step"])
 
     if wiz["step"] == 1:
@@ -1485,10 +1627,10 @@ def _wiz_step2(wiz: dict):
         f'<span class="dim-badge" style="background:{color};font-size:0.85rem">{icon} {dim}</span>',
         unsafe_allow_html=True,
     )
-    st.markdown("## Choose the type of rule")
+    st.markdown("## Choose a DQR pattern")
     st.markdown(
         '<p style="color:#64748B;font-size:0.95rem;margin-bottom:1.25rem">'
-        'Each pattern defines a reusable rule structure. '
+        'Each pattern defines a reusable requirement structure. '
         'Pick the one that best describes your intent.'
         '</p>',
         unsafe_allow_html=True,
@@ -1513,7 +1655,7 @@ def _wiz_step2(wiz: dict):
             for r in conflicts
         )
         dep_html = "".join(
-            f'<div class="dep-box">\U0001f517 <strong>{r.get("type", "Dependency")}:</strong> '
+            f'<div class="dep-box"><strong>{r.get("type", "Dependency")}:</strong> '
             f'{r.get("description", "")}</div>'
             for r in deps
         )
@@ -1588,7 +1730,7 @@ def _wiz_step3(wiz: dict):
         stmt_html = live_statement_html(template, new_vals)
         st.markdown(
             f'<div class="builder-card">'
-            f'<div class="builder-label">Policy sentence</div>'
+            f'<div class="builder-label">Requirement statement</div>'
             f'<div class="sentence-wrap">{stmt_html}</div>'
             f'</div>',
             unsafe_allow_html=True,
@@ -1615,18 +1757,18 @@ def _wiz_step3(wiz: dict):
             filled_stmt = template
             for pname, val in new_vals.items():
                 filled_stmt = filled_stmt.replace(f"%{pname}%", str(val))
-            status_icon  = "✅"
+            status_icon  = "●"
             stmt_display = filled_stmt
             stmt_cls     = ""
         else:
-            status_icon  = "\U0001f532"
-            stmt_display = "Complete the sentence builder to see your policy preview here."
+            status_icon  = "○"
+            stmt_display = "Complete the sentence builder to see your requirement preview here."
             stmt_cls     = " dim"
 
         st.markdown(
             f'<div class="policy-box">'
             f'<div class="policy-box-hdr">'
-            f'<span>{status_icon}</span><span>Live policy preview</span></div>'
+            f'<span>{status_icon}</span><span>Live requirement preview</span></div>'
             f'<div class="policy-stmt-text{stmt_cls}">{stmt_display}</div>'
             f'<div class="pm-row"><span class="pm-label">Dimension</span>'
             f'<span class="pm-val" style="color:{color}">{icon} {dim}</span></div>'
@@ -1639,7 +1781,7 @@ def _wiz_step3(wiz: dict):
         # Relationships
         for r in p.get("relationships", []):
             box = "conflict-box" if r.get("type") == "Conflict" else "dep-box"
-            pfx = "⚠️ Conflict" if r.get("type") == "Conflict" else f"\U0001f517 {r.get('type','')}"
+            pfx = "⚠️ Conflict" if r.get("type") == "Conflict" else f"{r.get('type','')}"
             st.markdown(
                 f'<div class="{box}"><strong>{pfx}:</strong> {r.get("description","")}</div>',
                 unsafe_allow_html=True,
@@ -1657,14 +1799,14 @@ def _wiz_step4(wiz: dict):
         st.markdown(
             f'<div class="success-wrap">'
             f'<div class="success-ring">✅</div>'
-            f'<div class="success-h">Policy created successfully!</div>'
+            f'<div class="success-h">Requirement created successfully!</div>'
             f'<div class="success-p">{wiz.get("saved_stmt", "")}</div>'
             f'</div>',
             unsafe_allow_html=True,
         )
         ca, cb = st.columns(2)
         with ca:
-            if st.button("Create another policy", use_container_width=True):
+            if st.button("Create another requirement", use_container_width=True):
                 _wizard_reset()
                 st.rerun()
         with cb:
@@ -1781,7 +1923,7 @@ def _wiz_step4(wiz: dict):
             wiz["step"] = 3
             st.rerun()
     with sc:
-        if st.button("✓ Create Policy", type="primary", use_container_width=True):
+        if st.button("✓ Create Requirement", type="primary", use_container_width=True):
             dqr_id = wiz["meta"].get("id", "").strip()
             if not dqr_id:
                 st.error("Requirement ID cannot be empty.")
@@ -1858,7 +2000,7 @@ def page_update_dqr():
         new_mat  = st.text_area("Supporting Materials", value=req.get("supportingMaterials", ""), height=80)
         new_hist = st.text_input("History", value=req.get("history", ""))
 
-        if st.button("\U0001f4be Save changes", type="primary"):
+        if st.button("Save changes", type="primary"):
             stmt = (
                 pattern.get("statementTemplate", req.get("statement", ""))
                 if pattern else req.get("statement", "")
@@ -1948,7 +2090,7 @@ def page_delete_dqr():
     st.warning(f"You are about to permanently delete **{req['id']}**.")
     st.markdown(f"> {req.get('statement', '')}")
 
-    if st.button("\U0001f5d1 Confirm delete", type="primary"):
+    if st.button("Confirm delete", type="primary"):
         path = REQS_DIR / f"{req['id']}.json"
         try:
             path.unlink()
@@ -2004,7 +2146,7 @@ def page_generate_odrl():
         nav("manage_odrl")
         return
 
-    st.title(f"Policy — {req['id']}")
+    st.title(f"ODRL Policy — {req['id']}")
 
     tmpl_path = ODRL_TMPL / f"{req.get('pattern', {}).get('id', '')}_odrl_template.json"
     if not tmpl_path.exists():
@@ -2018,7 +2160,7 @@ def page_generate_odrl():
     # ── Top: policy summary card + DQR image ────────────────────────────────────
     c1, c2 = st.columns([3, 2])
     with c1:
-        st.subheader("Policy card")
+        st.subheader("Requirement card")
         st.markdown(policy_card_html(req), unsafe_allow_html=True)
     with c2:
         inst_img = get_instantiation_image(req)
@@ -2033,7 +2175,7 @@ def page_generate_odrl():
     # ── Full-width ODRL section ──────────────────────────────────────────────────
     st.divider()
     st.subheader("ODRL Policy")
-    tab_vis, tab_raw = st.tabs(["📊 Visual breakdown", "📄 Raw JSON-LD"])
+    tab_vis, tab_raw = st.tabs(["Visual breakdown", "Raw JSON-LD"])
     try:
         rule = build_odrl_rule(req, tmpl)
         with tab_vis:
@@ -2051,7 +2193,7 @@ def page_generate_odrl():
     st.divider()
     col_save, col_gen = st.columns(2)
     with col_save:
-        if st.button("\U0001f4be Save ODRL rule", use_container_width=True):
+        if st.button("Save ODRL rule", use_container_width=True):
             try:
                 rule = build_odrl_rule(req, tmpl)
                 ODRL_RULES.mkdir(parents=True, exist_ok=True)
@@ -2062,7 +2204,7 @@ def page_generate_odrl():
                 st.error(str(e))
 
     with col_gen:
-        if st.button("⚙️ Generate validation service",
+        if st.button("Generate validation service",
                      type="primary", use_container_width=True):
             with st.spinner("Generating validation service…"):
                 try:
@@ -2130,7 +2272,7 @@ def page_generate_odrl():
                 )
 
             if code:
-                with st.expander("📄 Generated validation code", expanded=True):
+                with st.expander("Generated validation code", expanded=True):
                     st.code(code, language="python")
 
             if gen_result.get("logs"):
