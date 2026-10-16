@@ -1,0 +1,17 @@
+{
+  "dqr": "DQR3HL",
+  "statement": "In the BiodiversityObservation entity, when the detectionStatus attribute has the values {notDetected}, the breedingEvidence attribute of BiodiversityObservation entity must not contain values from the set {courtship, nesting, chicks}.",
+  "pattern": {
+    "id": "DQRP4",
+    "version": "1.0"
+  },
+  "qualityDimension": "Consistency",
+  "requirement": "prototype/requirements/heleade/DQR3HL.json",
+  "odrlRule": "prototype/odrl_rules/heleade/DQR3HL_odrl.json",
+  "dqvpCheck": "c-dqr3hl",
+  "dqvpPolicy": "hl-dq-offer-01",
+  "dataProducts": {
+    "observation": "tools/dqvp/data/heleade/observation.csv"
+  },
+  "generatedBy": "DQVP export_services.py at b1f55f0"
+}

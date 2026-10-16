@@ -1,0 +1,17 @@
+{
+  "dqr": "DQR2HL",
+  "statement": "In the Observation entity, the observedAt attribute must follow the UTC standard",
+  "pattern": {
+    "id": "DQRP3",
+    "version": "1.0"
+  },
+  "qualityDimension": "Compliance",
+  "requirement": "prototype/requirements/heleade/DQR2HL.json",
+  "odrlRule": "prototype/odrl_rules/heleade/DQR2HL_odrl.json",
+  "dqvpCheck": "c-dqr2hl",
+  "dqvpPolicy": "hl-dq-offer-01",
+  "dataProducts": {
+    "observation": "tools/dqvp/data/heleade/observation.csv"
+  },
+  "generatedBy": "DQVP export_services.py at b1f55f0"
+}

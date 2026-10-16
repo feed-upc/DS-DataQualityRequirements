@@ -1,0 +1,4 @@
+  - rowexpr_c-dqr3hl >= 100:
+      name: c-dqr3hl
+      rowexpr_c-dqr3hl query: |
+        SELECT 100.0*COUNT(*) FILTER (WHERE ("breedingEvidence" IS NULL OR NOT ("breedingEvidence" IN ('courtship', 'nesting', 'chicks'))))/NULLIF(COUNT(*),0) FROM observation where "detectionStatus" in ('notDetected')

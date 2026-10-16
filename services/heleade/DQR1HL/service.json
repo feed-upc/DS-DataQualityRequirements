@@ -1,0 +1,17 @@
+{
+  "dqr": "DQR1HL",
+  "statement": "In the MonitoringSite entity, the location attribute must contain at least 100 percent non-empty values",
+  "pattern": {
+    "id": "DQRP2",
+    "version": "1.0"
+  },
+  "qualityDimension": "Completeness",
+  "requirement": "prototype/requirements/heleade/DQR1HL.json",
+  "odrlRule": "prototype/odrl_rules/heleade/DQR1HL_odrl.json",
+  "dqvpCheck": "c-dqr1hl",
+  "dqvpPolicy": "hl-dq-offer-01",
+  "dataProducts": {
+    "monitoring_site": "tools/dqvp/data/heleade/monitoring_site.csv"
+  },
+  "generatedBy": "DQVP export_services.py at b1f55f0"
+}

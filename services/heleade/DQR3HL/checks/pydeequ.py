@@ -1,0 +1,1 @@
+    .satisfies('("breedingEvidence" IS NULL OR NOT ("breedingEvidence" IN (\'courtship\', \'nesting\', \'chicks\')))', "c-dqr3hl", lambda x: x >= 1)  # c-dqr3hl  -- NOTE: row filter detectionStatus eq ['notDetected'] not applied (no native PyDeequ row filter)  -- NOTE: the expression is DuckDB SQL; Spark SQL quotes identifiers with backticks

@@ -1,0 +1,4 @@
+  - rowexpr_c-dqr2hl >= 100:
+      name: c-dqr2hl
+      rowexpr_c-dqr2hl query: |
+        SELECT 100.0*COUNT(*) FILTER (WHERE regexp_matches(CAST("observedAt" AS VARCHAR), '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$'))/NULLIF(COUNT(*),0) FROM observation

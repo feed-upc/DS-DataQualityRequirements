@@ -1,0 +1,1 @@
+# NOT EXPRESSIBLE: Great Expectations has no free-form row-expression expectation (regexp_matches(CAST("observedAt" AS VARCHAR), '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$'))

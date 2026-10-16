@@ -1,0 +1,96 @@
+{
+  "@context": {
+    "odrl:operator": {
+      "@type": "@id"
+    },
+    "odrl:rightOperand": {
+      "@type": "@id"
+    },
+    "@base": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "tb": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/tbox#",
+    "ab": "http://www.semanticweb.org/acraf/ontologies/2024/healthmesh/abox#",
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@graph": [
+    {
+      "@id": "ab:DQR2HLRule",
+      "@type": "dqv:QualityPolicy",
+      "rdfs:label": "ab:DQR2HLRule - QualityPolicy",
+      "tb:derivedFrom": "DQR2HL",
+      "tb:qualityDimension": "Compliance",
+      "tb:sourceEntity": {
+        "@id": "ab:HELEADE Governance Authority"
+      },
+      "odrl:permission": [
+        {
+          "@id": "ab:DQR2HL_Permission",
+          "@type": "odrl:Permission",
+          "odrl:action": "odrl:distribute",
+          "odrl:assigner": {
+            "@id": "ab:HELEADE Governance Authority"
+          },
+          "odrl:assignee": {
+            "@id": "ab:DataProvider"
+          },
+          "odrl:target": {
+            "@id": "ab:Observation.observedAt"
+          },
+          "odrl:constraint": [
+            {
+              "@id": "ab:DQR2HL_Constraint",
+              "@type": "odrl:Constraint",
+              "odrl:leftOperand": {
+                "@id": "ab:ComplianceMeasurement",
+                "@type": "dqv:QualityMeasurement"
+              },
+              "odrl:operator": "odrl:isIncludedIn",
+              "odrl:rightOperand": {
+                "@id": "ab:UTC"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "ab:ComplianceMeasurement",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Compliance Measurement",
+      "dqv:isMeasurementOf": {
+        "@id": "ab:CheckCompliance"
+      }
+    },
+    {
+      "@id": "ab:Compliance",
+      "@type": "dqv:Metric",
+      "rdfs:label": "Compliance Metric (Abstract)",
+      "dqv:inDimension": {
+        "@id": "ab:ComplianceDimension",
+        "@type": "dqv:Dimension"
+      }
+    },
+    {
+      "@id": "ab:ComplianceDimension",
+      "@type": "dqv:Dimension",
+      "rdfs:label": "Compliance (ISO/IEC 25012)"
+    },
+    {
+      "@id": "ab:Observation.observedAt",
+      "@type": "odrl:Asset",
+      "odrl:partOf": {
+        "@id": ""
+      }
+    },
+    {
+      "@id": "ab:UTC",
+      "@type": "tb:ReferenceStandard",
+      "rdfs:label": "UTC"
+    }
+  ]
+}

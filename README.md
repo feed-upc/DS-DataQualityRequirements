@@ -38,6 +38,8 @@ flowchart LR
 
 The DQRs are kept only in this repository; the DQVP pipeline reads them from `prototype/requirements/`. A `dataspace.json` beside them tells the pipeline which data product each entity is stored in, and which column holds an attribute whose name differs in the data (for example `Hospital.country` is stored as `hospitalCountry`). The EHDS DQRs are in `prototype/requirements/`, and the HELEADE DQRs in `prototype/requirements/heleade/`. DQVP covers patterns DQRP2 to DQRP6; DQRP1 (currentness) is validated by the engine only.
 
+The HELEADE DQRs show why the DQVP path exists. Their ODRL rules (`prototype/odrl_rules/heleade/`) are built from the same templates as the EHDS ones, but plain ODRL cannot carry three of them faithfully: DQR2HL checks a format (UTC), not a code list; DQR3HL requires values *not* in a set; and DQR4HL counts monitoring sites per wetland, not in total. Their services (`services/heleade/`) are therefore exported from the DQVP checks with `tools/dqvp/operationalization-pipeline/export_services.py`. Each service folder is named after its DQR, and its `service.json` records where it comes from.
+
 ### Running it
 
 Clone with the submodules:
@@ -56,11 +58,12 @@ git clone --recurse-submodules git@github.com:feed-upc/DS-DataQualityRequirement
   - `patterns/` — DQR pattern definitions (DQRP1–6, JSON)
   - `requirements/` — Instantiated DQRs for the EHDS use case, and `dataspace.json` binding them to data products
   - `requirements/heleade/` — Instantiated DQRs for the HELEADE use case, with their `dataspace.json`
-  - `odrl_rules/` — Generated ODRL policies, one per DQR instantiation
+  - `odrl_rules/` — Generated ODRL policies, one per DQR instantiation (`heleade/` for the HELEADE use case)
   - `odrl_templates/` — ODRL generation templates, one per pattern
   - `dqr_prototype2.py` — Main application (`streamlit run prototype/dqr_prototype2.py`)
 - **`media/`** — Auto-generated pattern diagrams and instantiation visualizations
 - **`services/`** — Auto-generated validation services, one per DQR instantiation
+  - `heleade/<DQR>/` — HELEADE services generated from their DQVP checks: `validation_job.py`, the same check for dbt, SodaCL, Great Expectations and PyDeequ in `checks/`, and `service.json`, which records the DQR, its pattern, its ODRL rule and its DQVP check
 - **`tests/`** — Pattern instantiation, ODRL generation, the DQVP mapping, and execution of the services
 - **`tools/validation-engine`** — Submodule: the [DataValidationWorkflow](https://github.com/feed-upc/DataValidationWorkflow) engine
 - **`tools/dqvp`** — Submodule: [DQVP](https://github.com/feed-upc/DQVP-position), the ODRL data-quality profile and its pipeline

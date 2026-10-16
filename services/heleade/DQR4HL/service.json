@@ -1,0 +1,17 @@
+{
+  "dqr": "DQR4HL",
+  "statement": "In the Wetland.monitoringSite entity, the number of instances must be at least 5",
+  "pattern": {
+    "id": "DQRP5",
+    "version": "1.0"
+  },
+  "qualityDimension": "Completeness",
+  "requirement": "prototype/requirements/heleade/DQR4HL.json",
+  "odrlRule": "prototype/odrl_rules/heleade/DQR4HL_odrl.json",
+  "dqvpCheck": "c-dqr4hl",
+  "dqvpPolicy": "hl-dq-offer-01",
+  "dataProducts": {
+    "monitoring_site": "tools/dqvp/data/heleade/monitoring_site.csv"
+  },
+  "generatedBy": "DQVP export_services.py at b1f55f0"
+}

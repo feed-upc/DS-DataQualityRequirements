@@ -1,0 +1,1 @@
+    .satisfies('regexp_matches(CAST("observedAt" AS VARCHAR), \'^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$\')', "c-dqr2hl", lambda x: x >= 1)  # c-dqr2hl  -- NOTE: the expression is DuckDB SQL; Spark SQL quotes identifiers with backticks
