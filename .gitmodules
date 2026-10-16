@@ -1,3 +1,6 @@
 [submodule "tools/validation-engine"]
 	path = tools/validation-engine
 	url = git@github.com:feed-upc/DataValidationWorkflow.git
+[submodule "tools/dqvp"]
+	path = tools/dqvp
+	url = /home/aacraf/psr/Fdatavalidation/.git/modules/FederatedComputationalGovernance/DQVP
