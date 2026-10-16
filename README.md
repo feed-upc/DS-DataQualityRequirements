@@ -15,16 +15,55 @@ These patterns capture common and recurring DQRs encountered in data space data 
 
 > Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51–65 (2021)
 
+## From requirement to validation
+
+This repository covers the three processes of the framework. Each DQR keeps its identifier through every step, so a validation result can be traced back to the requirement and the pattern it instantiates.
+
+```mermaid
+flowchart LR
+  P["DQR patterns<br/>prototype/patterns"] -->|"P1 · instantiate"| R["DQRs<br/>prototype/requirements"]
+  R -->|"P2 · ODRL templates"| O["ODRL rules<br/>prototype/odrl_rules"]
+  R -->|"P2 · DQVP profile"| D["DQVP policy<br/>tools/dqvp"]
+  O -->|"P3 · validation engine"| S["Validation services<br/>services/"]
+  D -->|"P3 · DQVP pipeline"| Q["Generated checks<br/>SQL · dbt · SodaCL · GX · Deequ"]
+  S --> V["Measurement and verdict"]
+  Q --> V
+```
+
+| Process | What happens | Where |
+| ------- | ------------ | ----- |
+| P1 Specification | The governance authority selects a pattern and instantiates it with the parameters of its data space. The result is a DQR. | `prototype/patterns/`, `prototype/requirements/`, the prototype tool |
+| P2 Operationalization | Each DQR becomes an ODRL rule through its pattern's template. DQRs that need constraints plain ODRL cannot state, such as row filters, reference standards, per-group counts or share gaps, are also expressed with DQVP, an ODRL profile for data quality. | `prototype/odrl_templates/`, `prototype/odrl_rules/`, `tools/dqvp/dqvp.ttl` |
+| P3 Validation | The validation engine compiles each ODRL rule into a validation service that runs where the data is stored. The DQVP pipeline compiles a DQVP policy into checks for several engines and executes them. | `tools/validation-engine`, `services/`, `tools/dqvp/operationalization-pipeline/` |
+
+The DQRs are kept only in this repository; the DQVP pipeline reads them from `prototype/requirements/`. A `dataspace.json` beside them tells the pipeline which data product each entity is stored in, and which column holds an attribute whose name differs in the data (for example `Hospital.country` is stored as `hospitalCountry`). The EHDS DQRs are in `prototype/requirements/`, and the HELEADE DQRs in `prototype/requirements/heleade/`. DQVP covers patterns DQRP2 to DQRP6; DQRP1 (currentness) is validated by the engine only.
+
+### Running it
+
+Clone with the submodules:
+
+```bash
+git clone --recurse-submodules git@github.com:feed-upc/DS-DataQualityRequirements.git
+```
+
+- **P1 and P2, interactively:** `streamlit run prototype/dqr_prototype2.py`.
+- **P3 with the validation services:** `pytest tests`. The services need `great_expectations` 1.x. The end-to-end tests read the EHDS data from `../../DataProductLayer/DataProduct_EHDS_AMR/Data`, that is, from the [Fdatavalidation](https://github.com/feed-upc/Fdatavalidation) repository this catalogue is a submodule of. Tests that call the engine's API are skipped unless it is running.
+- **P3 with DQVP:** from `tools/dqvp/operationalization-pipeline`, run `python dqr_to_dqvp.py` for the EHDS DQRs or `python dqr_to_dqvp.py ../../../prototype/requirements/heleade` for HELEADE. This needs the EYE reasoner and the packages listed in `tools/dqvp/README.md`. Its test of the live Great Expectations output expects `great_expectations` 0.18, so use a separate environment from the services.
+
 ## Repository Structure
 
 - **`prototype/`** — Proof-of-concept tool for defining, instantiating, and operationalizing DQRs.
   - `patterns/` — DQR pattern definitions (DQRP1–6, JSON)
-  - `requirements/` — Instantiated DQR specifications for the EHDS use case
+  - `requirements/` — Instantiated DQRs for the EHDS use case, and `dataspace.json` binding them to data products
+  - `requirements/heleade/` — Instantiated DQRs for the HELEADE use case, with their `dataspace.json`
   - `odrl_rules/` — Generated ODRL policies, one per DQR instantiation
   - `odrl_templates/` — ODRL generation templates, one per pattern
   - `dqr_prototype2.py` — Main application (`streamlit run prototype/dqr_prototype2.py`)
 - **`media/`** — Auto-generated pattern diagrams and instantiation visualizations
 - **`services/`** — Auto-generated validation services, one per DQR instantiation
+- **`tests/`** — Pattern instantiation, ODRL generation, the DQVP mapping, and execution of the services
+- **`tools/validation-engine`** — Submodule: the [DataValidationWorkflow](https://github.com/feed-upc/DataValidationWorkflow) engine
+- **`tools/dqvp`** — Submodule: [DQVP](https://github.com/feed-upc/DQVP-position), the ODRL data-quality profile and its pipeline
 
 ## Validation Engine
 
