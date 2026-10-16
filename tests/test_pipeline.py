@@ -204,12 +204,13 @@ def test_e2e_pipeline_real_data(proto, dqr_id):
     # DQR1EH/DQR2EH: real data has intentional dirty records → correctly fails
     # DQR4EH: synthetic data < 2000 rows → correctly fails
     # DQR7EH: timestamps stale → correctly fails  (not included here)
-    # DQR5EH, DQR6EH: real data passes
+    # DQR5EH: 53.4% male, 46.6% female → share gap 6.8 points > 5 → correctly fails
+    # DQR6EH: real data passes
     expected = {
         "DQR1EH": False,  # 5 null patient IDs in synthetic data
         "DQR2EH": False,  # 10 invalid country codes in synthetic data
         "DQR4EH": False,  # only 500 rows, need ≥2000
-        "DQR5EH": True,
+        "DQR5EH": False,  # gender share gap 6.8 points, limit 5
         "DQR6EH": True,
     }
     if dqr_id in expected:

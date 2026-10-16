@@ -196,13 +196,13 @@ def test_dqr5eh_passes_balanced_gender(tmp_path):
 
 def test_dqr5eh_fails_heavily_imbalanced_gender(tmp_path):
     csv = tmp_path / "p.csv"
-    # 90/10 split → KL divergence ≈ 0.37 >> 0.05
+    # 90/10 split → share gap 80 points >> 5
     pd.DataFrame({"gender": ["M"] * 900 + ["F"] * 100}).to_csv(csv, index=False)
     assert validate(SVC_DQR5EH, csv) is False
 
 
 def test_dqr5eh_real_data(tmp_path):
-    """Real data should have roughly balanced gender; result documents actual distribution."""
+    """The service runs on the real data; the verdict depends on its gender balance."""
     result = validate(SVC_DQR5EH, DATA / "Patient_Summary.csv")
     # Not asserting a specific value — just ensures the service runs without error.
     assert isinstance(result, bool)

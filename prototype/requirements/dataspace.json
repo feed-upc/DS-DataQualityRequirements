@@ -1,0 +1,23 @@
+{
+  "name": "EHDS",
+  "description": "How the EHDS DQRs bind to the data products they are checked on. Read by the DQVP pipeline (tools/dqvp); the prototype only loads DQR*.json files.",
+  "namespaces": {
+    "attribute": "https://w3id.org/ehds/patsum/attr/",
+    "asset": "https://w3id.org/ehds/patsum/asset/",
+    "policy": "https://example.org/ehds/"
+  },
+  "policyId": "ps-dq-offer-01",
+  "descriptor": "dataset_csv.ttl",
+  "policyFile": "policy_from_dqr.ttl",
+  "constraintNames": "dimension",
+  "entities": {
+    "PatientIdentification": {"asset": "PatientSummary"},
+    "PatientSummaryBody": {"asset": "PatientSummary"},
+    "Hospital": {"asset": "PatientSummary", "note": "hospital fields are columns of the Patient Summary table"},
+    "PatientSummary": {"asset": "PatientSummary"},
+    "AMRStudy.isolates": {"asset": "AMRIsolates", "note": "one row per isolate of the AMR study"}
+  },
+  "attributes": {
+    "Hospital.country": "hospitalCountry"
+  }
+}
