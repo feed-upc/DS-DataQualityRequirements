@@ -1,0 +1,304 @@
+@prefix ab: <https://w3id.org/heleade/attr/> .
+@prefix dp: <https://w3id.org/heleade/asset/> .
+@prefix dqvp: <https://feed-upc.github.io/DQVP-position/dqvp.ttl#> .
+@prefix ex: <https://example.org/heleade/> .
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix pc: <https://feed-upc.github.io/DQVP-position/pc#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/heleade/hl-dq-offer-01/checker> a pc:PolicyChecker ;
+    pc:accordingTo ex:hl-dq-offer-01 ;
+    pc:hasWorkflow <https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite>,
+        <https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation> .
+
+<https://example.org/heleade/c-dqr1hl/compare> a pc:Compare ;
+    pc:forCheck ex:c-dqr1hl ;
+    pc:input <https://example.org/heleade/c-dqr1hl/mval> ;
+    pc:order 4 ;
+    pc:output <https://example.org/heleade/c-dqr1hl/verdict> ;
+    pc:parameter [ pc:name "threshold" ;
+            pc:value 100.0 ],
+        [ pc:name "sqlOp" ;
+            pc:value ">=" ],
+        [ pc:name "pyOp" ;
+            pc:value ">=" ] .
+
+<https://example.org/heleade/c-dqr1hl/filter> a pc:Filter ;
+    pc:forCheck ex:c-dqr1hl ;
+    pc:input <https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/table> ;
+    pc:order 2 ;
+    pc:output <https://example.org/heleade/c-dqr1hl/ftable> .
+
+<https://example.org/heleade/c-dqr1hl/measure> a pc:Measure ;
+    pc:forCheck ex:c-dqr1hl ;
+    pc:input <https://example.org/heleade/c-dqr1hl/ftable> ;
+    pc:metric dqvp:NonNullRate ;
+    pc:order 3 ;
+    pc:output <https://example.org/heleade/c-dqr1hl/mval> ;
+    pc:parameter [ pc:name "column" ;
+            pc:value "location" ],
+        [ pc:name "mostly" ;
+            pc:value 1 ],
+        [ pc:name "complement" ;
+            pc:value 0 ] .
+
+<https://example.org/heleade/c-dqr1hl/report> a pc:Report ;
+    pc:forCheck ex:c-dqr1hl ;
+    pc:input <https://example.org/heleade/c-dqr1hl/verdict> ;
+    pc:order 5 ;
+    pc:output <https://example.org/heleade/c-dqr1hl/reportdoc> .
+
+<https://example.org/heleade/c-dqr1hl/reportdoc> a pc:ReportDoc .
+
+<https://example.org/heleade/c-dqr2hl/aggregate> a pc:Aggregate ;
+    pc:forCheck ex:c-dqr2hl ;
+    pc:input <https://example.org/heleade/c-dqr2hl/mask> ;
+    pc:metric dqvp:RowExpressionRate ;
+    pc:order 4 ;
+    pc:output <https://example.org/heleade/c-dqr2hl/mval> ;
+    pc:parameter [ pc:name "aggregation" ;
+            pc:value "rate" ],
+        [ pc:name "mostly" ;
+            pc:value 1 ],
+        [ pc:name "complement" ;
+            pc:value 0 ] .
+
+<https://example.org/heleade/c-dqr2hl/compare> a pc:Compare ;
+    pc:forCheck ex:c-dqr2hl ;
+    pc:input <https://example.org/heleade/c-dqr2hl/mval> ;
+    pc:order 5 ;
+    pc:output <https://example.org/heleade/c-dqr2hl/verdict> ;
+    pc:parameter [ pc:name "threshold" ;
+            pc:value 100.0 ],
+        [ pc:name "sqlOp" ;
+            pc:value ">=" ],
+        [ pc:name "pyOp" ;
+            pc:value ">=" ] .
+
+<https://example.org/heleade/c-dqr2hl/filter> a pc:Filter ;
+    pc:forCheck ex:c-dqr2hl ;
+    pc:input <https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/table> ;
+    pc:order 2 ;
+    pc:output <https://example.org/heleade/c-dqr2hl/ftable> .
+
+<https://example.org/heleade/c-dqr2hl/predicate> a pc:RowPredicate ;
+    pc:forCheck ex:c-dqr2hl ;
+    pc:input <https://example.org/heleade/c-dqr2hl/ftable> ;
+    pc:order 3 ;
+    pc:output <https://example.org/heleade/c-dqr2hl/mask> ;
+    pc:parameter [ pc:name "column" ;
+            pc:value "observedAt" ],
+        [ pc:name "rowExpression" ;
+            pc:value "regexp_matches(CAST(\"observedAt\" AS VARCHAR), '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$')" ] .
+
+<https://example.org/heleade/c-dqr2hl/report> a pc:Report ;
+    pc:forCheck ex:c-dqr2hl ;
+    pc:input <https://example.org/heleade/c-dqr2hl/verdict> ;
+    pc:order 6 ;
+    pc:output <https://example.org/heleade/c-dqr2hl/reportdoc> .
+
+<https://example.org/heleade/c-dqr2hl/reportdoc> a pc:ReportDoc .
+
+<https://example.org/heleade/c-dqr3hl/aggregate> a pc:Aggregate ;
+    pc:forCheck ex:c-dqr3hl ;
+    pc:input <https://example.org/heleade/c-dqr3hl/mask> ;
+    pc:metric dqvp:RowExpressionRate ;
+    pc:order 4 ;
+    pc:output <https://example.org/heleade/c-dqr3hl/mval> ;
+    pc:parameter [ pc:name "aggregation" ;
+            pc:value "rate" ],
+        [ pc:name "mostly" ;
+            pc:value 1 ],
+        [ pc:name "complement" ;
+            pc:value 0 ] .
+
+<https://example.org/heleade/c-dqr3hl/compare> a pc:Compare ;
+    pc:forCheck ex:c-dqr3hl ;
+    pc:input <https://example.org/heleade/c-dqr3hl/mval> ;
+    pc:order 5 ;
+    pc:output <https://example.org/heleade/c-dqr3hl/verdict> ;
+    pc:parameter [ pc:name "threshold" ;
+            pc:value 100.0 ],
+        [ pc:name "sqlOp" ;
+            pc:value ">=" ],
+        [ pc:name "pyOp" ;
+            pc:value ">=" ] .
+
+<https://example.org/heleade/c-dqr3hl/filter> a pc:Filter ;
+    pc:forCheck ex:c-dqr3hl ;
+    pc:input <https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/table> ;
+    pc:order 2 ;
+    pc:output <https://example.org/heleade/c-dqr3hl/ftable> ;
+    pc:parameter [ pc:name "filterColumn" ;
+            pc:value "detectionStatus" ],
+        [ pc:name "filterValue" ;
+            pc:value "notDetected" ],
+        [ pc:name "filterOp" ;
+            pc:value "eq" ] .
+
+<https://example.org/heleade/c-dqr3hl/predicate> a pc:RowPredicate ;
+    pc:forCheck ex:c-dqr3hl ;
+    pc:input <https://example.org/heleade/c-dqr3hl/ftable> ;
+    pc:order 3 ;
+    pc:output <https://example.org/heleade/c-dqr3hl/mask> ;
+    pc:parameter [ pc:name "column" ;
+            pc:value "breedingEvidence" ],
+        [ pc:name "rowExpression" ;
+            pc:value "(\"breedingEvidence\" IS NULL OR NOT (\"breedingEvidence\" IN ('courtship', 'nesting', 'chicks')))" ] .
+
+<https://example.org/heleade/c-dqr3hl/report> a pc:Report ;
+    pc:forCheck ex:c-dqr3hl ;
+    pc:input <https://example.org/heleade/c-dqr3hl/verdict> ;
+    pc:order 6 ;
+    pc:output <https://example.org/heleade/c-dqr3hl/reportdoc> .
+
+<https://example.org/heleade/c-dqr3hl/reportdoc> a pc:ReportDoc .
+
+<https://example.org/heleade/c-dqr4hl/compare> a pc:Compare ;
+    pc:forCheck ex:c-dqr4hl ;
+    pc:input <https://example.org/heleade/c-dqr4hl/mval> ;
+    pc:order 4 ;
+    pc:output <https://example.org/heleade/c-dqr4hl/verdict> ;
+    pc:parameter [ pc:name "threshold" ;
+            pc:value 5.0 ],
+        [ pc:name "sqlOp" ;
+            pc:value ">=" ],
+        [ pc:name "pyOp" ;
+            pc:value ">=" ] .
+
+<https://example.org/heleade/c-dqr4hl/filter> a pc:Filter ;
+    pc:forCheck ex:c-dqr4hl ;
+    pc:input <https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/table> ;
+    pc:order 2 ;
+    pc:output <https://example.org/heleade/c-dqr4hl/ftable> .
+
+<https://example.org/heleade/c-dqr4hl/measure> a pc:Measure ;
+    pc:forCheck ex:c-dqr4hl ;
+    pc:input <https://example.org/heleade/c-dqr4hl/ftable> ;
+    pc:metric dqvp:RowCount ;
+    pc:order 3 ;
+    pc:output <https://example.org/heleade/c-dqr4hl/mval> ;
+    pc:parameter [ pc:name "groupColumn" ;
+            pc:value "wetlandId" ] .
+
+<https://example.org/heleade/c-dqr4hl/report> a pc:Report ;
+    pc:forCheck ex:c-dqr4hl ;
+    pc:input <https://example.org/heleade/c-dqr4hl/verdict> ;
+    pc:order 5 ;
+    pc:output <https://example.org/heleade/c-dqr4hl/reportdoc> .
+
+<https://example.org/heleade/c-dqr4hl/reportdoc> a pc:ReportDoc .
+
+ex:hl-dq-offer-01 odrl:permission [ a odrl:Permission ;
+            odrl:action odrl:use ;
+            odrl:constraint ex:c-dqr1hl,
+                ex:c-dqr4hl ;
+            odrl:target dp:MonitoringSite ],
+        [ a odrl:Permission ;
+            odrl:action odrl:use ;
+            odrl:constraint ex:c-dqr2hl,
+                ex:c-dqr3hl ;
+            odrl:target dp:Observation ] ;
+    pc:hasRule [ pc:ruleType odrl:Permission ],
+        [ pc:ruleType odrl:Permission ] .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite> a pc:Workflow ;
+    pc:hasOp <https://example.org/heleade/c-dqr1hl/compare>,
+        <https://example.org/heleade/c-dqr1hl/filter>,
+        <https://example.org/heleade/c-dqr1hl/measure>,
+        <https://example.org/heleade/c-dqr1hl/report>,
+        <https://example.org/heleade/c-dqr4hl/compare>,
+        <https://example.org/heleade/c-dqr4hl/filter>,
+        <https://example.org/heleade/c-dqr4hl/measure>,
+        <https://example.org/heleade/c-dqr4hl/report>,
+        <https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/load> ;
+    pc:onAsset dp:MonitoringSite .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/load> a pc:Load ;
+    pc:input <https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/source> ;
+    pc:order 1 ;
+    pc:output <https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/table> .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/source> a pc:Dataset ;
+    pc:format "csv" ;
+    pc:locator "../data/heleade/monitoring_site.csv" ;
+    pc:ofAsset dp:MonitoringSite .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation> a pc:Workflow ;
+    pc:hasOp <https://example.org/heleade/c-dqr2hl/aggregate>,
+        <https://example.org/heleade/c-dqr2hl/compare>,
+        <https://example.org/heleade/c-dqr2hl/filter>,
+        <https://example.org/heleade/c-dqr2hl/predicate>,
+        <https://example.org/heleade/c-dqr2hl/report>,
+        <https://example.org/heleade/c-dqr3hl/aggregate>,
+        <https://example.org/heleade/c-dqr3hl/compare>,
+        <https://example.org/heleade/c-dqr3hl/filter>,
+        <https://example.org/heleade/c-dqr3hl/predicate>,
+        <https://example.org/heleade/c-dqr3hl/report>,
+        <https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/load> ;
+    pc:onAsset dp:Observation .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/load> a pc:Load ;
+    pc:input <https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/source> ;
+    pc:order 1 ;
+    pc:output <https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/table> .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/source> a pc:Dataset ;
+    pc:format "csv" ;
+    pc:locator "../data/heleade/observation.csv" ;
+    pc:ofAsset dp:Observation .
+
+<https://example.org/heleade/c-dqr1hl/ftable> a pc:Table .
+
+<https://example.org/heleade/c-dqr1hl/mval> a pc:MeasureValue .
+
+<https://example.org/heleade/c-dqr1hl/verdict> a pc:Verdict .
+
+<https://example.org/heleade/c-dqr2hl/ftable> a pc:Table .
+
+<https://example.org/heleade/c-dqr2hl/mask> a pc:Mask .
+
+<https://example.org/heleade/c-dqr2hl/mval> a pc:MeasureValue .
+
+<https://example.org/heleade/c-dqr2hl/verdict> a pc:Verdict .
+
+<https://example.org/heleade/c-dqr3hl/ftable> a pc:Table .
+
+<https://example.org/heleade/c-dqr3hl/mask> a pc:Mask .
+
+<https://example.org/heleade/c-dqr3hl/mval> a pc:MeasureValue .
+
+<https://example.org/heleade/c-dqr3hl/verdict> a pc:Verdict .
+
+<https://example.org/heleade/c-dqr4hl/ftable> a pc:Table .
+
+<https://example.org/heleade/c-dqr4hl/mval> a pc:MeasureValue .
+
+<https://example.org/heleade/c-dqr4hl/verdict> a pc:Verdict .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite/table> a pc:Table .
+
+<https://example.org/heleade/hl-dq-offer-01/checker/wf/Observation/table> a pc:Table .
+
+dp:MonitoringSite pc:localName "MonitoringSite" .
+
+dp:Observation pc:localName "Observation" .
+
+ex:c-dqr1hl pc:checkId "c-dqr1hl" ;
+    pc:col "location" .
+
+ex:c-dqr4hl pc:checkId "c-dqr4hl" ;
+    pc:gcol "wetlandId" .
+
+ex:c-dqr2hl pc:checkId "c-dqr2hl" ;
+    pc:col "observedAt" .
+
+ex:c-dqr3hl dqvp:filter [ a dqvp:RowFilter ;
+            dqvp:filterAttribute ab:detectionStatus ;
+            dqvp:filterOperator odrl:eq ;
+            dqvp:filterValue "notDetected" ] ;
+    pc:checkId "c-dqr3hl" ;
+    pc:col "breedingEvidence" .
+
+[] pc:fcol "detectionStatus" .
+

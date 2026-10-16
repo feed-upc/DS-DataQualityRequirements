@@ -2,9 +2,9 @@
 
 In the Wetland.monitoringSite entity, the number of instances must be at least 5
 
-The check is the DQVP constraint c-dqr4hl. It reads the data in place with DuckDB
-and returns the measured value and whether DQR4HL is satisfied. service.json records
-where it comes from.
+The check is the DQVP constraint c-dqr4hl, compiled by the policy checker in
+../policy_checker.ttl. It reads the data in place with DuckDB and returns the measured
+value and whether DQR4HL is satisfied. service.json records where it comes from.
 
 Run:  python validation_job.py [data folder]
 """

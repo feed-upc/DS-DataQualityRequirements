@@ -63,7 +63,8 @@ git clone --recurse-submodules git@github.com:feed-upc/DS-DataQualityRequirement
   - `dqr_prototype2.py` — Main application (`streamlit run prototype/dqr_prototype2.py`)
 - **`media/`** — Auto-generated pattern diagrams and instantiation visualizations
 - **`services/`** — Auto-generated validation services, one per DQR instantiation
-  - `heleade/<DQR>/` — HELEADE services generated from their DQVP checks: `validation_job.py`, the same check for dbt, SodaCL, Great Expectations and PyDeequ in `checks/`, and `service.json`, which records the DQR, its pattern, its ODRL rule and its DQVP check
+  - `heleade/dqvp_policy.ttl` and `heleade/policy_checker.ttl` — the DQVP policy mapped from the HELEADE DQRs, and the policy checker compiled from it (one workflow per data product; each check's operations)
+  - `heleade/<DQR>/` — HELEADE services generated from their DQVP checks: `validation_job.py`, the same check for dbt, SodaCL, Great Expectations and PyDeequ in `checks/`, and `service.json`, which records the DQR, its pattern, its ODRL rule, its DQVP check, and its workflow and operations in the policy checker
 - **`tests/`** — Pattern instantiation, ODRL generation, the DQVP mapping, and execution of the services
 - **`tools/validation-engine`** — Submodule: the [DataValidationWorkflow](https://github.com/feed-upc/DataValidationWorkflow) engine
 - **`tools/dqvp`** — Submodule: [DQVP](https://github.com/feed-upc/DQVP-position), the ODRL data-quality profile and its pipeline

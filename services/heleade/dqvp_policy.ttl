@@ -1,0 +1,58 @@
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix dqvp: <https://feed-upc.github.io/DQVP-position/dqvp.ttl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ab:   <https://w3id.org/heleade/attr/> .
+@prefix dp:   <https://w3id.org/heleade/asset/> .
+@prefix ex:   <https://example.org/heleade/> .
+
+ex:HeleadeGovernanceAuthority a odrl:Party .
+dp:MonitoringSite a odrl:Asset .
+dp:Observation a odrl:Asset .
+
+ex:hl-dq-offer-01
+    a dqvp:QualityPolicy, odrl:Offer ;
+    odrl:profile  <https://feed-upc.github.io/DQVP-position/dqvp.ttl> ;
+    odrl:assigner ex:HeleadeGovernanceAuthority ;
+    odrl:permission [
+        a            odrl:Permission ;
+        odrl:target  dp:MonitoringSite ;
+        odrl:action  odrl:use ;
+        odrl:constraint ex:c-dqr1hl, ex:c-dqr4hl
+    ] ;
+    odrl:permission [
+        a            odrl:Permission ;
+        odrl:target  dp:Observation ;
+        odrl:action  odrl:use ;
+        odrl:constraint ex:c-dqr2hl, ex:c-dqr3hl
+    ] .
+
+ex:c-dqr1hl a dqvp:DQConstraint ; rdfs:label "c-dqr1hl" ;
+    odrl:leftOperand     dqvp:NonNullRate ;
+    dqvp:targetAttribute ab:location ;
+    odrl:operator        odrl:gteq ;
+    odrl:rightOperand    "100"^^xsd:decimal .
+
+ex:c-dqr4hl a dqvp:DQConstraint ; rdfs:label "c-dqr4hl" ;
+    odrl:leftOperand     dqvp:RowCount ;
+    dqvp:groupBy         ab:wetlandId ;
+    odrl:operator        odrl:gteq ;
+    odrl:rightOperand    "5"^^xsd:decimal .
+
+ex:c-dqr2hl a dqvp:DQConstraint ; rdfs:label "c-dqr2hl" ;
+    odrl:leftOperand     dqvp:RowExpressionRate ;
+    dqvp:targetAttribute ab:observedAt ;
+    dqvp:rowExpression   "regexp_matches(CAST(\"observedAt\" AS VARCHAR), '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$')" ;
+    odrl:operator        odrl:gteq ;
+    odrl:rightOperand    "100"^^xsd:decimal .
+
+ex:c-dqr3hl a dqvp:DQConstraint ; rdfs:label "c-dqr3hl" ;
+    odrl:leftOperand     dqvp:RowExpressionRate ;
+    dqvp:targetAttribute ab:breedingEvidence ;
+    dqvp:filter [ a dqvp:RowFilter ;
+                  dqvp:filterAttribute ab:detectionStatus ;
+                  dqvp:filterOperator  odrl:eq ;
+                  dqvp:filterValue     "notDetected" ] ;
+    dqvp:rowExpression   "(\"breedingEvidence\" IS NULL OR NOT (\"breedingEvidence\" IN ('courtship', 'nesting', 'chicks')))" ;
+    odrl:operator        odrl:gteq ;
+    odrl:rightOperand    "100"^^xsd:decimal .

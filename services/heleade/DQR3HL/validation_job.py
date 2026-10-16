@@ -2,9 +2,9 @@
 
 In the BiodiversityObservation entity, when the detectionStatus attribute has the values {notDetected}, the breedingEvidence attribute of BiodiversityObservation entity must not contain values from the set {courtship, nesting, chicks}.
 
-The check is the DQVP constraint c-dqr3hl. It reads the data in place with DuckDB
-and returns the measured value and whether DQR3HL is satisfied. service.json records
-where it comes from.
+The check is the DQVP constraint c-dqr3hl, compiled by the policy checker in
+../policy_checker.ttl. It reads the data in place with DuckDB and returns the measured
+value and whether DQR3HL is satisfied. service.json records where it comes from.
 
 Run:  python validation_job.py [data folder]
 """

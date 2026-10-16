@@ -3,6 +3,8 @@ HELEADE use case: every DQR has its ODRL rule and its validation service, and th
 links between them are recorded in the files.
 
   rule      prototype/odrl_rules/heleade/<DQR>_odrl.json, built by the prototype
+  policy    services/heleade/dqvp_policy.ttl, the DQVP policy mapped from the DQRs
+  checker   services/heleade/policy_checker.ttl, compiled from that policy
   service   services/heleade/<DQR>/, exported from the DQVP check
             (tools/dqvp/operationalization-pipeline/export_services.py)
 
@@ -13,6 +15,9 @@ import json
 from pathlib import Path
 
 import pytest
+from rdflib import Graph, Namespace, RDF, URIRef
+
+PC = Namespace("https://feed-upc.github.io/DQVP-position/pc#")
 
 HERE     = Path(__file__).resolve().parent
 CATS     = HERE.parent
@@ -61,8 +66,28 @@ def test_manifest_links_resolve(dqr):
     rule = json.loads((CATS / m["odrlRule"]).read_text())
     assert rule["@graph"][0]["tb:derivedFrom"] == dqr
     assert m["dqvpCheck"] == f"c-{dqr.lower()}"
+    assert (CATS / m["dqvpPolicy"]["file"]).exists()
     for path in m["dataProducts"].values():
         assert (CATS / path).exists(), path
+
+
+@pytest.mark.parametrize("dqr", DQRS)
+def test_policy_checker_links_the_check(dqr):
+    m  = json.loads((SERVICES / dqr / "service.json").read_text())
+    pc = m["policyChecker"]
+    g  = Graph().parse(CATS / pc["file"], format="turtle")
+    checker, workflow = URIRef(pc["checker"]), URIRef(pc["workflow"])
+    assert (checker, RDF.type, PC.PolicyChecker) in g
+    assert str(g.value(checker, PC.accordingTo)).endswith(m["dqvpPolicy"]["id"])
+    assert (checker, PC.hasWorkflow, workflow) in g
+    # filter -> measure -> compare -> report; a record-level check measures in two
+    # steps, a row predicate and its aggregate
+    steps = [op.rsplit("/", 1)[-1] for op in pc["operations"]]
+    assert steps in (["filter", "measure", "compare", "report"],
+                     ["filter", "predicate", "aggregate", "compare", "report"]), steps
+    for op in map(URIRef, pc["operations"]):
+        assert (workflow, PC.hasOp, op) in g
+        assert str(g.value(op, PC.forCheck)).endswith(m["dqvpCheck"])
 
 
 @pytest.mark.parametrize("dqr", DQRS)

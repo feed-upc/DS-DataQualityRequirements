@@ -2,9 +2,9 @@
 
 In the Observation entity, the observedAt attribute must follow the UTC standard
 
-The check is the DQVP constraint c-dqr2hl. It reads the data in place with DuckDB
-and returns the measured value and whether DQR2HL is satisfied. service.json records
-where it comes from.
+The check is the DQVP constraint c-dqr2hl, compiled by the policy checker in
+../policy_checker.ttl. It reads the data in place with DuckDB and returns the measured
+value and whether DQR2HL is satisfied. service.json records where it comes from.
 
 Run:  python validation_job.py [data folder]
 """

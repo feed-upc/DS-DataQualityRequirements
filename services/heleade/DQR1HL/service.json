@@ -9,9 +9,23 @@
   "requirement": "prototype/requirements/heleade/DQR1HL.json",
   "odrlRule": "prototype/odrl_rules/heleade/DQR1HL_odrl.json",
   "dqvpCheck": "c-dqr1hl",
-  "dqvpPolicy": "hl-dq-offer-01",
+  "dqvpPolicy": {
+    "id": "hl-dq-offer-01",
+    "file": "services/heleade/dqvp_policy.ttl"
+  },
+  "policyChecker": {
+    "file": "services/heleade/policy_checker.ttl",
+    "checker": "https://example.org/heleade/hl-dq-offer-01/checker",
+    "workflow": "https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite",
+    "operations": [
+      "https://example.org/heleade/c-dqr1hl/filter",
+      "https://example.org/heleade/c-dqr1hl/measure",
+      "https://example.org/heleade/c-dqr1hl/compare",
+      "https://example.org/heleade/c-dqr1hl/report"
+    ]
+  },
   "dataProducts": {
     "monitoring_site": "tools/dqvp/data/heleade/monitoring_site.csv"
   },
-  "generatedBy": "DQVP export_services.py at b1f55f0"
+  "generatedBy": "DQVP export_services.py at 5f6c748"
 }

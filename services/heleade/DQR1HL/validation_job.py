@@ -2,9 +2,9 @@
 
 In the MonitoringSite entity, the location attribute must contain at least 100 percent non-empty values
 
-The check is the DQVP constraint c-dqr1hl. It reads the data in place with DuckDB
-and returns the measured value and whether DQR1HL is satisfied. service.json records
-where it comes from.
+The check is the DQVP constraint c-dqr1hl, compiled by the policy checker in
+../policy_checker.ttl. It reads the data in place with DuckDB and returns the measured
+value and whether DQR1HL is satisfied. service.json records where it comes from.
 
 Run:  python validation_job.py [data folder]
 """
