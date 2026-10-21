@@ -7,6 +7,7 @@ The check is the DQVP constraint c-dqr3hl, compiled by the policy checker in
 value and whether DQR3HL is satisfied. service.json records where it comes from.
 
 Run:  python validation_job.py [data folder]
+      docker build -t dqr3hl . && docker run --rm -v <data folder>:/data dqr3hl /data
 """
 import operator
 import sys

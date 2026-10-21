@@ -101,12 +101,18 @@ def _load_generated(code: str, tmp_path: Path, label: str):
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
-@pytest.mark.parametrize("dqr_id,data_product,csv_name", [
-    ("DQR1EH", "Patient_Summary", "Patient_Summary.csv"),
-    ("DQR5EH", "Patient_Summary", "Patient_Summary.csv"),
-    ("DQR6EH", "Patient_Summary", "Hospital.csv"),   # compliance check on Hospital
+# Every EHDS DQR the prototype generates a service for, the data it is run on, and the
+# verdict that data must give. The EHDS data product has defects on purpose: missing
+# patient IDs, invalid country codes, a 53/47 gender split and only 500 isolates.
+@pytest.mark.parametrize("dqr_id,data_product,csv_name,expected", [
+    ("DQR1EH", "Patient_Summary", "Patient_Summary.csv", False),
+    ("DQR2EH", "Patient_Summary", "Patient_Summary.csv", False),
+    ("DQR3EH", "Patient_Summary", "Patient_Summary.csv", True),
+    ("DQR4EH", "Patient_Summary", "Isolate.csv",         False),
+    ("DQR5EH", "Patient_Summary", "Patient_Summary.csv", False),
+    ("DQR6EH", "Patient_Summary", "Patient_Summary.csv", False),   # hospitalCountry column
 ])
-def test_generate_and_execute_service(engine_url, proto, tmp_path, dqr_id, data_product, csv_name):
+def test_generate_and_execute_service(engine_url, proto, tmp_path, dqr_id, data_product, csv_name, expected):
     """
     Full pipeline:
       1. Generate ODRL rule from requirement + template   (Stage 3)
@@ -145,15 +151,14 @@ def test_generate_and_execute_service(engine_url, proto, tmp_path, dqr_id, data_
     assert "run_gx_validation" in code,        f"{dqr_id}: generated code missing run_gx_validation"
     assert "great_expectations" in code,       f"{dqr_id}: generated code missing great_expectations import"
 
+    # A service without expectations passes any data, so it must check something.
+    assert "suite.add_expectation" in code,    f"{dqr_id}: generated service checks nothing"
+
     # ── Stage 5b: execute generated service ───────────────────────────────────
     mod    = _load_generated(code, tmp_path, dqr_id)
     result = mod.run_gx_validation(str(DATA / csv_name))
     assert isinstance(result, bool), f"{dqr_id}: service did not return a bool"
-
-    # Log outcome — pass/fail depends on intentional data quality issues in the
-    # synthetic dataset (DQR1EH expects False: 5 null IDs; DQR5EH/6EH expect True)
-    status = "PASS" if result else "FAIL (expected for dirty synthetic data)"
-    print(f"\n  [{dqr_id}] Generated service result: {status}")
+    assert result is expected, f"{dqr_id}: expected {expected} on {csv_name}, got {result}"
 
 
 def test_generate_dqr7eh_freshness_service(engine_url, proto, tmp_path):
