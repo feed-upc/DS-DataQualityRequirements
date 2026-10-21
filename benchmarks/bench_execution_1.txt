@@ -1,0 +1,17 @@
+Three mapped EHDS DQRs, increasing data volume (median of 5)
+      rows   load s  checks s  ms/check  x per 10x rows
+-------------------------------------------------------
+       500    0.092    0.0134      4.46                
+     5,000    0.087    0.0223      7.42           1.66x
+    50,000    0.183    0.1007     33.56           4.52x
+   500,000    1.479    0.1451     48.36           1.44x
+ 5,000,000    2.336    0.7858    261.93           5.42x
+  measurements identical at every size: {'c-completeness': 98.0, 'c-compliance': 98.1964, 'c-consistency': 100.0}
+
+Synthetic policies over 5,000,000 rows, increasing check count (median of 5)
+ checks  checks s  ms/check
+---------------------------
+      3    0.1517     50.55
+     12    0.4608     38.40
+     48    2.7538     57.37
+     96    3.2165     33.50

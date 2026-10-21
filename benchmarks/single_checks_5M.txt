@@ -1,0 +1,26 @@
+replicated (500 distinct IDs) load 3.096 total 0.2948
+   b0    NonNullRate  nationalHealthcarePatientID  0.0065 s  value 98.0
+   b1    UniqueRate   familyName                   0.0558 s  value 0.0005
+   b10   UniqueRate   nationalHealthcarePatientID  0.0580 s  value 0.01
+   b11   NullRate     familyName                   0.0119 s  value 0.0
+   b2    NullRate     givenName                    0.0137 s  value 0.0
+   b3    NonNullRate  dateOfBirth                  0.0028 s  value 100.0
+   b4    UniqueRate   gender                       0.0600 s  value 0.0
+   b5    NullRate     countryOfAffiliation         0.0153 s  value 0.2
+   b6    NonNullRate  hospitalCode                 0.0180 s  value 100.0
+   b7    UniqueRate   hospitalCountry              0.0490 s  value 0.0006
+   b8    NullRate     lastUpdated                  0.0020 s  value 0.0
+   b9    NonNullRate  pregnancyHistory             0.0018 s  value 23.4
+unique IDs load 2.55 total 0.4619
+   b0    NonNullRate  nationalHealthcarePatientID  0.0075 s  value 98.0
+   b1    UniqueRate   familyName                   0.0581 s  value 0.0005
+   b10   UniqueRate   nationalHealthcarePatientID  0.2428 s  value 100.0
+   b11   NullRate     familyName                   0.0096 s  value 0.0
+   b2    NullRate     givenName                    0.0088 s  value 0.0
+   b3    NonNullRate  dateOfBirth                  0.0017 s  value 100.0
+   b4    UniqueRate   gender                       0.0432 s  value 0.0
+   b5    NullRate     countryOfAffiliation         0.0083 s  value 0.2
+   b6    NonNullRate  hospitalCode                 0.0107 s  value 100.0
+   b7    UniqueRate   hospitalCountry              0.0667 s  value 0.0006
+   b8    NullRate     lastUpdated                  0.0021 s  value 0.0
+   b9    NonNullRate  pregnancyHistory             0.0024 s  value 23.4

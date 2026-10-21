@@ -50,6 +50,7 @@ git clone --recurse-submodules https://github.com/feed-upc/DS-DataQualityRequire
   - `heleade/`: the DQVP policy and the policy checker that the HELEADE services are generated from.
 - **`media/`**: pattern templates and instantiation examples as figures.
 - **`tests/`**: pattern instantiation, ODRL generation, the DQVP mapping, and the services.
+- **`benchmarks/`**: raw outputs of the [benchmarks](#benchmarks).
 - **`evaluation/`**: preliminary feedback evaluation with practitioners.
 - **`tools/validation-engine`** and **`tools/dqvp`**: the two submodules below.
 
@@ -96,3 +97,24 @@ python export_services.py ../../../prototype/requirements/heleade ../../../servi
 docker build -t dqr4hl ../../../services/policyChecker_567fdac1
 docker run --rm -v "$(realpath ../data/heleade)":/data dqr4hl /data
 ```
+
+### Benchmarks
+
+`bench_planning.py` and `bench_execution.py` measure how compilation and execution grow with the number of checks and the size of the data. The results below were measured on 20 Oct 2026 on a laptop with an AMD Ryzen 5 PRO 215 (6 cores, 12 threads) and 7.1 GiB of memory, under Ubuntu 24.04 on WSL2, with Python 3.12.3, DuckDB 1.5.6, rdflib 7.6.0 and EYE 11.24.4. Times vary between runs on this machine, so the tables give ranges. The raw outputs are in [`benchmarks/`](benchmarks).
+
+| Checks | Planning | Code generation | Per check |
+| -----: | -------: | --------------: | --------: |
+| 128 | 2.40 s | 0.65 s | 24 ms |
+| 256 | 4.32 s | 1.25 s | 22 ms |
+| 512 | 8.50 s | 2.41 s | 21 ms |
+
+| Checks over 5,000,000 records | Execution | Per check |
+| ----------------------------: | --------: | --------: |
+| 3 | 0.07–0.15 s | 25–51 ms |
+| 12 | 0.46–0.73 s | 38–61 ms |
+| 48 | 1.43–2.75 s | 30–57 ms |
+| 96 | 2.76–3.22 s | 29–34 ms |
+
+- **Compilation**: medians of 7 runs. Planning includes about 0.3 s to start the reasoner, and each check adds 4 operations to the policy checker.
+- **Execution**: two runs, each the median of 5, with the data already loaded; loading the 5,000,000-record CSV took about 2.3 s. Single checks range from 2–11 ms (null and non-null rates) to 0.24 s (uniqueness of 5,000,000 distinct identifiers) and 1.3 s (conformance to the 249 ISO 3166 codes).
+- **Data size**: the three EHDS checks took 13 ms over 500 records, 0.15 s over 500,000 and 0.74–0.79 s over 5,000,000, with the same measured values at every size.
