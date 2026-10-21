@@ -3,7 +3,7 @@
 In the MonitoringSite entity, the location attribute must contain at least 100 percent non-empty values
 
 The check is the DQVP constraint c-dqr1hl, compiled by the policy checker in
-../policy_checker.ttl. It reads the data in place with DuckDB and returns the measured
+../heleade/policy_checker.ttl. It reads the data in place with DuckDB and returns the measured
 value and whether DQR1HL is satisfied. service.json records where it comes from.
 
 Run:  python validation_job.py [data folder]
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import duckdb
 
-DATA = Path(__file__).resolve().parent / '../../../tools/dqvp/data/heleade'
+DATA = Path(__file__).resolve().parent / '../../tools/dqvp/data/heleade'
 LOADS = {'monitoring_site': "read_csv_auto('{data}/monitoring_site.csv')"}          # table -> load expression; {data} is the data folder
 MEASURE = 'select 100.0*count("location")/nullif(count(*),0) from "monitoring_site"'
 COMPARE, THRESHOLD = '>=', 100.0

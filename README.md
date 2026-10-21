@@ -19,14 +19,14 @@ flowchart LR
 | [DQRP1](media/DQRP1/DQRP1-Currentness.png) Currentness | DQR7EH | Patient Summary records are at most 1,440 minutes old | [DQR7EH.json](prototype/requirements/DQR7EH.json) | [DQR7EH_odrl.json](prototype/odrl_rules/DQR7EH_odrl.json) | [policyChecker_05fb5861](services/policyChecker_05fb5861) | – |
 | [DQRP1](media/DQRP1/DQRP1-Currentness.png) Currentness | DQR1LS | Live Stocks prices are at most 30 minutes old | – | [DQR1LS_odrl.json](prototype/odrl_rules/DQR1LS_odrl.json) | [policyChecker_69b7c656](services/policyChecker_69b7c656) | – |
 | [DQRP2](media/DQRP2/DQRP2-Completeness.png) Completeness | DQR1EH | The national healthcare patient ID is always present | [DQR1EH.json](prototype/requirements/DQR1EH.json) | [DQR1EH_odrl.json](prototype/odrl_rules/DQR1EH_odrl.json) | [policyChecker_3ae130f1](services/policyChecker_3ae130f1) | 98.0% · violated |
-| [DQRP2](media/DQRP2/DQRP2-Completeness.png) Completeness | DQR1HL | Every monitoring site has a location | [DQR1HL.json](prototype/requirements/heleade/DQR1HL.json) | [DQR1HL_odrl.json](prototype/odrl_rules/heleade/DQR1HL_odrl.json) | [heleade/DQR1HL](services/heleade/DQR1HL) | 100.0% · satisfied |
+| [DQRP2](media/DQRP2/DQRP2-Completeness.png) Completeness | DQR1HL | Every monitoring site has a location | [DQR1HL.json](prototype/requirements/heleade/DQR1HL.json) | [DQR1HL_odrl.json](prototype/odrl_rules/heleade/DQR1HL_odrl.json) | [policyChecker_870f6287](services/policyChecker_870f6287) | 100.0% · satisfied |
 | [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR2EH | The country of affiliation follows ISO 3166 | [DQR2EH.json](prototype/requirements/DQR2EH.json) | [DQR2EH_odrl.json](prototype/odrl_rules/DQR2EH_odrl.json) | [policyChecker_5b132606](services/policyChecker_5b132606) | 98.2% · violated |
 | [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR6EH | The hospital country follows ISO 3166 | [DQR6EH.json](prototype/requirements/DQR6EH.json) | [DQR6EH_odrl.json](prototype/odrl_rules/DQR6EH_odrl.json) | [policyChecker_32ec32b7](services/policyChecker_32ec32b7) | 98.2% · violated |
-| [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR2HL | Observation times are written in UTC | [DQR2HL.json](prototype/requirements/heleade/DQR2HL.json) | [DQR2HL_odrl.json](prototype/odrl_rules/heleade/DQR2HL_odrl.json) | [heleade/DQR2HL](services/heleade/DQR2HL) | 99.0% · violated |
+| [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR2HL | Observation times are written in UTC | [DQR2HL.json](prototype/requirements/heleade/DQR2HL.json) | [DQR2HL_odrl.json](prototype/odrl_rules/heleade/DQR2HL_odrl.json) | [policyChecker_f0f0086e](services/policyChecker_f0f0086e) | 99.0% · violated |
 | [DQRP4](media/DQRP4/DQRP4-Consistency.png) Consistency | DQR3EH | Male patients have no recorded pregnancy history | [DQR3EH.json](prototype/requirements/DQR3EH.json) | [DQR3EH_odrl.json](prototype/odrl_rules/DQR3EH_odrl.json) | [policyChecker_842a8b01](services/policyChecker_842a8b01) | 100.0% · satisfied |
-| [DQRP4](media/DQRP4/DQRP4-Consistency.png) Consistency | DQR3HL | A "not detected" observation records no courtship, nesting or chicks | [DQR3HL.json](prototype/requirements/heleade/DQR3HL.json) | [DQR3HL_odrl.json](prototype/odrl_rules/heleade/DQR3HL_odrl.json) | [heleade/DQR3HL](services/heleade/DQR3HL) | 100.0% · satisfied |
+| [DQRP4](media/DQRP4/DQRP4-Consistency.png) Consistency | DQR3HL | A "not detected" observation records no courtship, nesting or chicks | [DQR3HL.json](prototype/requirements/heleade/DQR3HL.json) | [DQR3HL_odrl.json](prototype/odrl_rules/heleade/DQR3HL_odrl.json) | [policyChecker_6ec52568](services/policyChecker_6ec52568) | 100.0% · satisfied |
 | [DQRP5](media/DQRP5/DQRP5-Completeness.png) Completeness | DQR4EH | An AMR study has at least 2,000 isolates | [DQR4EH.json](prototype/requirements/DQR4EH.json) | [DQR4EH_odrl.json](prototype/odrl_rules/DQR4EH_odrl.json) | [policyChecker_21a1ab80](services/policyChecker_21a1ab80) | 2,249 · satisfied |
-| [DQRP5](media/DQRP5/DQRP5-Completeness.png) Completeness | DQR4HL | Every wetland has at least 5 monitoring sites | [DQR4HL.json](prototype/requirements/heleade/DQR4HL.json) | [DQR4HL_odrl.json](prototype/odrl_rules/heleade/DQR4HL_odrl.json) | [heleade/DQR4HL](services/heleade/DQR4HL) | 4 · violated |
+| [DQRP5](media/DQRP5/DQRP5-Completeness.png) Completeness | DQR4HL | Every wetland has at least 5 monitoring sites | [DQR4HL.json](prototype/requirements/heleade/DQR4HL.json) | [DQR4HL_odrl.json](prototype/odrl_rules/heleade/DQR4HL_odrl.json) | [policyChecker_567fdac1](services/policyChecker_567fdac1) | 4 · violated |
 | [DQRP6](media/DQRP6/DQRP6-Fairness.png) Fairness | DQR5EH | The gender imbalance among isolates is at most 5 points | [DQR5EH.json](prototype/requirements/DQR5EH.json) | [DQR5EH_odrl.json](prototype/odrl_rules/DQR5EH_odrl.json) | [policyChecker_96133334](services/policyChecker_96133334) | 8.8 points · violated |
 
 - **EH** are the DQRs of the European Health Data Space use case, **HL** those of the HELEADE wetlands data space, and **DQR1LS** an illustrative Live Stocks example with no data.
@@ -46,8 +46,8 @@ git clone --recurse-submodules https://github.com/feed-upc/DS-DataQualityRequire
   - `odrl_rules/`: one ODRL rule per DQR. Each records its DQR in `tb:derivedFrom`.
   - `odrl_templates/`: one ODRL template per pattern.
 - **`services/`**: the validation services.
-  - `policyChecker_*`: generated by the Validation Engine from the ODRL rules. The table above shows which DQR each one checks.
-  - `heleade/`: generated from the DQVP checks (see [DQVP](#dqvp)). Each folder holds `validation_job.py` with its `Dockerfile` and `requirements.txt`, like the `policyChecker_*` services, the same check for dbt, SodaCL, Great Expectations and PyDeequ in `checks/`, and a `service.json` recording its DQR, pattern, ODRL rule and check. The DQVP policy and its policy checker are in `heleade/dqvp_policy.ttl` and `heleade/policy_checker.ttl`.
+  - `policyChecker_*`: one service per DQR, with its `validation_job.py`, `Dockerfile` and `requirements.txt`. The table above shows which DQR each one checks. The Validation Engine generates the EHDS and Live Stocks ones from the ODRL rules; DQVP generates the HELEADE ones from its checks (see [DQVP](#dqvp)). These also hold the same check for dbt, SodaCL, Great Expectations and PyDeequ in `checks/`, and a `service.json` recording its DQR, pattern, ODRL rule and check.
+  - `heleade/`: the DQVP policy and the policy checker that the HELEADE services are generated from.
 - **`media/`**: pattern templates and instantiation examples as figures.
 - **`tests/`**: pattern instantiation, ODRL generation, the DQVP mapping, and the services.
 - **`evaluation/`**: preliminary feedback evaluation with practitioners.
@@ -89,10 +89,10 @@ python bench_execution.py 5000000 5                            # execution as th
 python automation_report.py                                    # what is authored and what is generated, per DQR
 ```
 
-The HELEADE services in `services/heleade/` are generated from these checks, because plain ODRL cannot express three of the HELEADE DQRs: a format standard (UTC), values *not* in a set, and a count per wetland. From the same folder:
+The HELEADE services are generated from these checks, because plain ODRL cannot express three of the HELEADE DQRs: a format standard (UTC), values *not* in a set, and a count per wetland. From the same folder:
 
 ```bash
-python export_services.py ../../../prototype/requirements/heleade ../../../services/heleade ../../../prototype/odrl_rules/heleade
-docker build -t dqr4hl ../../../services/heleade/DQR4HL
+python export_services.py ../../../prototype/requirements/heleade ../../../services ../../../prototype/odrl_rules/heleade
+docker build -t dqr4hl ../../../services/policyChecker_567fdac1
 docker run --rm -v "$(realpath ../data/heleade)":/data dqr4hl /data
 ```

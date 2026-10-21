@@ -5,11 +5,13 @@ links between them are recorded in the files.
   rule      prototype/odrl_rules/heleade/<DQR>_odrl.json, built by the prototype
   policy    services/heleade/dqvp_policy.ttl, the DQVP policy mapped from the DQRs
   checker   services/heleade/policy_checker.ttl, compiled from that policy
-  service   services/heleade/<DQR>/, exported from the DQVP check
-            (tools/dqvp/operationalization-pipeline/export_services.py)
+  service   services/policyChecker_<hash>/, exported from the DQVP check
+            (tools/dqvp/operationalization-pipeline/export_services.py); its
+            service.json says which DQR it validates
 
 The services read the synthetic HELEADE data in tools/dqvp/data/heleade.
 """
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -24,7 +26,8 @@ CATS     = HERE.parent
 REQS     = CATS / "prototype" / "requirements" / "heleade"
 RULES    = CATS / "prototype" / "odrl_rules" / "heleade"
 TMPL     = CATS / "prototype" / "odrl_templates"
-SERVICES = CATS / "services" / "heleade"
+SERVICES = {json.loads(p.read_text())["dqr"]: p.parent
+            for p in (CATS / "services").glob("policyChecker_*/service.json")}
 
 # (measured value, satisfied) on the synthetic HELEADE data
 EXPECTED = {
@@ -37,14 +40,14 @@ DQRS = sorted(p.stem for p in REQS.glob("DQR*HL.json"))
 
 
 def _service(dqr):
-    spec = importlib.util.spec_from_file_location(f"svc_{dqr}", SERVICES / dqr / "validation_job.py")
+    spec = importlib.util.spec_from_file_location(f"svc_{dqr}", SERVICES[dqr] / "validation_job.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
 
 
 def test_every_heleade_dqr_is_covered():
-    assert DQRS == sorted(EXPECTED)
+    assert DQRS == sorted(EXPECTED) == sorted(SERVICES)
 
 
 @pytest.mark.parametrize("dqr", DQRS)
@@ -58,7 +61,7 @@ def test_rule_is_derived_from_its_dqr(proto, dqr):
 
 @pytest.mark.parametrize("dqr", DQRS)
 def test_manifest_links_resolve(dqr):
-    m   = json.loads((SERVICES / dqr / "service.json").read_text())
+    m   = json.loads((SERVICES[dqr] / "service.json").read_text())
     req = json.loads((CATS / m["requirement"]).read_text())
     assert m["dqr"] == req["id"] == dqr
     assert m["pattern"] == req["pattern"]
@@ -73,8 +76,11 @@ def test_manifest_links_resolve(dqr):
 
 @pytest.mark.parametrize("dqr", DQRS)
 def test_policy_checker_links_the_check(dqr):
-    m  = json.loads((SERVICES / dqr / "service.json").read_text())
+    m  = json.loads((SERVICES[dqr] / "service.json").read_text())
     pc = m["policyChecker"]
+    # named like the engine's services: the MD5 of the check's IRI
+    assert SERVICES[dqr].name == f"policyChecker_{hashlib.md5(pc['check'].encode()).hexdigest()[:8]}"
+    assert pc["check"].endswith(m["dqvpCheck"])
     g  = Graph().parse(CATS / pc["file"], format="turtle")
     checker, workflow = URIRef(pc["checker"]), URIRef(pc["workflow"])
     assert (checker, RDF.type, PC.PolicyChecker) in g
@@ -87,7 +93,7 @@ def test_policy_checker_links_the_check(dqr):
                      ["filter", "predicate", "aggregate", "compare", "report"]), steps
     for op in map(URIRef, pc["operations"]):
         assert (workflow, PC.hasOp, op) in g
-        assert str(g.value(op, PC.forCheck)).endswith(m["dqvpCheck"])
+        assert (op, PC.forCheck, URIRef(pc["check"])) in g
 
 
 @pytest.mark.parametrize("dqr", DQRS)

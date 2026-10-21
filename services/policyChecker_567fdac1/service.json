@@ -17,6 +17,7 @@
     "file": "services/heleade/policy_checker.ttl",
     "checker": "https://example.org/heleade/hl-dq-offer-01/checker",
     "workflow": "https://example.org/heleade/hl-dq-offer-01/checker/wf/MonitoringSite",
+    "check": "https://example.org/heleade/c-dqr4hl",
     "operations": [
       "https://example.org/heleade/c-dqr4hl/filter",
       "https://example.org/heleade/c-dqr4hl/measure",
@@ -27,5 +28,5 @@
   "dataProducts": {
     "monitoring_site": "tools/dqvp/data/heleade/monitoring_site.csv"
   },
-  "generatedBy": "DQVP export_services.py at bd4f7bc"
+  "generatedBy": "DQVP export_services.py at ff055c3"
 }
