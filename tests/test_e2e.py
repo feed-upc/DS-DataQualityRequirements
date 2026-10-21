@@ -182,7 +182,7 @@ def test_dqr4eh_real_data_fails_synthetic_limitation():
 
 # ═══════════════════════════════════════════════════════════════
 # DQR5EH — DQRP6 Fairness
-# Gender distribution imbalance <= 5% (KL divergence < 0.05 vs 50/50)
+# Gender distribution imbalance <= 5 points (gap between the largest and smallest share)
 # policyChecker_96133334
 # ═══════════════════════════════════════════════════════════════
 SVC_DQR5EH = "policyChecker_96133334"
