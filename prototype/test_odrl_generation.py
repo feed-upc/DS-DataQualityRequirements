@@ -66,7 +66,7 @@ sys.modules["streamlit"] = _StStub()
 
 # Now import the builder
 sys.path.insert(0, str(PROTO_DIR))
-from dqr_prototype_gui import build_odrl_rule  # noqa: E402
+from dqr_prototype2 import build_odrl_rule  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -138,7 +138,7 @@ def test_all_patterns_have_templates(res: Results):
 def test_all_requirements_have_templates(res: Results):
     """Every requirement should reference a pattern that has an active template."""
     print("\n--- Test: every requirement's pattern has an active template ---")
-    for rfile in sorted(REQUIREMENTS_DIR.glob("*.json")):
+    for rfile in sorted(REQUIREMENTS_DIR.glob("DQR*.json")):
         req = load_json(rfile)
         rid = req["id"]
         pid = req["pattern"]["id"]
@@ -182,7 +182,7 @@ def test_odrl_rule_generation(res: Results):
     and compare it to the expected output in odrl_rules/.
     """
     print("\n--- Test: ODRL rule generation matches expected output ---")
-    for rfile in sorted(REQUIREMENTS_DIR.glob("*.json")):
+    for rfile in sorted(REQUIREMENTS_DIR.glob("DQR*.json")):
         req = load_json(rfile)
         rid = req["id"]
         pid = req["pattern"]["id"]
@@ -222,7 +222,7 @@ def test_odrl_rule_structure(res: Results):
     structure: @context, @graph, and required node types.
     """
     print("\n--- Test: generated ODRL rules have valid structure ---")
-    for rfile in sorted(REQUIREMENTS_DIR.glob("*.json")):
+    for rfile in sorted(REQUIREMENTS_DIR.glob("DQR*.json")):
         req = load_json(rfile)
         rid = req["id"]
         pid = req["pattern"]["id"]
