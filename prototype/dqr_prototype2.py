@@ -1928,6 +1928,9 @@ def _wiz_step4(wiz: dict):
             if not dqr_id:
                 st.error("Requirement ID cannot be empty.")
                 return
+            if (REQS_DIR / f"{dqr_id}.json").exists():
+                st.error(f"Requirement ID '{dqr_id}' already exists — choose a different ID.")
+                return
             dqr = {
                 "id":                  dqr_id,
                 "goal":                p.get("goal", ""),
@@ -2256,10 +2259,19 @@ def page_generate_odrl():
                 with st.expander("Error logs"):
                     st.text(gen_result["logs"])
         else:
-            st.success(gen_result.get("message", "Validation service successfully generated."))
-
             code = gen_result.get("validation_code", "")
             zip_b64 = gen_result.get("zip_base64")
+
+            # A service without a single expectation accepts any data: the engine has no
+            # rule for this requirement's measurement, so do not offer it as a validation service.
+            if code and "add_expectation" not in code:
+                concept = req.get("measurementConcept", req.get("qualityDimension", {}).get("dimension", ""))
+                st.error(f"The Validation Engine generated no check for {req['id']}: it has no rule "
+                         f"for {concept} measurements, so the service would accept any data. "
+                         "It is not offered for download.")
+                zip_b64 = None
+            else:
+                st.success(gen_result.get("message", "Validation service successfully generated."))
 
             # Download button first so it's prominent
             if zip_b64:
@@ -2492,6 +2504,7 @@ def page_pattern_maintainer():
             tmpl_path    = ODRL_TMPL    / f"{pid}_odrl_template.json"
             pattern_path.write_text(json.dumps(pattern_json, indent=2))
             tmpl_path.write_text(json.dumps(odrl_json, indent=2))
+            load_patterns.clear()
 
             st.success(f"✅ Pattern **{pid} — {name}** saved.")
             ci, cj = st.columns(2)
