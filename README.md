@@ -55,7 +55,7 @@ git clone --recurse-submodules https://github.com/feed-upc/DS-DataQualityRequire
 
 ## Validation Engine
 
-[`tools/validation-engine`](https://github.com/feed-upc/DataValidationWorkflow) (DataValidationWorkflow) takes an ODRL rule, resolves the data and service catalog metadata, and generates the corresponding validation service as an executable microservice: the `services/policyChecker_*` folders. In the prototype, **Generate validation service** sends the DQR's ODRL rule to the engine's API and returns the service as a ZIP. The API runs from the [Fdatavalidation](https://github.com/feed-upc/Fdatavalidation) repository, which includes this one as a submodule and holds the EHDS data product.
+[`tools/validation-engine`](https://github.com/feed-upc/DataValidationWorkflow) (DataValidationWorkflow) takes an ODRL rule, resolves the data and service catalog metadata, and generates the corresponding validation service as an executable microservice: the `services/policyChecker_*` folders. In the prototype, **Generate validation service** sends the DQR's ODRL rule to the engine's API and returns the service as a ZIP. The API runs from the [Fdatavalidation](https://github.com/feed-upc/Fdatavalidation) repository, which includes this one as a submodule and holds the EHDS and HELEADE data products.
 
 ```bash
 uvicorn Connector.ValidationFramework.api.api:app --port 5000   # from the Fdatavalidation root
@@ -76,7 +76,7 @@ Some tests read the EHDS data product from `../../DataProductLayer/DataProduct_E
 
 [`tools/dqvp`](https://github.com/feed-upc/DQVP-position) is DQVP, an ODRL profile for data quality, with a pipeline that compiles a DQVP policy into checks for several engines and executes them. It covers the constraints plain ODRL cannot state, such as row filters, reference standards, per-group counts and share gaps.
 
-The pipeline reads the DQRs from `prototype/requirements/` and its synthetic data from `tools/dqvp/data/`: 500 Patient Summary records, 2,249 AMR isolates derived from them, and the HELEADE wetlands, sites and observations. It produced the **Result** column of the table above. It needs a separate environment from the Validation Engine, because it uses Great Expectations 0.18, and the [EYE reasoner](https://github.com/eyereasoner/eye) on `PATH`.
+The pipeline reads the DQRs from `prototype/requirements/` and its synthetic data from `tools/dqvp/data/`: 500 Patient Summary records, 2,249 AMR isolates derived from them, and the HELEADE wetlands, sites and observations. The HELEADE rows are the same as in Fdatavalidation's HELEADE data product (`DataProductLayer/DataProduct_HELEADE`), which adds the other entities of the HELEADE data model. It produced the **Result** column of the table above. It needs a separate environment from the Validation Engine, because it uses Great Expectations 0.18, and the [EYE reasoner](https://github.com/eyereasoner/eye) on `PATH`.
 
 ```bash
 pip install -r tools/dqvp/requirements.txt
