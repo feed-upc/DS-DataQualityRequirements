@@ -9,7 +9,7 @@ Service mapping:
   DQR2EH → policyChecker_5b132606  DQRP3 Compliance    countryOfAffiliation in ISO 3166
   DQR3EH → policyChecker_842a8b01  DQRP4 Consistency   male patients have no pregnancy
   DQR4EH → policyChecker_21a1ab80  DQRP5 Completeness  dataset >= 2000 records
-  DQR5EH → policyChecker_96133334  DQRP6 Fairness      gender KL-divergence < 0.05
+  DQR5EH → policyChecker_96133334  DQRP6 Fairness      gender share gap < 5 points
   DQR6EH → policyChecker_32ec32b7  DQRP3 Compliance    hospital country in ISO 3166
   DQR7EH → policyChecker_05fb5861  DQRP1 Currentness   lastUpdated age <= 1440 min
   DQR1LS → policyChecker_69b7c656  DQRP1 Currentness   insertionTime age <= 30 min
