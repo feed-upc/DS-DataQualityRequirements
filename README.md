@@ -43,6 +43,7 @@ The validation services in `services/` are executed by the **DataValidationWorkf
 The pipeline reads the DQRs from `prototype/requirements/` and its synthetic data from `tools/dqvp/data/`: 500 Patient Summary records and 2,249 AMR isolates derived from them. It produced the **Result** column of the table above. It needs a separate environment from the Validation Engine, because it uses Great Expectations 0.18, and the [EYE reasoner](https://github.com/eyereasoner/eye) on `PATH`.
 
 ```bash
+git submodule update --init tools/dqvp
 pip install -r tools/dqvp/requirements.txt
 cd tools/dqvp/operationalization-pipeline
 python dqr_to_dqvp.py         # measured values and verdicts of the EHDS DQRs
