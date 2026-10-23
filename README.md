@@ -1,101 +1,55 @@
 # Reference Catalog of Data Quality Requirement Patterns
 
-The Reference catalog of Data Quality Requirement (DQR) Patterns supports Data Space Governance Authorities in defining and managing data quality in their data spaces. An authority elicits its DQRs by selecting patterns from the catalog and instantiating them, which yields a DQR catalog specific to its data space.
+The Reference catalog of Data Quality Requirement (DQR) Patterns is designed to support Data Space Governance Authorities in defining and managing data quality throughout the governance and operational processes underpinning their data spaces. It enables authorities to elicit DQRs by selecting and instantiating relevant patterns, thereby constructing a data space specific DQR catalog tailored to their governance and operational needs.
 
-Each DQR then goes through three steps, and keeps its identifier through all of them:
+These patterns capture common and recurring DQRs encountered in data space data sharing and governance scenarios. For each pattern in the catalog, the associated data quality dimension, its identifier, a textual description of the requirement, the pattern template, an example of the pattern instantiation, and the corresponding automated validation service are explicitly defined.
 
-```mermaid
-flowchart LR
-  P["Pattern<br/>prototype/patterns"] -->|"instantiate"| R["DQR<br/>prototype/requirements"]
-  R -->|"ODRL template"| O["ODRL rule<br/>prototype/odrl_rules"]
-  O -->|"Validation Engine"| S["Validation service<br/>services/"]
-  R -->|"DQVP pipeline"| Q["Checks and result<br/>tools/dqvp"]
-```
+| Quality Dimension | DQR Pattern Identifier | DQR Description | DQR Pattern | DQR Pattern Instantiation Example | Validation Service | Result |
+| ----------------- | ---------------------- | --------------- | ----------- | --------------------------------- | ------------------ | ------ |
+| Currentness (ISO/IEC 25012) | DQRP1 | A specific data age is required for the values of an attribute of an entity | [DQRP1](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP1/DQRP1-Currentness.png) | The EHDS performs the [DQRP1 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP1/DQR7EHInstantiation.png) to define a DQR specifying that Patient Summary records are only valid if their data age does not exceed 1440 minutes. Its DQR record is [DQR7EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR7EH.json) and its corresponding ODRL rule is [DQR7EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR7EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_05fb5861) | – |
+| Completeness (ISO/IEC 25012) | DQRP2 | Values of an attribute must be mandatory | [DQRP2](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP2/DQRP2-Completeness.png) | The EHDS performs the [DQRP2 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP2/DQR1EHInstantiation.png) to define a DQR specifying that national healthcare patient ID shall be unambiguously used to identify patients and, therefore, it must not be a null value. Its DQR record is [DQR1EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR1EH.json) and its corresponding ODRL rule is [DQR1EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR1EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_3ae130f1) | 98.0%, violated |
+| Compliance (ISO/IEC 25012) | DQRP3 | Values of an attribute must follow a specific format | [DQRP3](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP3/DQRP3-Compliance.png) | The EHDS performs the [DQRP3 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP3/DQR2EHInstantiation.png) to define a DQR specifying that patient affiliation countries must be referenced using country codes from the ISO 3166 International Standard. Its DQR record is [DQR2EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR2EH.json) and its corresponding ODRL rule is [DQR2EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR2EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_5b132606) | 98.2%, violated |
+| Compliance (ISO/IEC 25012) | DQRP3 | Values of an attribute must follow a specific format | [DQRP3](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP3/DQRP3-Compliance.png) | The EHDS also performs a [DQRP3 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP3/DQR6EHInstantiation.png) to define a DQR specifying that hospital countries must be referenced using country codes from the ISO 3166 International Standard. Its DQR record is [DQR6EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR6EH.json) and its corresponding ODRL rule is [DQR6EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR6EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_32ec32b7) | 98.2%, violated |
+| Consistency (ISO/IEC 25012) | DQRP4 | Values of an attribute must be compatible with values of another attribute | [DQRP4](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP4/DQRP4-Consistency.png) | The EHDS performs the [DQRP4 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP4/DQR3EHInstantiation.png) to define a DQR specifying that male patients shall not have any recorded pregnancy history. Its DQR record is [DQR3EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR3EH.json) and its corresponding ODRL rule is [DQR3EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR3EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_842a8b01) | 100.0%, satisfied |
+| Completeness (ISO/IEC 25012) | DQRP5 | A dataset must contain a minimum number of records | [DQRP5](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP5/DQRP5-Completeness.png) | The EHDS performs the [DQRP5 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP5/DQR4EHInstantiation.png) to define a DQR specifying that an AMR study must include at least 2000 bacterial isolates to ensure statistical reliability. Its DQR record is [DQR4EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR4EH.json) and its corresponding ODRL rule is [DQR4EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR4EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_21a1ab80) | 2,249 isolates, satisfied |
+| Fairness (Biessmann et al., 2021) | DQRP6 | An entity composition includes groups in appropriate proportions for the task and context | [DQRP6](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP6/DQRP6-Fairness.png) | The EHDS performs the [DQRP6 Instantiation](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/media/DQRP6/DQR5EHInstantiation.png) to define a DQR specifying that accurate estimation of antimicrobial resistance rates requires a study population with balanced representation of male and female patients for mitigating potential biases. Its DQR record is [DQR5EH.json](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/requirements/DQR5EH.json) and its corresponding ODRL rule is [DQR5EH](https://github.com/feed-upc/DS-DataQualityRequirements/blob/main/prototype/odrl_rules/DQR5EH_odrl.json) | [policyChecker](https://github.com/feed-upc/DS-DataQualityRequirements/tree/main/services/policyChecker_96133334) | 8.8 points gap, violated |
 
-## DQRs
+> Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51–65 (2021)
 
-| Pattern | DQR | Requirement | DQR record | ODRL rule | Validation service | Result |
-| ------- | --- | ----------- | ---------- | --------- | ------------------ | ------ |
-| [DQRP2](media/DQRP2/DQRP2-Completeness.png) Completeness | DQR1EH | The national healthcare patient ID is always present | [DQR1EH.json](prototype/requirements/DQR1EH.json) | [DQR1EH_odrl.json](prototype/odrl_rules/DQR1EH_odrl.json) | [policyChecker_3ae130f1](services/policyChecker_3ae130f1) | 98.0% · violated |
-| [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR2EH | The country of affiliation follows ISO 3166 | [DQR2EH.json](prototype/requirements/DQR2EH.json) | [DQR2EH_odrl.json](prototype/odrl_rules/DQR2EH_odrl.json) | [policyChecker_5b132606](services/policyChecker_5b132606) | 98.2% · violated |
-| [DQRP4](media/DQRP4/DQRP4-Consistency.png) Consistency | DQR3EH | Male patients have no recorded pregnancy history | [DQR3EH.json](prototype/requirements/DQR3EH.json) | [DQR3EH_odrl.json](prototype/odrl_rules/DQR3EH_odrl.json) | [policyChecker_842a8b01](services/policyChecker_842a8b01) | 100.0% · satisfied |
-| [DQRP5](media/DQRP5/DQRP5-Completeness.png) Completeness | DQR4EH | An AMR study has at least 2,000 isolates | [DQR4EH.json](prototype/requirements/DQR4EH.json) | [DQR4EH_odrl.json](prototype/odrl_rules/DQR4EH_odrl.json) | [policyChecker_21a1ab80](services/policyChecker_21a1ab80) | 2,249 · satisfied |
-| [DQRP6](media/DQRP6/DQRP6-Fairness.png) Fairness | DQR5EH | The gender imbalance among isolates is at most 5 points | [DQR5EH.json](prototype/requirements/DQR5EH.json) | [DQR5EH_odrl.json](prototype/odrl_rules/DQR5EH_odrl.json) | [policyChecker_96133334](services/policyChecker_96133334) | 8.8 points · violated |
-| [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR6EH | The hospital country follows ISO 3166 | [DQR6EH.json](prototype/requirements/DQR6EH.json) | [DQR6EH_odrl.json](prototype/odrl_rules/DQR6EH_odrl.json) | [policyChecker_32ec32b7](services/policyChecker_32ec32b7) | 98.2% · violated |
-| [DQRP1](media/DQRP1/DQRP1-Currentness.png) Currentness | DQR7EH | Patient Summary records are at most 1,440 minutes old | [DQR7EH.json](prototype/requirements/DQR7EH.json) | [DQR7EH_odrl.json](prototype/odrl_rules/DQR7EH_odrl.json) | [policyChecker_05fb5861](services/policyChecker_05fb5861) | – |
-| [DQRP2](media/DQRP2/DQRP2-Completeness.png) Completeness | DQR1HL | Every monitoring site has a location | [DQR1HL.json](prototype/requirements/heleade/DQR1HL.json) | [DQR1HL_odrl.json](prototype/odrl_rules/heleade/DQR1HL_odrl.json) | [policyChecker_870f6287](services/policyChecker_870f6287) | 100.0% · satisfied |
-| [DQRP3](media/DQRP3/DQRP3-Compliance.png) Compliance | DQR2HL | Observation times are written in UTC | [DQR2HL.json](prototype/requirements/heleade/DQR2HL.json) | [DQR2HL_odrl.json](prototype/odrl_rules/heleade/DQR2HL_odrl.json) | [policyChecker_f0f0086e](services/policyChecker_f0f0086e) | 99.0% · violated |
-| [DQRP4](media/DQRP4/DQRP4-Consistency.png) Consistency | DQR3HL | A "not detected" observation records no courtship, nesting or chicks | [DQR3HL.json](prototype/requirements/heleade/DQR3HL.json) | [DQR3HL_odrl.json](prototype/odrl_rules/heleade/DQR3HL_odrl.json) | [policyChecker_6ec52568](services/policyChecker_6ec52568) | 100.0% · satisfied |
-| [DQRP5](media/DQRP5/DQRP5-Completeness.png) Completeness | DQR4HL | Every wetland has at least 5 monitoring sites | [DQR4HL.json](prototype/requirements/heleade/DQR4HL.json) | [DQR4HL_odrl.json](prototype/odrl_rules/heleade/DQR4HL_odrl.json) | [policyChecker_567fdac1](services/policyChecker_567fdac1) | 4 · violated |
-| [DQRP1](media/DQRP1/DQRP1-Currentness.png) Currentness | DQR1LS | Live Stocks prices are at most 30 minutes old | – | [DQR1LS_odrl.json](prototype/odrl_rules/DQR1LS_odrl.json) | [policyChecker_69b7c656](services/policyChecker_69b7c656) | – |
+The Result column gives the measured value and verdict of each DQR on the synthetic data in `tools/dqvp/data/`, into which defects were introduced on purpose. It is produced by the [DQVP pipeline](#dqvp), which does not yet cover DQRP1.
 
-- **EH** are the DQRs of the European Health Data Space use case, **HL** those of the HELEADE wetlands data space, and **DQR1LS** an illustrative Live Stocks example with no data.
-- **Pattern** links to the pattern template. Definitions are in [`prototype/patterns/`](prototype/patterns), and the EHDS instantiation figures in [`media/`](media).
-- **Result** is the measured value and verdict from the [DQVP pipeline](#dqvp) on its synthetic data. Defects were introduced into that data on purpose, so several DQRs are violated. DQVP does not cover DQRP1.
-- Fairness follows Biessmann, F., Golebiowski, J., Rukat, T., Lange, D., Schmidt, P.: Automated data validation in machine learning systems. IEEE Data Eng. Bull. 44, 51–65 (2021). The other dimensions follow ISO/IEC 25012.
+## Repository Structure
 
-## Repository structure
-
-```bash
-git clone --recurse-submodules https://github.com/feed-upc/DS-DataQualityRequirements.git
-```
-
-- **`prototype/`**: the tool for defining, instantiating and operationalizing DQRs (`streamlit run prototype/dqr_prototype2.py`; see [`prototype/README.md`](prototype/README.md)).
-  - `patterns/`: the pattern definitions (DQRP1–6).
-  - `requirements/`: the EHDS DQRs; `requirements/heleade/`: the HELEADE DQRs. The `dataspace.json` in each folder binds the DQRs' entities to data products.
-  - `odrl_rules/`: one ODRL rule per DQR. Each records its DQR in `tb:derivedFrom`.
-  - `odrl_templates/`: one ODRL template per pattern.
-- **`services/`**: the validation services.
-  - `policyChecker_*`: one service per DQR, with its `validation_job.py`, `Dockerfile` and `requirements.txt`. The table above shows which DQR each one checks. The Validation Engine generates the EHDS and Live Stocks ones from the ODRL rules; DQVP generates the HELEADE ones from its checks (see [DQVP](#dqvp)). These also hold the same check for dbt, SodaCL, Great Expectations and PyDeequ in `checks/`, and a `service.json` recording its DQR, pattern, ODRL rule and check.
-  - `heleade/`: the DQVP policy and the policy checker that the HELEADE services are generated from.
-- **`media/`**: pattern templates and instantiation examples as figures.
-- **`tests/`**: pattern instantiation, ODRL generation, the DQVP mapping, and the services.
-- **`benchmarks/`**: raw outputs of the [benchmarks](#benchmarks).
-- **`evaluation/`**: preliminary feedback evaluation with practitioners.
-- **`tools/validation-engine`** and **`tools/dqvp`**: the two submodules below.
+- **`prototype/`** — Proof-of-concept tool for defining, instantiating, and operationalizing DQRs.
+  - `patterns/` — DQR pattern definitions (DQRP1–6, JSON)
+  - `requirements/` — Instantiated DQR specifications for the EHDS use case
+  - `odrl_rules/` — Generated ODRL policies, one per DQR instantiation
+  - `odrl_templates/` — ODRL generation templates, one per pattern
+  - `dqr_prototype2.py` — Main application (`streamlit run prototype/dqr_prototype2.py`)
+- **`media/`** — Auto-generated pattern diagrams and instantiation visualizations
+- **`services/`** — Auto-generated validation services, one per DQR instantiation
+- **`tools/`** — The Validation Engine and DQVP, as submodules (see below)
+- **`benchmarks/`** — Raw outputs of the [benchmarks](#benchmarks)
+- **`evaluation/`** — Preliminary feedback from data-space practitioners
 
 ## Validation Engine
 
-[`tools/validation-engine`](https://github.com/feed-upc/DataValidationWorkflow) (DataValidationWorkflow) takes an ODRL rule, resolves the data and service catalog metadata, and generates the corresponding validation service as an executable microservice: the `services/policyChecker_*` folders. In the prototype, **Generate validation service** sends the DQR's ODRL rule to the engine's API and returns the service as a ZIP. The API runs from the [Fdatavalidation](https://github.com/feed-upc/Fdatavalidation) repository, which includes this one as a submodule and holds the EHDS and HELEADE data products.
-
-```bash
-uvicorn Connector.ValidationFramework.api.api:app --port 5000   # from the Fdatavalidation root
-docker build -t dqr1eh services/policyChecker_3ae130f1
-docker run --rm -v <data folder>:/data dqr1eh /data/Patient_Summary.csv
-```
-
-The services and their tests need `great_expectations` 1.x:
-
-```bash
-pip install pandas "great_expectations>=1.0" pytest rdflib requests fastapi uvicorn
-pytest tests
-```
-
-Some tests read the EHDS data product from `../../DataProductLayer/DataProduct_EHDS_AMR/Data` in Fdatavalidation. Its isolate file has 500 rows, so DQR4EH fails there by design. `tests/test_service_generation.py` does what the prototype's button does for every EHDS DQR, and checks that each generated service gives the expected verdict on that data. It starts the API if it is not running.
+The validation services in `services/` are executed by the **DataValidationWorkflow** engine, available as a submodule under [`tools/validation-engine`](https://github.com/feed-upc/DataValidationWorkflow). The engine takes an ODRL policy as input, resolves the data and service catalog metadata, and deploys the corresponding validation service as an executable microservice.
 
 ## DQVP
 
-[`tools/dqvp`](https://github.com/feed-upc/DQVP-position) is DQVP, an ODRL profile for data quality, with a pipeline that compiles a DQVP policy into checks for several engines and executes them. It covers the constraints plain ODRL cannot state, such as row filters, reference standards, per-group counts and share gaps.
+[`tools/dqvp`](https://github.com/feed-upc/DQVP-position) is DQVP, an ODRL profile for data quality, with a pipeline that compiles a DQVP policy into checks for several engines and executes them. It covers constraints that plain ODRL cannot state, such as row filters, reference standards, per-group counts and share gaps.
 
-The pipeline reads the DQRs from `prototype/requirements/` and its synthetic data from `tools/dqvp/data/`: 500 Patient Summary records, 2,249 AMR isolates derived from them, and the HELEADE wetlands, sites and observations. The HELEADE rows are the same as in Fdatavalidation's HELEADE data product (`DataProductLayer/DataProduct_HELEADE`), which adds the other entities of the HELEADE data model. It produced the **Result** column of the table above. It needs a separate environment from the Validation Engine, because it uses Great Expectations 0.18, and the [EYE reasoner](https://github.com/eyereasoner/eye) on `PATH`.
+The pipeline reads the DQRs from `prototype/requirements/` and its synthetic data from `tools/dqvp/data/`: 500 Patient Summary records and 2,249 AMR isolates derived from them. It produced the **Result** column of the table above. It needs a separate environment from the Validation Engine, because it uses Great Expectations 0.18, and the [EYE reasoner](https://github.com/eyereasoner/eye) on `PATH`.
 
 ```bash
 pip install -r tools/dqvp/requirements.txt
 cd tools/dqvp/operationalization-pipeline
-python dqr_to_dqvp.py                                          # EHDS DQRs: measured values and verdicts
-python dqr_to_dqvp.py ../../../prototype/requirements/heleade  # HELEADE DQRs
-python test_end_to_end.py                                      # every stage, checked against values computed from the CSVs
-python bench_planning.py 256                                   # planning and code generation as the policy grows
-python bench_execution.py 5000000 5                            # execution as the data and the checks grow
-python automation_report.py                                    # what is authored and what is generated, per DQR
-```
-
-The HELEADE services are generated from these checks, because plain ODRL cannot express three of the HELEADE DQRs: a format standard (UTC), values *not* in a set, and a count per wetland. From the same folder:
-
-```bash
-python export_services.py ../../../prototype/requirements/heleade ../../../services ../../../prototype/odrl_rules/heleade
-docker build -t dqr4hl ../../../services/policyChecker_567fdac1
-docker run --rm -v "$(realpath ../data/heleade)":/data dqr4hl /data
+python dqr_to_dqvp.py               # measured values and verdicts of the EHDS DQRs
+python test_end_to_end.py           # every stage, checked against values computed from the CSVs
+python bench_planning.py 256        # planning and code generation as the policy grows
+python bench_execution.py 5000000 5 # execution as the data and the checks grow
+python automation_report.py         # what is authored and what is generated, per DQR
 ```
 
 ### Benchmarks
