@@ -1,6 +1,7 @@
 {
   "patternId": "DQRP5",
   "patternVersion": "1.0",
+  "measurementConcept": "Volume",
 
   "description": "ODRL template for Completeness pattern ensuring sufficient sample size for statistical validity",
 

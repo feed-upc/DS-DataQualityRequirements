@@ -1257,6 +1257,7 @@ def _build_odrl_template(pid: str, ver: str, goal: str,
         "patternId":      pid,
         "patternVersion": ver,
         "description":    f"ODRL template for {goal}",
+        "measurementConcept": meas_label.removesuffix("Measurement"),
         "context":        _ODRL_CTX,
         "policy":         {"type": "dqv:QualityPolicy", "action": "odrl:distribute"},
         "target":         {"parameter": target_param},
@@ -1909,6 +1910,8 @@ def _wiz_step4(wiz: dict):
                 with st.expander("View raw ODRL policy (expert / machine-readable)"):
                     try:
                         dqr_full = {**dqr_preview, "parameters": vals}
+                        if tmpl.get("measurementConcept"):
+                            dqr_full["measurementConcept"] = tmpl["measurementConcept"]
                         st.json(build_odrl_rule(dqr_full, tmpl))
                     except Exception as e:
                         st.caption(f"Could not render: {e}")
@@ -1943,6 +1946,11 @@ def _wiz_step4(wiz: dict):
                 "supportingMaterials": wiz["meta"].get("supportingMaterials", ""),
                 "history":             wiz["meta"].get("history", ""),
             }
+            # The pattern fixes what is measured, whatever dimension the DQR is filed under
+            tmpl_file = ODRL_TMPL / f"{p['id']}_odrl_template.json"
+            concept = (load_json(tmpl_file) or {}).get("measurementConcept") if tmpl_file.exists() else None
+            if concept:
+                dqr["measurementConcept"] = concept
             path = REQS_DIR / f"{dqr_id}.json"
             if save_json(path, dqr):
                 load_requirements.clear()

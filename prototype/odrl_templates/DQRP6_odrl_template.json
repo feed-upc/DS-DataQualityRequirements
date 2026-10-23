@@ -1,6 +1,7 @@
 {
   "patternId": "DQRP6",
   "patternVersion": "1.0",
+  "measurementConcept": "Fairness",
 
   "description": "ODRL template for Fairness pattern for avoiding under-representation",
 

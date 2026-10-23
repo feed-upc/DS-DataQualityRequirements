@@ -1,6 +1,7 @@
 {
   "patternId": "DQRP4",
   "patternVersion": "1.0",
+  "measurementConcept": "Consistency",
 
   "description": "ODRL template for Consistency pattern using action refinement for conditional constraints",
 

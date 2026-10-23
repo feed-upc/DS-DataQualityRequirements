@@ -1,6 +1,7 @@
 {
   "patternId": "DQRP2",
   "patternVersion": "1.0",
+  "measurementConcept": "Completeness",
 
   "description": "ODRL template for Completeness pattern requiring a specific completeness percentage",
 
