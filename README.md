@@ -29,7 +29,7 @@ The Result column gives the measured value and verdict of each DQR on the synthe
 - **`media/`** — Auto-generated pattern diagrams and instantiation visualizations
 - **`services/`** — Auto-generated validation services, one per DQR instantiation
 - **`tools/`** — The Validation Engine and DQVP, as submodules (see below)
-- **`benchmarks/`** — Raw outputs of the [benchmarks](#benchmarks)
+- **`benchmarks/`** — The benchmark notebook, with its saved results (see [Benchmarks](#benchmarks))
 - **`evaluation/`** — Preliminary feedback from data-space practitioners
 
 ## Validation Engine
@@ -45,30 +45,28 @@ The pipeline reads the DQRs from `prototype/requirements/` and its synthetic dat
 ```bash
 pip install -r tools/dqvp/requirements.txt
 cd tools/dqvp/operationalization-pipeline
-python dqr_to_dqvp.py               # measured values and verdicts of the EHDS DQRs
-python test_end_to_end.py           # every stage, checked against values computed from the CSVs
-python bench_planning.py 256        # planning and code generation as the policy grows
-python bench_execution.py 5000000 5 # execution as the data and the checks grow
-python automation_report.py         # what is authored and what is generated, per DQR
+python dqr_to_dqvp.py         # measured values and verdicts of the EHDS DQRs
+python test_end_to_end.py     # every stage, checked against values computed from the CSVs
+python automation_report.py   # what is authored and what is generated, per DQR
 ```
 
 ### Benchmarks
 
-`bench_planning.py` and `bench_execution.py` measure how compilation and execution grow with the number of checks and the size of the data. The results below were measured on 20 Oct 2026 on a laptop with an AMD Ryzen 5 PRO 215 (6 cores, 12 threads) and 7.1 GiB of memory, under Ubuntu 24.04 on WSL2, with Python 3.12.3, DuckDB 1.5.6, rdflib 7.6.0 and EYE 11.24.4. Times vary between runs on this machine, so the tables give ranges. The raw outputs are in [`benchmarks/`](benchmarks).
+The notebook [`benchmarks/benchmarks.ipynb`](benchmarks/benchmarks.ipynb) measures how compilation grows with the number of checks, and how execution grows with the size of the data and the number of checks. It runs the functions of the pipeline's `bench_planning.py` and `bench_execution.py`. Its saved outputs are the run below, made on 23 Oct 2026 on a laptop with an AMD Ryzen 5 PRO 215 (6 cores, 12 threads) and 7.1 GiB of memory, under Ubuntu 24.04 on WSL2, with Python 3.12.3, DuckDB 1.5.6, rdflib 7.6.0 and EYE 11.24.4. Times vary by up to about 30% between runs on this machine.
 
 | Checks | Planning | Code generation | Per check |
 | -----: | -------: | --------------: | --------: |
-| 128 | 2.40 s | 0.65 s | 24 ms |
-| 256 | 4.32 s | 1.25 s | 22 ms |
-| 512 | 8.50 s | 2.41 s | 21 ms |
+| 128 | 2.17 s | 0.54 s | 21 ms |
+| 256 | 4.14 s | 1.13 s | 21 ms |
+| 512 | 8.01 s | 2.13 s | 20 ms |
 
 | Checks over 5,000,000 records | Execution | Per check |
 | ----------------------------: | --------: | --------: |
-| 3 | 0.07–0.15 s | 25–51 ms |
-| 12 | 0.46–0.73 s | 38–61 ms |
-| 48 | 1.43–2.75 s | 30–57 ms |
-| 96 | 2.76–3.22 s | 29–34 ms |
+| 3 | 0.07 s | 24 ms |
+| 12 | 0.35 s | 29 ms |
+| 48 | 1.12 s | 23 ms |
+| 96 | 2.08 s | 22 ms |
 
-- **Compilation**: medians of 7 runs. Planning includes about 0.3 s to start the reasoner, and each check adds 4 operations to the policy checker.
-- **Execution**: two runs, each the median of 5, with the data already loaded; loading the 5,000,000-record CSV took about 2.3 s. Single checks range from 2–11 ms (null and non-null rates) to 0.24 s (uniqueness of 5,000,000 distinct identifiers) and 1.3 s (conformance to the 249 ISO 3166 codes).
-- **Data size**: the three EHDS checks took 13 ms over 500 records, 0.15 s over 500,000 and 0.74–0.79 s over 5,000,000, with the same measured values at every size.
+- **Compilation**: medians of 7 runs. Planning includes about 0.3 s to start the reasoner, each check adds 4 operations to the policy checker, and doubling the policy multiplies the time by 1.7 to 1.9.
+- **Execution**: medians of 5 runs, with the data already loaded; loading the 5,000,000-record CSV took 2.3 s. Single checks range from 2–12 ms (null and non-null rates) to 0.2 s (uniqueness of 5,000,000 distinct identifiers) and 0.6 s (conformance to the 249 ISO 3166 codes).
+- **Data size**: the three EHDS checks took 8 ms over 500 records, 0.14 s over 500,000 and 0.58 s over 5,000,000, with the same measured values at every size.
